@@ -1,0 +1,1182 @@
+/* general css*/
+::-webkit-input-placeholder {
+    color: #ccc;
+}
+
+:-moz-placeholder {
+    color: #ccc;
+}
+
+::-moz-placeholder {
+    color: #ccc;
+}
+
+:-ms-input-placeholder {
+    color: #ccc;
+}
+
+html, body {
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+html {
+    height: 100%;
+    font-size: 10px;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+    box-sizing: border-box;
+    background: #eee;
+    font-family: 'PingFangSC-Regular', Helvetica, '微软雅黑';
+    font-size: 1.4rem;
+    color: #3c3c3c;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover, a:active, a:visited {
+    text-decoration: none;
+}
+
+ul, ol, li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    border: none;
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+}
+
+p {
+    margin: 0;
+}
+
+table, td {
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-collapse: collapse;
+}
+
+input {
+    -webkit-user-modify: read-write-plaintext-only;
+}
+
+/*common css*/
+.hidden {
+    display: none !important;
+}
+
+.show {
+    display: block !important;
+}
+
+.mt10 {
+    margin-top: 10px !important;
+}
+
+.mb10 {
+    margin-bottom: 10px !important;
+}
+
+.mt20 {
+    margin-top: 20px !important;
+}
+
+.paddingl20 {
+    padding-left: 20px;
+}
+
+.hide {
+    display: none !important;
+}
+
+/*清除浮动
+=======*/
+.fl {
+    float: left !important;
+}
+
+.fr {
+    float: right !important;
+}
+
+.cfx {
+    zoom: 1;
+}
+
+.clear {
+    clear: both;
+    zoom: 1;
+}
+
+.cfx:after {
+    display: block;
+    visibility: hidden;
+    clear: both;
+    overflow: hidden;
+    height: 0;
+    content: '.';
+}
+
+/*tab
+=========*/
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.red {
+    color: red;
+}
+
+/* 中间内容 */
+.my-input-title {
+    padding: 18px 0 10px 0;
+    color: #333;
+}
+
+.font16 {
+    font-size: 1.6rem;
+}
+
+.space-1 {
+    height: 10px;
+}
+
+.space-2 {
+    height: 20px;
+}
+
+.space-5 {
+    height: 50px;
+}
+
+.space-7 {
+    height: 70px;
+}
+
+.small-tips {
+    font-size: 12px;
+    color: #999;
+}
+
+.mui-col-xs32-11 {
+    width: 90% !important;
+}
+
+.mui-col-xs32-11.mui-col-xs32-offset-1 {
+    margin-left: 5% !important;
+}
+
+.mui-btn.block {
+    height: 55px;
+    line-height: 55px;
+    width: 66%;
+    font-size: 18px;
+}
+
+.mui-btn-gray {
+    background: #d9d9d9;
+    color: #555;
+}
+
+.my-select, .my-input, .mui-select > select, .mui-select > select:focus {
+    height: 41px !important;
+    margin: 0 !important;
+    background: #fff;
+    border: 0;
+    border-radius: 7px;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    outline: none;
+}
+
+.my-input {
+    width: 100%;
+    padding: 0 3%;
+}
+
+.my-input-memo {
+    width: 43%;
+    display: inline-block;
+}
+
+/*复制*/
+.btn-copy {
+    position: absolute;
+    right: 6px;
+    top: 4px;
+    -webkit-appearance: none;
+    border: 0;
+    background: #cf3636;
+    height: 28px;
+    line-height: 28px;
+    padding: 0 12px;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.btn-copynew {
+    top: inherit;
+    bottom: 0;
+    height: 40px;
+    width: 25%;
+    position: inherit;
+    display: inline-block;
+    margin-left: 2%;
+    padding: 0 15px;
+    background: #e51515;
+}
+
+/* 个人中心头部*/
+.center-top {
+    background: #191a2f url(../images/e_wallet_bg.png) repeat;
+}
+
+.center-top .o-wrapper {
+    min-height: 95px;
+    overflow: hidden;
+}
+
+.center-top .o-wrapper .user-level {
+    width: 100%;
+    padding-left: 140px;
+    position: absolute;
+    top: 15px;
+}
+
+.center-top .o-wrapper .user-photo {
+    width: 115px;
+    text-align: center;
+}
+
+.center-top .o-wrapper .fl img {
+    width: 65%;
+    padding: 15px 5px;
+}
+
+.center-top .o-wrapper h1 {
+    font-size: 1.6rem;
+    color: #fff;
+    line-height: 2;
+}
+
+.sloatbar {
+    background: rgba(0, 0, 0, .3);
+    height: 35px;
+    line-height: 35px;
+    color: #fff;
+    padding: 0 10px;
+}
+
+.balance-r {
+    float: right;
+}
+
+/*头部*/
+.common-header {
+    /*position: fixed;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*z-index: 4;*/
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    /*letter-spacing: 1px;*/
+    /*background: #20192b url(/mobile/images2/topbar-bg.jpg) repeat;*/
+    color: #fff;
+}
+
+.full-page .common-header {
+    background: #20192b url(/mobile/images2/topbar-bg.jpg) repeat;
+}
+
+.common-header .left-button {
+    float: left;
+    padding-left: 15px;
+    padding-right: 5px;
+    font-size: 24px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.common-header .icon-llmainpageback {
+    display: inline-block;
+    height: 45px;
+    width: 26px;
+}
+
+.common-header .header-title {
+    display: inline-block;
+    font-size: 18px;
+    margin-left: -25px;
+}
+
+.showpaypic {
+    background: url(/images/yimatpay2.jpg) no-repeat;
+    background-size: 100%;
+    width: 300px;
+    height: 240px;
+    border: 1px solid #ddd;
+}
+
+.showpaypic .span {
+    font-size: 15px;
+    padding-top: 212px;
+    display: block;
+    padding-left: 34px;
+    color: #666;
+}
+
+.showpaypic .span .red {
+    padding-left: 20px;
+}
+
+.shopic-box {
+    width: 300px;
+    margin: 0 auto;
+}
+
+/* liebiao */
+
+.title {
+    height: 49px;
+    line-height: 49px;
+    padding: 0 0 0 17px;
+    letter-spacing: 0;
+    font-size: 1.8rem;
+    text-indent: 0;
+    text-align: left;
+    color: #747474;
+    border-bottom: 1px solid #e2e2e3;
+    position: relative;
+    background: #fff;
+    margin-bottom: 6px;
+}
+
+.title .useless {
+    color: #b5b5b5;
+}
+
+.title.stop {
+    color: #b5b5b5;
+}
+
+.center-list .iconfont {
+    font-size: 20px;
+    padding: 0 5px 0 0;
+}
+
+.center-list .icon-erweima {
+    color: #000;
+}
+
+.center-list .icon-zhifubao2 {
+    color: #00aaee;
+}
+
+.center-list .icon-wechatpay-scan {
+    color: #41ce62;
+}
+
+.center-list .icon-qq {
+    color: #ffc133;
+}
+
+.center-list .icon-qiapian {
+    color: #a16bf2;
+}
+
+.center-list .icon-jd {
+    color: red;
+}
+
+.center-list .icon-dianka {
+    color: #ff6969;
+}
+
+.balance {
+    color: #fff;
+    text-align: center;
+    padding: 12px 0 18px;
+}
+
+.balance .amount {
+    color: #fff;
+    font-size: 35px;
+}
+
+.amount-tit {
+    color: #bebebe;
+    padding: 0 0 5px 0;
+    font-size: 15px;
+}
+
+.redbtn {
+    display: inline-block;
+    color: #ffd982;
+    background: #fc553e;
+    border-radius: 4px;
+    height: 24px;
+    width: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 13px;
+    margin-left: 15px;
+    vertical-align: 2px;
+}
+
+.repairbtn {
+    position: absolute;
+    right: 40px;
+    font-size: 15px;
+}
+
+.center-list .i-arrow-r {
+    position: absolute;
+    right: 15px;
+    top: 0;
+    display: inline-block;
+    width: 15px;
+    height: 45px;
+    background: url(../images/i-arrow-r2.png) no-repeat left center;
+    background-size: 10px;
+}
+
+.repairbtn {
+    display: none;
+}
+
+.stop .repairbtn {
+    display: inline-block;
+}
+
+.my-divider {
+    height: 12px;
+    width: 100%;
+    background: #f1f1f1;
+    clear: both;
+}
+
+.full-page {
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+/* 温馨提示 */
+.tips-box {
+    color: #888;
+    padding: 10px 0 20px 0;
+    font-size: 14px;
+}
+
+.tips-title {
+    color: #555;
+    font-size: 15px;
+    padding: 5px 0;
+}
+
+/*温馨提示结束*/
+
+/*支付宝*/
+.tab-btn {
+    overflow: hidden;
+}
+
+.tab-btn .span {
+    width: 47%;
+    margin: 0 3% 8px 0;
+    display: inline-block;
+    background: #d1d1d1;
+    float: left;
+    height: 70px;
+    line-height: 70px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+    position: relative;
+}
+
+.tab-btn .span .font14 {
+    font-size: 14px;
+}
+
+.tab-btn .span.span2 {
+    /*padding-top:13px;*/
+}
+
+.tab-btn .span.active {
+    background: #c44533;
+    color: #fff;
+}
+
+.tab-btn .span.stop {
+    position: relative;
+    color: #b3b3b3;
+    background: #e0e0e0;
+}
+
+.tab-btn .span .stxt {
+    font-size: 12px;
+    background: #999;
+    padding: 2px 5px;
+    border-radius: 10px 0 5px 0;
+    right: 0;
+    position: absolute;
+    bottom: 0;
+    color: #e0e0e0;
+    display: none;
+    line-height: 16px;
+}
+
+.tab-btn .span.stop .stxt {
+    display: inline-block;
+}
+
+.tab-btn .span .txt-fan {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #943325;
+    color: #f1f1f1;
+    border-radius: 0 4px 0 5px;
+    font-size: 12px;
+    padding: 0 3px;
+    line-height: 20px;
+}
+
+.tab-btn .span .tab-txt {
+    font-size: 10px;
+    color: #999;
+    position: absolute;
+    bottom: 2px;
+    line-height: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.tab-btn .span.active .tab-txt {
+    color: #943325;
+}
+
+.tab-btn .span.stop .tab-txt {
+    display: none;
+}
+
+.input-tips {
+    color: #999;
+    padding: 5px;
+}
+
+.input-tips.red {
+    color: #fd6b56;
+}
+
+.bottom-btn {
+    /*position:fixed;*/
+    /*bottom:0;*/
+    display: block;
+    width: 100%;
+    color: #fff;
+    background: #d21515;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 18px;
+    left: 0;
+    cursor: pointer;
+}
+
+.bottom-btn:focus, .bottom-btn:link {
+    color: #fff;
+    background: #a51212;
+}
+
+.my-select, .mui-select > select, .mui-select > select:focus {
+    width: 100%;
+    background: #fff url(/mobile/images/onlinepay/icon_arrow_select.png) no-repeat right center;
+    background-size: 40px;
+    padding: 0 40px 0 3%;
+    color: #acacac;
+}
+
+/*快速输入金额*/
+.fast-amount {
+}
+
+.fast-amount .num-btn, .card-name .num-btn, .money-list input[type=button] {
+    display: inline-block;
+    height: 42px;
+    line-height: 42px;
+    width: 22%;
+    text-align: center;
+    color: #747474;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    background: #fff;
+    margin: 8px 2% 0 0;
+    font-size: 18px;
+    outline: none;
+    cursor: pointer;
+}
+
+.num-btn.hide {
+    display: none;
+}
+
+.card-name .num-btn {
+    width: 31%;
+    margin: 0 1.5% 8px 0;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+.card-name .num-btn:nth-child(3n) {
+    margin-right: 0;
+}
+
+.fast-amount .num-btn:nth-child(4n) {
+    margin-right: 0;
+}
+
+.fast-amount .num-btn.otherbtn {
+    font-size: 14px;
+}
+
+.fast-amount .num-btn.on, .money-list input.on[type=button] {
+    background: #fff url(/mobile/app/images/check.png) no-repeat right bottom;
+    border: 2px solid #d21515;
+    height: 41px;
+    line-height: 41px;
+    background-size: 16px;
+    padding: 0;
+}
+
+.card-name .num-btn.on {
+    background: #fff url(/mobile/app/images/check.png) no-repeat right bottom;
+    border: 2px solid #d21515;
+    height: 41px;
+    line-height: 41px;
+    background-size: 16px
+}
+
+.pay-method {
+    overflow: hidden;
+    padding-bottom: 10px;
+    cursor: pointer;
+}
+
+.pay-method .payway-show, .pay-method .payway-tips {
+    display: inline-block;
+    float: left;
+    margin-right: 2%;
+    height: 50px;
+    color: #656565;
+    font-size: 14px;
+}
+
+.payway-tips {
+    color: #656565;
+    font-size: 14px;
+}
+
+.pay-method .payway-tips {
+    padding-top: 4px;
+    width: 56%;
+}
+
+.pay-method .payway-show {
+    width: 30%;
+    background: #fff;
+    line-height: 50px;
+    text-align: center;
+    border-radius: 5px;
+    color: #555;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.pay-method .payway-show.active {
+    background: #48cf75;
+    color: #fff;
+    border-color: #48cf75;
+}
+
+.pay-method .payway-show .iconfont {
+    font-size: 25px;
+    vertical-align: -4px;
+    padding-left: 4px;
+}
+
+/*支付宝秒存 start*/
+.mui-formTable {
+    border: 1px solid #d3d3d3;
+    background: #fff;
+}
+
+.mui-formTable li {
+    border-bottom: 1px solid #d3d3d3;
+    overflow: hidden;
+    position: relative;
+}
+
+.mui-formTable li:last-child {
+    border-bottom: 0;
+}
+
+.mui-formTable li .tips {
+    height: 38px;
+    line-height: 38px;
+    text-indent: 1em;
+}
+
+.mui-formTable .left-title, .mui-formTable .right-txt {
+    display: inline-block;
+    height: 38px;
+    float: left;
+    line-height: 38px;
+}
+
+.mui-formTable .left-title {
+    width: 30%;
+    border-right: 1px solid #d3d3d3;
+    padding-left: 3%;
+}
+
+.mui-formTable .right-txt {
+    width: 65%;
+    padding-left: 3%;
+}
+
+/*支付宝秒存 end*/
+/*支付宝结束*/
+.gray-tips {
+    color: #888;
+}
+
+.layui-m-layerbtn span[yes] {
+    color: #fff !important;
+    background: #ffb400 !important;
+}
+
+/* c在线支付银行*/
+.bank-choose {
+    line-height: 40px;
+    position: relative;
+}
+
+.i-arrow-r {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    display: inline-block;
+    width: 15px;
+    height: 100%;
+    background: url(/mobile/app/images/i-arrow-r2.png) no-repeat left center;
+    background-size: 10px;
+}
+
+.bank-list-txt {
+    position: absolute;
+    right: 40px;
+    font-size: 15px;
+    color: #999;
+}
+
+.bank-box {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 10;
+}
+
+.bank-box .bottom-btn {
+    z-index: 11;
+    position: fixed;
+    bottom: 0;
+}
+
+.my-bank-list {
+    width: 100%;
+    display: block;
+    position: absolute;
+    bottom: 50px;
+    background: #fff;
+    left: 0;
+    z-index: 11;
+    padding: 5px 5px 15px 5px;
+}
+
+.my-bank-list li {
+    display: inline-block;
+    width: 47%;
+    max-width: 240px;
+    margin: 10px 1.5% 0 1.5%;
+    position: relative;
+    padding-left: 50px;
+    height: 45px;
+    line-height: 45px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.my-bank-list li.on {
+    border: 2px solid #d21515;
+    height: 43px;
+    line-height: 43px;
+    background: #fff url(/mobile/app/images/check.png) no-repeat right bottom;
+}
+
+i.bank-sprite {
+    background: url('/images/bank-sprites3.png') no-repeat top left;
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+    position: absolute;
+    left: 13px;
+    top: 5px;
+}
+
+i.bank-sprite.ICBC {
+    background-position: 0 0;
+    width: 29px;
+}
+
+i.bank-sprite.CCB {
+    background-position: 0 -33px;
+    height: 29px;
+}
+
+i.bank-sprite.ABC {
+    background-position: 0 -67px;
+    width: 30px;
+    height: 29px;
+}
+
+i.bank-sprite.BOC {
+    background-position: 0 -101px;
+    width: 29px;
+    height: 29px;
+}
+
+i.bank-sprite.CMB {
+    background-position: 0 -135px;
+}
+
+i.bank-sprite.CMBC {
+    background-position: 0 -168px;
+    width: 31px;
+    height: 24px;
+    top: 7px;
+}
+
+i.bank-sprite.PSBC {
+    background-position: 0 -197px;
+    height: 25px;
+    top: 7px;
+}
+
+i.bank-sprite.SPDB {
+    background-position: 0 -227px;
+    height: 24px;
+}
+
+i.bank-sprite.ECITIC {
+    background-position: 0 -256px;
+    top: 6px;
+}
+
+i.bank-sprite.CIB {
+    background-position: 0 -289px;
+    width: 35px;
+    height: 22px;
+    top: 8px;
+}
+
+i.bank-sprite.BCOM {
+    background-position: 0 -319px;
+    top: 6px;
+}
+
+i.bank-sprite.CEBB {
+    background-position: -1px -348px;
+    height: 22px;
+    width: 33px;
+    top: 12px;
+}
+
+i.bank-sprite.SPABANK {
+    background-position: 0 -370px;
+    width: 35px;
+    height: 15px;
+    top: 13px;
+}
+
+i.bank-sprite.HXB {
+    background-position: 0 -388px;
+    width: 35px;
+    height: 28px;
+}
+
+i.bank-sprite.GDB {
+    background-position: 0 -417px;
+    width: 35px;
+    height: 30px;
+}
+
+i.bank-sprite.BOS {
+    background-position: 0 -513px;
+    width: 35px;
+    height: 29px;
+}
+
+i.bank-sprite.SHRCB {
+    background-position: 0 -448px;
+    width: 35px;
+    height: 30px;
+    top: 4px;
+}
+
+i.bank-sprite.BCCB {
+    background-position: 0 -478px;
+    width: 35px;
+    height: 33px;
+    top: 4px;
+}
+
+i.bank-sprite.BJRCB {
+    background-position: 0 -545px;
+    width: 35px;
+    height: 34px;
+}
+
+/*银行  end*/
+/*点卡 start*/
+i.dcard-sprite {
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+    position: absolute;
+    top: 7px;
+    left: 12px
+}
+
+i.dcard-sprite.i100002 {
+    background: url("/images/dcard-sprites2.png") no-repeat top left;
+    background-position: 0 0;
+    left: 12px;
+    top: 5px
+}
+
+i.dcard-sprite.i100008 {
+    background: url("/images/dcard-sprites2.png") no-repeat top left;
+    background-position: 0 -38px;
+    width: 29px;
+    height: 27px
+}
+
+i.dcard-sprite.i100010 {
+    background: url("/images/dcard-sprites2.png") no-repeat top left;
+    background-position: 0 -75px;
+    width: 32px;
+    height: 27px;
+    top: 4px;
+    left: 16px
+}
+
+i.dcard-sprite.i100007 {
+    background: url("/images/dcard-sprites2.png") no-repeat top left;
+    background-position: 0 -112px;
+    width: 26px;
+    height: 30px;
+    top: 4px;
+    left: 19px
+}
+
+i.dcard-sprite.i100005 {
+    background: url("/images/dcard-sprites2.png") no-repeat top left;
+    background-position: 0 -152px;
+    width: 27px;
+    height: 27px
+}
+
+i.dcard-sprite.i100009 {
+    background: url("/images/dcard-sprites2.png") no-repeat top left;
+    background-position: 0 -189px;
+    width: 31px;
+    height: 22px;
+    top: 9px
+}
+
+i.dcard-sprite.i100003 {
+    background: url("/images/dcard-sprites2.png") no-repeat top left;
+    background-position: 0 -221px;
+    width: 29px;
+    top: 5px
+}
+
+i.dcard-sprite.i100011 {
+    background: url("/images/dcard-sprites2.png") no-repeat top left;
+    background-position: 0 -259px;
+    width: 36px;
+    height: 19px;
+    top: 10px
+}
+
+i.dcard-sprite.i100004 {
+    background: url("/images/dcard-sprites2.png") no-repeat top left;
+    background-position: 0 -288px;
+    width: 32px;
+    height: 23px;
+    top: 9px
+}
+
+i.dcard-sprite.i100006 {
+    background: url("/images/dcard-sprites2.png") no-repeat top left;
+    background-position: 0 -351px;
+    width: 30px
+}
+
+i.dcard-sprite.i100001 {
+    background: url("/images/dcard-sprites2.png") no-repeat top left;
+    background-position: 0 -451px;
+    width: 36px;
+    height: 22px;
+    top: 10px
+}
+
+i.dcard-sprite.icon10 {
+    background: url("/images/dcard-sprites2.png") no-repeat top left;
+    background-position: 0 -321px;
+    width: 41px;
+    height: 20px
+}
+
+i.dcard-sprite.icon12 {
+    background: url("/images/dcard-sprites2.png") no-repeat top left;
+    background-position: 0 -389px
+}
+
+i.dcard-sprite.icon13 {
+    background: url("/images/dcard-sprites2.png") no-repeat top left;
+    background-position: 0 -427px;
+    width: 41px;
+    height: 16px
+}
+
+/*点卡  end*/
+
+body .layui-m-layer .layui-m-layer-msg {
+    bottom: 50% !important;
+}
+
+.error-tips, .bank-tips, .name-tips {
+    padding: 5px 5% 5px 3%;
+}
+
+.tab-contents-wechat .tabdiv {
+    display: none;
+}
+
+.tab-contents-wechat .tabdiv.active {
+    display: block;
+}
+
+@media screen and (max-width: 320px) {
+    .tab-btn .span {
+        height: 58px;
+        line-height: 58px;
+        font-size: 14px;
+    }
+
+    .fast-amount .num-btn, .card-name .num-btn, .money-list input[type=button] {
+        height: 34px;
+        line-height: 34px;
+        margin: 5px 2% 0 0;
+    }
+
+    .card-name .num-btn.on {
+        height: 34px;
+        line-height: 34px;
+    }
+
+    .pay-method .payway-show {
+        font-size: 12px;
+        width: 31.5%;
+        margin-right: 1.5%;
+    }
+
+    .pay-method .payway-show:nth-child(3n+0) {
+        width: 33%;
+        margin-right: 0;
+    }
+
+}
+
+#fast-real-money, #quick-confirm-wwmoney {
+    color: red;
+    font-size: 1.6em;
+}
+
+#wexinpay-content .mui-btn-gray {
+    width: 48%;
+}
+
+#wechat-desc-page{
+    text-align: left;
+    line-height: 2;
+}
+
+#wechat-desc-page img {
+    width: 100%;
+}
+
+.q{
+    background: url(/images/deposit/q3.png) no-repeat center;
+    background-size: 100%;
+    width: 25px;
+    height: 25px;
+    position: relative;
+    top: 4px;
+    left: 0px;
+    display: inline-block;
+}

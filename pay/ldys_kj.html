@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/style.css" rel="stylesheet" />
+		<script src="http://apps.bdimg.com/libs/jquery/1.6.4/jquery.js" type="text/javascript"></script>
+
+		<style>
+			.area {
+				margin: 20px auto 0px auto;
+			}
+			
+			.mui-input-group {
+				margin-top: 10px;
+			}
+			
+			.mui-input-group:first-child {
+				margin-top: 20px;
+			}
+			
+			.mui-input-group label {
+				width: 40%;
+			}
+			
+			.mui-input-row label~input,
+			.mui-input-row label~select,
+			.mui-input-row label~textarea {
+				width: 58%;
+			}
+			
+			.mui-checkbox input[type=checkbox],
+			.mui-radio input[type=radio] {
+				top: 6px;
+			}
+			
+			.mui-content-padded {
+				margin-top: 25px;
+			}
+			
+			.mui-btn {
+				padding: 10px;
+			}
+			
+			.link-area {
+				display: block;
+				margin-top: 25px;
+				text-align: center;
+			}
+			
+			.spliter {
+				color: #bbb;
+				padding: 0px 8px;
+			}
+			
+			.oauth-area {
+				position: absolute;
+				bottom: 20px;
+				left: 0px;
+				text-align: center;
+				width: 100%;
+				padding: 0px;
+				margin: 0px;
+			}
+			
+			.oauth-area .oauth-btn {
+				display: inline-block;
+				width: 50px;
+				height: 50px;
+				background-size: 30px 30px;
+				background-position: center center;
+				background-repeat: no-repeat;
+				margin: 0px 20px;
+				/*-webkit-filter: grayscale(100%); */
+				border: solid 1px #ddd;
+				border-radius: 25px;
+			}
+			
+			.oauth-area .oauth-btn:active {
+				border: solid 1px #aaa;
+			}
+			
+			.oauth-area .oauth-btn.disabled {
+				background-color: #ddd;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">在线支付</h1>
+		</header>
+		<div class="mui-content">
+			<form id='login-form' class="mui-input-group" method="post" action="<?php echo $channel;?>.php">
+			
+
+				<input  name='ccc' type="hidden"  value="<?php echo number_format($_REQUEST['ccc'],2,'.','');  ?>">
+				<div class="mui-input-row">
+					<label>卡片类型</label>
+					<select name="cardType"><option value="DEBITCARD">储蓄卡</option>
+							<!-- <option value="CREDITCARD">信用卡</option> -->
+					</select>
+
+				</div>
+				<div class="mui-input-row">
+					<label>开户行</label>
+					<select name="bankCode">
+							<option value="ICBC">工商银行</option>
+							<!--<option value="POST">邮政储蓄银行</option>
+							<option value="SDB">深圳发展银行</option>
+							<option value="CMBC">民生银行</option>
+							<option value="BCCB">北京银行</option>
+							<option value="SHB">上海银行</option>
+							<option value="CMBCHINA">招商银行</option>
+ 							<option value="ECITIC">中信银行</option>
+							<option value="SPDB">浦发银行</option>
+ 							<option value="CIB">兴业银行</option>
+ 							<option value="HXB">华夏银行</option>
+ 							<option value="ABC">农业银行</option>
+ 							<option value="GDB">广发银行</option>
+							
+ 							<option value="BOC">中国银行</option>
+							<option value="BOCO">交通银行</option>
+							<option value="CCB">建设银行</option>
+							<option value="CCB">平安银行</option>
+							<option value="CEB">光大银行</option>-->
+					</select>
+				</div>
+				<div class="mui-input-row">
+					<label>银行卡号</label>
+					<input id='bankCardNum' name="bankCardNum" type="text" class="mui-input-clear mui-input" placeholder="银行卡号" value="">
+				</div>
+				<div class="mui-input-row">
+					<label>预留手机号</label>
+					<input id='bankCardPhone' name="bankCardPhone" type="text" class="mui-input-clear mui-input" placeholder="预留手机号" value="">
+				</div>
+				<div class="mui-input-row">
+					<label>开户名</label>
+					<input id='cardUserName' name="cardUserName" type="text" class="mui-input-clear mui-input" placeholder="开户名" value="">
+				</div>
+				<div class="mui-input-row">
+					<label>身份证号码</label>
+					<input id='idCardNum' name="idCardNum" type="text" class="mui-input-clear mui-input" placeholder="身份证号码" value="">
+				</div>
+				
+			<div class="mui-content-padded">
+				<button type="submit" class="mui-btn mui-btn-block mui-btn-primary">确认支付</button>
+				
+				</div>
+				</form>
+			</div>
+			<div class="mui-content-padded oauth-area">
+
+			</div>
+		</div>
+	</body>
+
+</html>

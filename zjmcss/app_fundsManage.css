@@ -1,0 +1,811 @@
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>龙8-存款中心</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="/mobile/css/iconfont/iconfont.css?v=72"/>
+    <link rel="stylesheet" type="text/css" href="/mobile/css/lib/mui-0.2.1/mui.min.css">
+    <link href="/js/layer/mobile/need/layer.css?2.0" type="text/css" rel="styleSheet" id="layermcss">
+    <link rel="stylesheet" type="text/css" href="/mobile/app/css/funds.css?v=66"/>
+
+</head>
+<body>
+<div class="contents j-title-content">
+    <div class="center-top">
+        <header class="common-header j-common-header j-come-back">
+            <a href="javascript:;" onclick="history.back()" class="left-button icon iconfont icon-llmainpageback"></a>
+            <div class="header-title">快速存款</div>
+        </header>
+        <div class="o-wrapper">
+            <div class="balance">
+                <p class="amount-tit">主账户余额</p>
+                <span>￥<span class="amount">0.28</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="center-list pay-tabctrl">
+        <ul>
+            <li class="title stop" id="deposit-gatherPay"><i class="icon iconfont icon-erweima"></i> 一码通 <span
+                    class="repairbtn">维护中</span><span class="i-arrow-r"></span></li>
+            <li class="title" id="deposit-aliPay"><i class="icon iconfont icon-zhifubao2"></i> 支付宝 <span
+                    class="redbtn">赠</span><span class="repairbtn">维护中</span><span class="i-arrow-r"></span></li>
+            <li class="title" id="deposit-weixin"><i class="icon iconfont icon-wechatpay-scan"></i> 微信支付<span
+                    class="redbtn">赠</span> <span
+                    class="repairbtn">维护中</span><span class="i-arrow-r"></span></li>
+            <li class="title  stop" id="deposit-jd"><i class="icon iconfont icon-jd"></i> 京东支付 <span
+                    class="redbtn hide">赠</span><span class="repairbtn">维护中</span><span class="i-arrow-r"></span></li>
+            <li class="title stop" id="deposit-qq"><i class="icon iconfont icon-qq"></i> QQ钱包 <span class="repairbtn">维护中</span><span
+                    class="i-arrow-r"></span></li>
+            <li class="title stop" id="deposit-fastpay"><i class="icon iconfont icon-qiapian"></i> 网上银行<span
+                    class="redbtn hide">赠</span> <span class="repairbtn">维护中</span><span class="i-arrow-r"></span></li>
+            <li class="title stop" id="deposit-dcard"><i class="icon iconfont icon-dianka"></i> 点卡 <span
+                    class="repairbtn">维护中</span><span class="i-arrow-r"></span></li>
+        </ul>
+    </div>
+</div>
+<div class="contents j-page-content">
+    <!--一码通-->
+    <div class="gather-page full-page">
+        <header class="common-header j-common-header">
+            <i href="javascript:;" onclick="closeContent()" class="left-button icon iconfont icon-llmainpageback"></i>
+            <div class="header-title">一码通</div>
+        </header>
+
+        <div class="pay-content" id="deposit-gather-content">
+            <p class=" font16 my-input-title" style="padding-left:20px;">扫描支付 <span
+                    class="small-tips">（1个二维码，支持多个支付软件）</span></p>
+            <div class="mui-col-xs32-11 mui-col-xs32-offset-1 mui-col-xs64-5">
+                <div class="mui-select shopic-box">
+                    <p>
+                        <span class="txt">长按保存二维码</span><br>
+                        <span class="red">*请每次存款前重新获取二维码</span>
+                    </p>
+
+                    <div class="text-center">
+                        <img src="/images/qrcode/wxqrcode.jpg" style="width:100%;max-width:290px;"
+                             id="j-gather-codeimg"/>
+                        <div class="space-1"></div>
+                        <img src="/mobile/images/ymtzf.png" style="width:100%;max-width:190px;"/>
+                    </div>
+
+                </div>
+            </div>
+            <div class="mui-col-xs32-12 mui-col-xs64-5">
+                <div class="space-1"></div>
+                <div class="space-2"></div>
+                <div class="paddingl20" style="position:relative; display:inline-block; width:95%;">
+                    <span class="font16 my-input-title newtitle"> 添加备注</span>
+                    <input type="text" class="my-input my-input-memo" value="a447737180"
+                           id="playusergame" readonly="readonly"/>
+                    <button class="btn-copy btn-copynew" data-clipboard-action="copy"
+                            data-clipboard-target="#playusergame">复制
+                    </button>
+                </div>
+
+                <div class="space-2"></div>
+                <div class="space-1"></div>
+            </div>
+
+            <div class="mui-col-xs32-11 mui-col-xs32-offset-1 mui-col-xs64-5">
+                <div class="mui-select">
+                    <div class="shopic-box">
+                        <div class="space-1"></div>
+                        <p>扫码后按下图方式填写 </p>
+                        <div class="showpaypic">
+                            <span class="span"> a447737180 <span class="red">&lt;&lt;填写您的游戏账号</span></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="mui-col-xs32-11 mui-col-xs32-offset-1 mui-col-xs64-5 tips-box">
+                <div class="tips-title">温馨提示</div>
+                <ol id="deposit-gather-tips">
+                    <li>1.支付限额10-5000元</li>
+                    <li>2.请输入您的游戏账号添加到备注，否则将会错误添加到其他账户</li>
+                    <li>3.手续费0.35%</li>
+                </ol>
+                <div class="space-2"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!--支付宝支付-->
+    <div class="alipay-page full-page">
+        <header class="common-header j-common-header">
+            <i href="javascript:;" onclick="closeContent()" class="left-button icon iconfont icon-llmainpageback"></i>
+            <div class="header-title">支付宝</div>
+        </header>
+        <div class="pay-content" id="alipay-zfbmc">
+
+            <div class="mui-col-xs32-11 mui-col-xs32-offset-1 mui-col-xs64-5">
+                <p class="font16 my-input-title step1-title">存款方式</p>
+                <div class="tab-btn subtitle-btn step1-title">
+                    <a href="javascript:;" id="deposit-zfbmc-page" data-target="deposit-zfbmc-page" class="span active">
+                        支付宝转账 <p class="tab-txt">稳定，单笔上限300万</p><span class="txt-fan">赠1%</span><span
+                            class="stxt">维护中</span>
+                    </a>
+                    <a href="javascript:;" id="deposit-zfbQR2" data-target="deposit-zfbQR2-page"
+                       class="span span2 stop">支付宝扫码支付<p class="tab-txt">便捷，适合小额存款</p><span class="stxt">维护中</span></a>
+
+                </div>
+                <div class="tab-contents">
+                    <div class="alipay01 tabdiv" id="alipaymc-content">
+                        <div class="step1">
+                            <p class="font16 my-input-title">存款姓名</p>
+                            <input type="text" id="fast-zfb-name" class="my-input" value="" placeholder="请输入您转账支付宝的姓名">
+                            <p class="name-tips red"></p>
+
+                            <p class="font16 my-input-title">存款金额</p>
+                            <input type="number" id="fast-zfb-acount" class="my-input money-input" value=""
+                                   placeholder="10元-300万">
+                            <p class="error-tips red"></p>
+                            
+                            <div class="space-2"></div>
+                            <div class="gray-tips">* 支付宝转账每日23:20-01:00左右有延迟到帐现象，若转账状态成功后仍未到账，请咨询客服。</div>
+                            <div class="space-2"></div>
+                            <div class="bottom-btn " id="deposit-zfbmc-submit">获取收款账号</div>
+                        </div>
+                        <div class="step2" style="display:none;">
+                            <p class="font16 my-input-title">存款信息</p>
+                            <ul class="mui-formTable">
+                                <li>
+                                    <span class="left-title">存款姓名</span>
+                                    <span class="right-txt"><span id="quick-confirm-username"></span></span>
+                                </li>
+                                <li>
+                                    <span class="left-title">存款金额</span>
+                                    <span class="right-txt"><span id="quick-confirm-money"></span></span>
+                                </li>
+
+                            </ul>
+                            <div class="space-1"></div>
+                            <p>* 请使用以上存款信息转账至以下收款账户</p>
+                            <div class="space-1"></div>
+                            <p class="font16 my-input-title">收款账号</p>
+                            <ul class="mui-formTable">
+                                <li><p class="tips red">仅本次有效，下次存款请重新获取</p></li>
+                                <li>
+                                    <span class="left-title">收款银行类别</span>
+                                    <span class="right-txt"><input type="text" class="my-input" readonly="readonly"
+                                                                   id="sbankname"></span>
+                                </li>
+                                <li>
+                                    <span class="left-title">收款银行卡号</span>
+                                    <span class="right-txt">
+                        <input type="text" class="my-input" id="saccountno" readonly="readonly">
+                        <button class="btn-copy" data-clipboard-action="copy"
+                                data-clipboard-target="#saccountno">复制</button>
+                    </span>
+                                </li>
+                                <li>
+                                    <span class="left-title">收款人姓名</span>
+                                    <span class="right-txt">
+                        <input type="text" class="my-input" id="saccountname" readonly="readonly">
+                        <button class="btn-copy" data-clipboard-action="copy"
+                                data-clipboard-target="#saccountname">复制</button>
+                    </span>
+                                </li>
+
+                            </ul>
+
+                            <div class="space-2"></div>
+                            <div class="text-center">
+                                <div class="deposit-fast-success mui-btn block mui-btn-gray ">重新填写</div>
+                            </div>
+                            <div class="space-5"></div>
+                            <div class="space-2"></div>
+                            <div class="space-1"></div>
+                            <a class="bottom-btn " href="javascript:;" onclick="_GoAlipay()" target="_blank">去转账</a>
+                            <a href="https://shenghuo.alipay.com/send/payment/fill.htm" target="_blank" id="goAlipayurl"
+                               style="display:none;"></a>
+
+                        </div>
+
+                    </div>
+                    <div class="alipay02 tabdiv" id="deposit-zfbQR-page" style="display:none;">
+                        <p class="font16 my-input-title">存款金额</p>
+                        <input type="number" id="deposit-zfbQR2-money" class="my-input money-input" value=""
+                               placeholder="1-3000">
+                        <p class="error-tips red"></p>
+                        <div class="fast-amount">
+                            <span class="num-btn" data-value="50">50</span>
+                            <span class="num-btn" data-value="100">100</span>
+                            <span class="num-btn" data-value="200">200</span>
+                            <span class="num-btn" data-value="500">500</span>
+                            <span class="num-btn" data-value="1000">1000</span>
+                            <span class="num-btn" data-value="2000">2000</span>
+                            <span class="num-btn" data-value="3000">3000</span>
+                            <span class="num-btn hide" data-value="5000">5000</span>
+                            <span class="num-btn hide" data-value="10000">10000</span>
+                            <span class="num-btn hide" data-value="20000">20000</span>
+                            <span class="num-btn hide" data-value="50000">50000</span>
+                            <span class="num-btn otherbtn" data-value="other">其他金额</span>
+                        </div>
+
+                        <p class="font16 my-input-title">支付通道</p>
+                        <div id="alipay-curpay" class=" deposit-zfbQR2-reload pay-method payway-list"></div>
+                        <p class="input-tips red bank-tips"></p>
+                        <div class="gray-tips">若选择的通道无法存款，请点选其他支付通道</div>
+                        <div class="gray-tips">*需要承担<span class="payway-fee"></span>%手续费，费用由第三方收取</div>
+                        <div class="space-1"></div>
+                        <div class="space-2"></div>
+                        <div class="bottom-btn" id="deposit-zfbQR2-submit">去支付</div>
+                        <div class="space-5"></div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--微信支付-->
+    <div class="wechat-page full-page">
+        <header class="common-header j-common-header">
+            <i href="javascript:;" onclick="closeContent()" class="left-button icon iconfont icon-llmainpageback"></i>
+            <div class="header-title">微信支付</div>
+        </header>
+        <div class="pay-content" id="wechatpay">
+
+            <div class="mui-col-xs32-11 mui-col-xs32-offset-1 mui-col-xs64-5">
+                <div class="j-subtitle">
+                    <p class="font16 my-input-title">存款方式</p>
+                    <div class="tab-btn subtitle-btn">
+                        <a href="javascript:;" id="deposit-weixinin" data-target="deposit-weixinin" class="span active">
+                            微信转账 <p class="tab-txt">稳定，单笔上限300万</p><span class="txt-fan">赠1%</span><span class="stxt">维护中</span>
+                        </a>
+                        <a href="javascript:;" id="deposit-wexinQR" data-target="deposit-wexinQR-page"
+                           class="span span2 stop">微信扫码支付 <p class="tab-txt">便捷，最高上限3000</p><span
+                                class="stxt">维护中</span></a>
+                    </div>
+                </div>
+                <div class="tab-contents tab-contents-wechat">
+                    <div class="alipay01 tabdiv active" id="wexinpay-content">
+                        <div class="step1">
+                            <p class="font16 my-input-title">存款姓名</p>
+                            <input type="text" id="fast-wex-name" class="my-input" value="" placeholder="请输入您转账微信的姓名">
+                            <p class="name-tips red"></p>
+
+                            <p class="font16 my-input-title">存款金额</p>
+                            <input type="number" id="fast-wex-acount" class="my-input money-input" value=""
+                                   placeholder="10元-300万">
+                            <p class="error-tips red"></p>
+
+                            
+                            <input type="hidden" id="fast-real-money" class="my-input money-input" value="" disabled>
+                            
+                            <div class="space-2"></div>
+                            
+                            <div class="space-2"></div>
+                            <div class="bottom-btn " id="deposit-wexin-submit">获取收款账号</div>
+                        </div>
+                        <div class="step2" style="display:none;">
+                            <p class="font16 my-input-title">存款信息</p>
+                            <ul class="mui-formTable">
+                                <li>
+                                    <span class="left-title">存款姓名</span>
+                                    <span class="right-txt"><span id="quick-confirm-wwusername"></span></span>
+                                </li>
+                                <li>
+                                    <span class="left-title">存款金额</span>
+                                    <span class="right-txt"><span id="quick-confirm-wwmoney"></span></span>
+                                </li>
+
+                            </ul>
+                            <div class="space-1"></div>
+                            <p>* 请使用以上存款信息转账至以下收款账户</p>
+                            <div class="space-1"></div>
+                            <p class="font16 my-input-title">收款账号</p>
+                            <ul class="mui-formTable">
+                                <li><p class="tips red">仅本次有效，下次存款请重新获取</p></li>
+                                <li>
+                                    <span class="left-title">收款银行类别</span>
+                                    <span class="right-txt"><input type="text" class="my-input" readonly="readonly"
+                                                                   id="wbankname"></span>
+                                </li>
+                                <li>
+                                    <span class="left-title">收款银行卡号</span>
+                                    <span class="right-txt">
+                        <input type="text" class="my-input" id="waccountno" readonly="readonly">
+                        <button class="btn-copy" data-clipboard-action="copy"
+                                data-clipboard-target="#waccountno">复制</button>
+                    </span>
+                                </li>
+                                <li>
+                                    <span class="left-title">收款人姓名</span>
+                                    <span class="right-txt">
+                        <input type="text" class="my-input" id="waccountname" readonly="readonly">
+                        <button class="btn-copy" data-clipboard-action="copy"
+                                data-clipboard-target="#waccountname">复制</button>
+                    </span>
+                                </li>
+
+                            </ul>
+
+                            <div class="space-2"></div>
+                            <div class="text-center">
+                                <div class="deposit-fast-success mui-btn block mui-btn-gray ">重新填写</div>
+                                <div class="deposit-fast-how mui-btn block mui-btn-gray ">如何转账<i class="q"></i></div>
+                            </div>
+                            <div class="space-5"></div>
+                            <div class="space-2"></div>
+                            <div class="space-1"></div>
+
+                        </div>
+                    </div>
+                    <div class="alipay02 tabdiv" id="deposit-wexinQR-page">
+                        <p class="font16 my-input-title">存款金额</p>
+                        <input type="number" class="my-input money-input" value="" placeholder="1-3000">
+                        <p class="error-tips red"></p>
+                        <div class="fast-amount">
+                            
+                            <span class="num-btn" data-value="100">100</span>
+                            <span class="num-btn" data-value="200">200</span>
+                            <span class="num-btn" data-value="500">500</span>
+                            <span class="num-btn" data-value="1000">1000</span>
+                            <span class="num-btn" data-value="2000">2000</span>
+                            <span class="num-btn" data-value="3000">3000</span>
+                            <span class="num-btn hide" data-value="5000">5000</span>
+                            <span class="num-btn hide" data-value="10000">10000</span>
+                            <span class="num-btn hide" data-value="20000">20000</span>
+                            <span class="num-btn hide" data-value="50000">50000</span>
+                            <span class="num-btn otherbtn" data-value="other">其他金额</span>
+                        </div>
+
+                        <p class="font16 my-input-title">支付通道</p>
+                        <div id="curWechatpay" class=" deposit-wexinQR-reload pay-method payway-list"></div>
+
+                        <div class="space-1"></div>
+                        <div class="gray-tips">若选择的通道无法存款，请点选其他支付通道</div>
+                        <div class="gray-tips">*需要承担<span class="payway-fee"></span>%手续费，费用由第三方收取</div>
+                        <div class="space-1"></div>
+                        <div class="space-2"></div>
+                        <div class="bottom-btn " id="deposit-wexinQR-submit">去支付</div>
+                        <div class="space-5"></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--京东支付-->
+    <div class="jd-page full-page">
+        <header class="common-header j-common-header">
+            <i href="javascript:;" onclick="closeContent()" class="left-button icon iconfont icon-llmainpageback"></i>
+            <div class="header-title">京东支付</div>
+        </header>
+        <div class="pay-content" id="deposit-jd-page">
+
+            <div class="mui-col-xs32-11 mui-col-xs32-offset-1 mui-col-xs64-5">
+                <div class="mui-select" style="display:none;">
+                    <p class="font16 my-input-title">京东支付</p>
+                    <select id="m-deposit-jd-pay" tabindex="0">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+
+                <div class="tab-contents">
+                    <div class="alipay02 tabdiv">
+                        <p class="font16 my-input-title">存款金额 <span class="small-tips">(便捷，最高上限3000)</span></p>
+                        <input type="number" id="deposit-jd-money" class="my-input money-input" placeholder="1-3000">
+                        <p class="input-tips red error-tips">
+
+                        </p>
+                        
+                        <div class="fast-amount fast-amount-jd">
+                            <span class="num-btn num-btn100" data-value="100">100</span>
+                            <span class="num-btn num-btn500" data-value="500">500</span>
+                            <span class="num-btn num-btn1000" data-value="1000">1000</span>
+                            <span class="num-btn num-btn3000" data-value="3000">3000</span>
+                            <span class="num-btn num-btn5000" data-value="5000">5000</span>
+                            <span class="num-btn num-btn10000 hide" data-value="10000">10000</span>
+                            <span class="num-btn num-btn50000 hide" data-value="50000">50000</span>
+                            <span class="num-btn otherbtn" data-value="other">其他金额</span>
+                        </div>
+                        <p class="font16 my-input-title">支付通道</p>
+                        <div class=" deposit-zfbQR2-reload pay-method payway-list"></div>
+                        <p class="input-tips red bank-tips"></p>
+
+                        <div class="space-1"></div>
+                        <div class="gray-tips">若选择的通道无法存款，请点选其他支付通道</div>
+                        <div class="gray-tips">*需要承担<span class="payway-fee"></span>%手续费，费用由第三方收取</div>
+                        <div class="space-1"></div>
+                        <div class="space-2"></div>
+                        <div class="bottom-btn " id="deposit-jd-submit">去支付</div>
+                        <div class="space-5"></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--QQ支付-->
+    <div class="qq-page full-page">
+        <header class="common-header j-common-header">
+            <i href="javascript:;" onclick="closeContent()" class="left-button icon iconfont icon-llmainpageback"></i>
+            <div class="header-title">QQ钱包支付</div>
+        </header>
+        <div class="pay-content" id="deposit-qq-page">
+
+            <div class="mui-col-xs32-11 mui-col-xs32-offset-1 mui-col-xs64-5">
+                <div class="mui-select" style="display:none;">
+                    <p class="font16 my-input-title">QQ支付</p>
+                    <select id="m-deposit-qq-pay" tabindex="0">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+
+                <div class="tab-contents">
+                    <div class="alipay02 tabdiv">
+                        <p class="font16 my-input-title">存款金额 <span class="small-tips">(便捷，最高上限3000)</span></p>
+                        <input type="number" id="deposit-qq-money" class="my-input money-input" placeholder="0.00">
+                        <p class="input-tips red error-tips">
+                            
+                        </p>
+                        
+                        <div class="fast-amount fast-amount-qq">
+                            <span class="num-btn num-btn100" data-value="100">100</span>
+                            <span class="num-btn num-btn500" data-value="500">500</span>
+                            <span class="num-btn num-btn1000" data-value="1000">1000</span>
+                            <span class="num-btn num-btn3000" data-value="3000">3000</span>
+                            <span class="num-btn num-btn5000" data-value="5000">5000</span>
+                            <span class="num-btn num-btn10000 hide" data-value="10000">10000</span>
+                            <span class="num-btn num-btn50000 hide" data-value="50000">50000</span>
+                            <span class="num-btn otherbtn" data-value="other">其他金额</span>
+                        </div>
+                        <p class="font16 my-input-title">支付通道</p>
+                        <div class=" deposit-zfbQR2-reload pay-method payway-list"></div>
+                        <p class="input-tips red bank-tips"></p>
+                        <div class="space-1"></div>
+                        <div class="gray-tips">若选择的通道无法存款，请点选其他支付通道</div>
+                        <div class="gray-tips">*需要承担<span class="payway-fee"></span>%手续费，费用由第三方收取</div>
+                        <div class="space-1"></div>
+                        <div class="space-2"></div>
+                        <div class="bottom-btn " id="deposit-qq-submit">去支付</div>
+                        <div class="space-5"></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--网上银行支付-->
+    <div class="bank-page full-page">
+        <header class="common-header j-common-header">
+            <i href="javascript:;" onclick="closeContent()" class="left-button icon iconfont icon-llmainpageback"></i>
+            <div class="header-title">网上银行</div>
+        </header>
+        <div class="pay-content" id="alipay">
+
+            <div class="mui-col-xs32-11 mui-col-xs32-offset-1 mui-col-xs64-5">
+                <p class="font16 my-input-title step1-title">存款方式</p>
+                <div class="tab-btn subtitle-btn step1-title">
+                    <a href="javascript:;" id="deposit-bankspeedpay" data-target="deposit-bankspeedpay-page"
+                       class="span active">
+                        手机/网银转账 <p class="tab-txt">推荐已开通网银用户使用</p><span class="txt-fan">赠1%</span><span
+                            class="stxt">维护中</span>
+                    </a>
+                    <a href="javascript:;" id="deposit-thirdpay-page" data-target="deposit-thirdpay-page"
+                       class="span span2 stop">在线支付<p class="tab-txt">推荐已开通网银用户使用</p> <span class="stxt">维护中</span></a>
+                    <a href="javascript:;" id="deposit-speedpay-page" data-target="deposit-speedpay-page"
+                       class="span span2 stop">快捷支付 <p class="tab-txt">验证身份证号、短信即可</p><span class="stxt">维护中</span></a>
+                </div>
+                <div class="tab-contents">
+                    <div class="alipay01 tabdiv" id="deposit-bankspeedpay-page-con">
+                        <div class="step1">
+                            <p class="font16 my-input-title">存款姓名</p>
+                            <input type="text" id="fast-mc-name" class="my-input" value="" placeholder="请输入您转账的姓名">
+                            <p class="name-tips red"></p>
+                            <p class="font16 my-input-title">存款金额</p>
+                            <input type="number" id="fast-mc-acount" class="my-input money-input" value=""
+                                   placeholder="10元-300万">
+                            <p class="error-tips red"></p>
+                            <div class="space-2"></div>
+                            
+                            <div class="bottom-btn " id="deposit-bankmc-submit">获取收款账号</div>
+                        </div>
+                        <div class="step2" style="display:none;">
+                            <p class="font16 my-input-title">存款信息</p>
+                            <ul class="mui-formTable">
+                                <li>
+                                    <span class="left-title">存款姓名</span>
+                                    <span class="right-txt"><span id="quick-confirm-ccusername"></span></span>
+                                </li>
+                                <li>
+                                    <span class="left-title">存款金额</span>
+                                    <span class="right-txt"><span id="quick-confirm-ccmoney"></span></span>
+                                </li>
+
+                            </ul>
+                            <div class="space-1"></div>
+                            <p>* 请使用以上存款信息转账至以下收款账户</p>
+                            <div class="space-1"></div>
+                            <p class="font16 my-input-title">收款账号</p>
+                            <ul class="mui-formTable">
+                                <li><p class="tips red">仅本次有效，下次存款请重新获取</p></li>
+                                <li>
+                                    <span class="left-title">收款银行类别</span>
+                                    <span class="right-txt"><input type="text" class="my-input" readonly="readonly"
+                                                                   id="ccbankname"></span>
+                                </li>
+                                <li>
+                                    <span class="left-title">收款银行卡号</span>
+                                    <span class="right-txt">
+                                        <input type="text" class="my-input" id="ccaccountno" readonly="readonly">
+                                        <button class="btn-copy" data-clipboard-action="copy"
+                                                data-clipboard-target="#ccaccountno">复制</button>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="left-title">收款人姓名</span>
+                                    <span class="right-txt">
+                                        <input type="text" class="my-input" id="ccaccountname" readonly="readonly">
+                                        <button class="btn-copy" data-clipboard-action="copy"
+                                                data-clipboard-target="#ccaccountname">复制</button>
+                                    </span>
+                                </li>
+                                <li id="fuyan-box">
+                                    <span class="left-title">附言:</span>
+                                    <span class="right-txt">
+                                        <input id="ccmefuyan" class="my-input" type="text" readonly="readonly">
+                                        <button class="btn-copy" data-clipboard-action="copy"
+                                                data-clipboard-target="#ccmefuyan">复制</button>
+                                    </span>
+                                </li>
+
+                            </ul>
+
+                            <div class="space-2"></div>
+                            <div class="text-center">
+                                <div class="deposit-fast-success mui-btn block mui-btn-gray ">重新填写</div>
+                            </div>
+                            <div class="space-2"></div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="alipay02 tabdiv" id="deposit-thirdpay-pagecon" style="display:none;">
+                        <p class="font16 my-input-title">存款金额</p>
+                        <input type="number" class="my-input money-input" value="" placeholder="1-3000">
+                        <p class="error-tips red"></p>
+                        <div class="fast-amount">
+                            <span class="num-btn" data-value="100">100</span>
+                            <span class="num-btn" data-value="500">500</span>
+                            <span class="num-btn" data-value="1000">1000</span>
+                            <span class="num-btn" data-value="3000">3000</span>
+                            <span class="num-btn hide" data-value="5000">5000</span>
+                            <span class="num-btn hide" data-value="10000">10000</span>
+                            <span class="num-btn hide" data-value="50000">50000</span>
+                            <span class="num-btn otherbtn" data-value="other">其他金额</span>
+                        </div>
+                        <p class="font16 my-input-title">支付通道</p>
+                        <div class=" deposit-bankpay-reload pay-method payway-list"></div>
+                        <div class="space-1"></div>
+                        <div class="my-input bank-choose" onclick="$('.j-bank-box').show()">
+                            支付银行
+                            <span class="bank-list-txt j-bank-list-txt"></span><i class="i-arrow-r"></i>
+                        </div>
+                        <div class="space-1"></div>
+                        <div class="payway-tips">若选择的通道无法存款，请点选其他支付通道</div>
+                        <div class="payway-tips hide">*需要承担<span class="payway-fee">0.8</span>%手续费，费用由第三方收取</div>
+
+                        <p class="bank-tips red"></p>
+                        <div></div>
+                        <div class="bank-box j-bank-box" style="display:none;">
+                            <ul class="my-bank-list j-bank-list" id="bank-list">
+                                <li class="payWayBtn " data-value="ABC" value="农业银行"><i
+                                        class="bank-sprite ABC"></i><span class="text">农业银行</span></li>
+                            </ul>
+                            <div class="bottom-btn" onclick="checkBank()">确定</div>
+                        </div>
+
+
+                        <div class="space-2"></div>
+                        <div class="bottom-btn " id="deposit-thirdpay-submit">去支付</div>
+                        <div class="space-5"></div>
+
+                    </div>
+                    <div class="alipay03 tabdiv" id="deposit-speedpay-pagecon" style="display:none;">
+                        <p class="font16 my-input-title">存款金额</p>
+                        <input type="number" class="my-input money-input" value="" placeholder="1-3000">
+                        <p class="error-tips red"></p>
+                        <div class="fast-amount">
+                            <span class="num-btn" data-value="100">100</span>
+                            <span class="num-btn" data-value="500">500</span>
+                            <span class="num-btn" data-value="1000">1000</span>
+                            <span class="num-btn" data-value="3000">3000</span>
+                            <span class="num-btn" data-value="5000">5000</span>
+                            <span class="num-btn" data-value="10000">10000</span>
+                            <span class="num-btn" data-value="50000">50000</span>
+                            <span class="num-btn otherbtn" data-value="other">其他金额</span>
+                        </div>
+                        <div class="space-1"></div>
+                        <p class="font16 my-input-title">支付通道</p>
+                        <div class="deposit-speedpay-reload pay-method payway-list"></div>
+                        <div class="payway-tips">若选择的通道无法存款，请点选其他支付通道</div>
+                        <div class="payway-tips">*需要承担<span class="payway-fee">0</span>%手续费，费用由第三方收取</div>
+                        <p class="bank-tips red"></p>
+                        <div class="space-1"></div>
+
+                        <div class="mbkj hidden">
+                            <p class="font16 my-input-title">银行卡号</p>
+                            <input type="text" class="my-input" value="" id="speedpay-bankcard" placeholder="银行卡号"
+                                   onkeyup="value=value.replace(/[^\d]/g,'');">
+
+                            <p class="font16 my-input-title">银行卡户名</p>
+                            <input type="text" class="my-input" value="" id="speedpay-bankname" placeholder="银行卡户名">
+
+                            <p class="font16 my-input-title">手机号</p>
+                            <input type="text" class="my-input" value="" id="speedpay-phoneNumber" placeholder="手机号"
+                                   onkeyup="value=value.replace(/[^\d]/g,'');"
+                                   maxlength="11">
+                        </div>
+
+                        <div class="space-2"></div>
+                        <div class="bottom-btn " id="deposit-speedpay-submit">去支付</div>
+                        <div class="space-5"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--点卡支付-->
+    <div class="dcard-page full-page">
+        <header class="common-header j-common-header">
+            <i href="javascript:;" onclick="closeContent()" class="left-button icon iconfont icon-llmainpageback"></i>
+            <div class="header-title">点卡支付</div>
+        </header>
+        <div class="pay-content" id="alipay">
+
+            <div class="mui-col-xs32-11 mui-col-xs32-offset-1 mui-col-xs64-5">
+                <p class="font16 my-input-title">支付点卡</p>
+                <div class="card-name" id="cardTable">
+                    <span class="num-btn on" data-value="50">加载中...</span>
+                </div>
+                <div class="dcard-num j-dcard-num">
+                    <p class="font16 my-input-title">选择面额</p>
+                    <div class="fast-amount money-list">
+                    </div>
+                </div>
+                <p class="font16 my-input-title" id="display-dcard-pay"></p>
+
+
+                <div class="tab-contents">
+                    <div class="pay-dcard-inputs j-pay-dcard-inputs hide">
+                        <p class="font16 my-input-title">点卡卡号</p>
+                        <input type="text" class="my-input" id="deposit-card-no" value="" placeholder="">
+                        <p class="font16 my-input-title">点卡密码</p>
+                        <input type="text" class="my-input" id="deposit-card-password" value="" placeholder="">
+
+                    </div>
+                    <p class="error-tips dcard-pwd-error-message"></p>
+                    <div class="space-1"></div>
+                    <div class="space-2"></div>
+
+                    <div class="bottom-btn deposit-card-submit">确定支付</div>
+                    <div class="space-5"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!--微信秒存转帐说明-->
+    <div id="wechat-desc-page" class="full-page">
+        <div class="mui-col-xs32-11 mui-col-xs32-offset-1 mui-col-xs64-5">
+            <div class="relative">
+                <div class="btn-copy" onclick="returnWechatPage();">返回</div>
+            </div>
+            <div class="space-2"></div>
+            <h3 class="text-center">微信转账流程</h3>
+
+            <div class="space-2"></div>
+            <p>步骤一：请先确认您的微信版本为最新版本</p>
+            <div><img src="/images/deposit/5-1.jpg"/></div>
+
+            <div class="space-2"></div>
+            <p>步骤二：点击微信【钱包】-【收付款】页面</p>
+            <div><img src="/images/deposit/1-2.jpg"/></div>
+
+            <div class="space-2"></div>
+            <p>步骤三：选择【转账到银行卡功能】</p>
+            <div><img src="/images/deposit/2-2.jpg"/></div>
+
+            <div class="space-2"></div>
+            <p>步骤四：对应填写获取到的收款账户名与收款卡号</p>
+            <div><img src="/images/deposit/3-3.jpg"/></div>
+
+            <div class="space-2"></div>
+            <p>步骤五：务必填写系统生成的存款金额，方可自动到账</p>
+            <div><img src="/images/deposit/4-4.jpg"/></div>
+            <div class="space-2"></div>
+
+            <div class="bottom-btn" onclick="returnWechatPage();">返回</div>
+            <div class="space-5"></div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<script type="text/javascript" src="/mobile/js/lib/jquery/jquery-1.10.2.min.js"></script>
+<input type="hidden" value="1" id="j-num-level"/>
+<input type="hidden" value="a447737180" id="j-loginName"/>
+<script type="text/javascript" src="/js/layer/mobile/layer.js"></script>
+<script type="text/javascript" src="/mobile/js/clip.js"></script>
+<script type="text/javascript" src="/mobile/app/js/deposit.js?v=2233"></script>
+<script>
+    //j-come-back 返回的判断
+    window.onload = function () {
+        var mobileorApp = window.location.href;
+        if (mobileorApp.indexOf('openMobile') > -1) {
+            $(".j-come-back").html("<i class='left-button icon iconfont icon-llmainpageback' onclick='history.back()'></i><div class='header-title'>快速存款</div>");
+        } else {
+            $(".j-come-back").html("<i class='left-button icon iconfont icon-llmainpageback' onclick='goBackApp()'></i><div class='header-title'>快速存款</div>");
+        }
+
+        function goBackApp() {
+            if (getMobileKind() == 'Android') {
+                window.location.href = 'long8webapp://login?u=a447737180&p=dc483e80a7a0bd9ef71d8cf973673924'
+            } else {
+                window.location.href = 'long8native://login?u=a447737180&p=dc483e80a7a0bd9ef71d8cf973673924'
+            }
+        }
+        function getMobileKind(){
+            if(navigator.userAgent.match(/Android/i))
+                return 'Android';
+            if(navigator.userAgent.match(/iPhone/i)
+                || navigator.userAgent.match(/iPad/i)
+                || navigator.userAgent.match(/iPod/i))
+                return 'IOS';
+            if(navigator.userAgent.match(/Windows Phone/i))
+                return 'Windows Phone';
+            return 'other';
+        }
+    }
+
+</script>
+
+
+
+
+
+
+
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');   ga('create', 'UA-89910754-1', 'auto');
+    ga('send', 'pageview'); </script>
+
+
+</body>
+</html>
