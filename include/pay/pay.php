@@ -7,10 +7,14 @@ class pay{
 		'charset'			=>	'utf-8',
 		'sign_type'			=> 'MD5',
     );
-	protected $api_key =  '1K3IO1TXWPOOTE45ASAX1CDYLE3CLKBQ';
-	protected $secret_key =  'a6d6df9303ae9f6fd8dbb6a5807548b';
+	//protected $api_key =  '1K3IO1TXWPOOTE45ASAX1CDYLE3CLKBQ';
+        protected $api_key =  'UN57QVEE9RIS858PJ5GUAP2Y7WUS2VUO';
+        
+	//protected $secret_key =  'a6d6df9303ae9f6fd8dbb6a5807548b';
+        protected $secret_key =  '93a3a0f5c46c7111a4d880583ab06a19';
 	protected $debug_info = array();
-	protected $IsTest = true;
+	//protected $IsTest = true;
+        protected $IsTest = true;
 
 	 
     /**
