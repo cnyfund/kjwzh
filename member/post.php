@@ -4,7 +4,7 @@ require_once 'function.php';
 //建立数据库连接
 $db_settings = parse_ini_file('dbConfig.php');
 @extract($db_settings);
-require_once 'mysql.php';
+require_once 'include/mysql.php';
 $db = new dbmysql();
 $db->dbconn($con_db_host,$con_db_id,$con_db_pass,$con_db_name);
 require_once 'webConfig.php';
