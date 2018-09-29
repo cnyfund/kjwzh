@@ -121,9 +121,8 @@ class dbmysql {
 	}
 
 	function resulta($query, $row) {
-		//$query->data_seek($row)
-                var $rowdata = $query->fetch_row()
-                return $rowdata[0]
+		$query->data_seek($row);
+                return $query->fetch_row()[0];
 	}
 
 	function num_rows($query) {
