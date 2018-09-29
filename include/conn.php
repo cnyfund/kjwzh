@@ -49,7 +49,7 @@ $m_user_ip  = preg_match('/^([0-9]{1,3}\.){3}[0-9]{1,3}$/',$m_user_ip) ? $m_user
 //建立数据库连接
 $db_settings = parse_ini_file('dbConfig.php');
 @extract($db_settings);
-require_once 'mysql.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/mysql.php';
 $db = new dbmysql();
 $db->dbconn($con_db_host,$con_db_id,$con_db_pass,$con_db_name);
 
@@ -61,4 +61,3 @@ $ckeditor_mc_height = "400";
 
 //操作密码
 define('CC_ACT_PWD', '123123');
-

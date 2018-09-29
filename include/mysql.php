@@ -5,15 +5,17 @@ class dbmysql {
 	var $querynum = 0;
 	var $link;
 	function  dbconn($con_db_host,$con_db_id,$con_db_pass, $con_db_name = '',$db_charset='utf8',$pconnect = 0) {
-                if (!$this->link=mysqli_connect($con_db_host, $con_db_id, $con_db_pass)) {
+                if (!$this->link=new mysqli($con_db_host, $con_db_id, $con_db_pass, $con_db_name)) {
                      $this->halt('Can not connect to MySQL server');
                 }
-                
-                if($db_charset!='latin1') {
-                     @mysqli_query("SET character_set_connection=$db_charset, character_set_results=$db_charset, character_set_client=binary", $this->link);
+                /*if ($db_charset!='latin1') {
+                    @mysqli_set_charset($this->link, $db_charset);
                 }
-                @mysqli_query("SET sql_mode=''", $this->link);
-		/*if($pconnect) {
+                @mysqli_query( $this->link, "SET sql_mode=''");
+	        if ($con_db_name) {
+                   @mysqli_select_db($this->link, $con_db_name);
+                }*/
+                /*if($pconnect) {
 			if(!$this->link = @mysql_pconnect($con_db_host,$con_db_id,$con_db_pass)) {
 				$this->halt('Can not connect to MySQL server');
 			}
@@ -31,29 +33,26 @@ class dbmysql {
 				@mysqli_query("SET sql_mode=''", $this->link);
 			}
 		}*/
-
-		if($con_db_name) {
-			@mysqli_select_db($con_db_name, $this->link);
-		}
-
 	}
 	
 	function move_first($query) {
-		mysqli_data_seek($query,0);
+		this->link->data_seek($query,0);
 	}
 
 	function select_db($dbname) {
-		return mysqli_select_db($dbname, $this->link);
+		return this->link->select_db($dbname);
 	}
 
 	function fetch_array($query, $result_type = MYSQL_ASSOC) {
 		if(!$query)
 		{
+                        echo "come fetch none...";
 			return "";
 		}
 		else
 		{
-			return mysqli_fetch_array($query,$result_type);
+                        echo "come to get first...";
+			return $query->fetch_array($result_type);
 		}
 	}
 	
@@ -96,6 +95,9 @@ class dbmysql {
 	{
 		$query = $this->query($sql, $type);
 		$rs = $this->fetch_array($query);
+                if (!$rs) {
+                    echo "no result...";
+                }
 		$this->free_result($query);
 		return $rs ;
 	}
@@ -105,9 +107,11 @@ class dbmysql {
 	function query($sql, $type = '') {
 	   /*$func = $type == 'UNBUFFERED' && @function_exists('mysqli_unbuffered_query') ?
 			'mysqli_unbuffered_query' : 'mysqli_query';*/
-           $func = 'mysqli_query';
-		if(!($query = $func($sql, $this->link))) {
-			if(in_array($this->errno(), array(2006, 2013)) && substr($type, 0, 5) != 'RETRY') {
+                echo "query(" . $sql . ")";
+		if(!($query = $this->link->query($sql))) {
+                     echo "query has error";
+                     if(in_array($this->errno(), array(2006, 2013)) && substr($type, 0, 5) != 'RETRY') {
+                                echo "query get error, retry...";
 				$this->close();
 				global $config_db;
 				$db_settings = parse_ini_file("$config_db");
@@ -126,71 +130,61 @@ class dbmysql {
 	    if(strtolower(substr($where_str,0,5))!='where' && $where_str) $where_str = "WHERE ".$where_str;
 	    $query = " SELECT COUNT($field_name) FROM $table_name $where_str ";
 	    $result = $this->query($query);
-	    $fetch_row = mysqli_fetch_row($result);
+	    $fetch_row = this->link->fetch_row($result);
 	    return $fetch_row[0];
 	}
 
 	function affected_rows() {
-		return mysqli_affected_rows($this->link);
-	}
-	function list_fields($con_db_name,$table) {
-		$fields=mysqli_list_fields($con_db_name,$table,$this->link);
-	    $columns=$this->num_fields($fields);
-	    for ($i = 0; $i < $columns; $i++) {
-	        $tables[]=mysqli_field_name($fields, $i);
-	    }
-	    return $tables;
+		return $this->link->affected_rows();
 	}
 
 	function error() {
-		return (($this->link) ? mysqli_error($this->link) : mysqli_error());
+		return (($this->link) ? $this->link->error() : mysqli_error());
 	}
 
 	function errno() {
-		return intval(($this->link) ? mysqli_errno($this->link) : mysqli_errno());
+		return intval(($this->link) ? $this->link->errno() : mysqli_errno());
 	}
 
 	function result($query, $row) {
-		$query = @mysqli_result($query, $row);
-		return $query;
+		$query->data_seek($row)
+                return $query->fetch_row()
 	}
 
 	function num_rows($query) {
-		$query = mysqli_num_rows($query);
-		return $query;
+		return $query->num_rows();
 	}
 
 	function num_fields($query) {
-		return mysqli_num_fields($query);
+		return $query->num_fields();
 	}
 
 	function free_result($query) {
-		return mysqli_free_result($query);
+		return $query->free_result();
 	}
 
 	function insert_id() {
-		return ($id = mysqli_insert_id($this->link)) >= 0 ? $id : $this->result($this->query("SELECT last_insert_id()"), 0);
+		return ($id = this->link->insert_id()) >= 0 ? $id : $this->result($this->query("SELECT last_insert_id()"), 0);
 	}
 
 	function fetch_row($query) {
-		$query = mysqli_fetch_row($query);
-		return $query;
+		return $query->fetch_row();
 	}
 
 	function fetch_fields($query) {
-		return mysqli_fetch_field($query);
+		return $query->fetch_fields();
 	}
 
 	function version() {
-		return mysqli_get_server_info($this->link);
+		return $this->link->get_server_info();
 	}
 
 	function close() {
-		return mysqli_close($this->link);
+		return $this->link->close();
 	}
 
 	function halt($message = '',$sql) {
-	     $sqlerror = mysqli_error();
+	     $sqlerror = $this->linke->error();
 		 $sqlerrno = mysqli_errno();
 		 $sqlerror = str_replace($dbhost,'dbhost',$sqlerror);
 		 echo"<html><head><title>CSSInfo</title><style type='text/css'>P,BODY{FONT-FAMILY:tahoma,arial,sans-serif;FONT-SIZE:10px;}A { TEXT-DECORATION: none;}a:hover{ text-decoration: underline;}TD { BORDER-RIGHT: 1px; BORDER-TOP: 0px; FONT-SIZE: 16pt; COLOR: #000000;}</style><body>\n\n";
