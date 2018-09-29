@@ -1745,19 +1745,19 @@ else if($act == 'point2_sell_post'){
 		exit;
 	}
 	if(strlen($pwd) < 6 || strlen($pwd) > 32){
-		echo '{"state":false,"msg":"登录密码6-32位任意字符，请检查！"}';
+		echo '{"state":false,"msg":"登录密码6-32位任意字符，请检查！" . $pwd}';
 		exit;
 	}
 	
-	$rs = $db->get_one("select * from `h_member` where h_userName = '{$username}'");
+	$rs = $db->get_one("select * from h_member where h_userName = '{$username}'");
 	if(!$rs){
 		echo '{"state":false,"msg":"账户或密码错误，请检查！"}';
 		exit;
 	}
 	
-	$pwd = md5($pwd);
-	if($pwd != $rs['h_passWord']){
-		echo '{"state":false,"msg":"账户或密码错误，请检查！"}';
+	$pwdhash = md5($pwd);
+	if($pwdhash != $rs['h_passWord']){
+		echo '{"state":false,"msg":"账户或密码错误，请检查! pwdhash:' . $pwdhash . '  dbhash:  ' . $rs['h_passWord'] . '" }';
 		exit;
 	}
 	

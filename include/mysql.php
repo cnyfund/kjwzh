@@ -8,39 +8,13 @@ class dbmysql {
                 if (!$this->link=new mysqli($con_db_host, $con_db_id, $con_db_pass, $con_db_name)) {
                      $this->halt('Can not connect to MySQL server');
                 }
-                /*if ($db_charset!='latin1') {
-                    @mysqli_set_charset($this->link, $db_charset);
-                }
-                @mysqli_query( $this->link, "SET sql_mode=''");
-	        if ($con_db_name) {
-                   @mysqli_select_db($this->link, $con_db_name);
-                }*/
-                /*if($pconnect) {
-			if(!$this->link = @mysql_pconnect($con_db_host,$con_db_id,$con_db_pass)) {
-				$this->halt('Can not connect to MySQL server');
-			}
-		} else {
-			if(!$this->link = @mysql_connect($con_db_host,$con_db_id,$con_db_pass, 1)) {
-				$this->halt('Can not connect to MySQL server');
-			}
-		}
-		if($this->version() > '4.1') {
-			if($db_charset!='latin1') {
-				@mysql_query("SET character_set_connection=$db_charset, character_set_results=$db_charset, character_set_client=binary", $this->link);
-			}
-
-			if($this->version() > '5.0.1') {
-				@mysqli_query("SET sql_mode=''", $this->link);
-			}
-		}*/
-	}
-	
+        }	
 	function move_first($query) {
-		this->link->data_seek($query,0);
+		$this->link->data_seek($query,0);
 	}
 
 	function select_db($dbname) {
-		return this->link->select_db($dbname);
+		return $this->link->select_db($dbname);
 	}
 
 	function fetch_array($query, $result_type = MYSQL_ASSOC) {
@@ -67,7 +41,7 @@ class dbmysql {
              . $table
              . ' SET ' . implode(',', $set)
              . (($where) ? " WHERE $where" : '');
-        $this->query($sql);
+            $this->query($sql);
 	}
 	
 	
@@ -82,8 +56,8 @@ class dbmysql {
              . $table
              . ' (' . implode(', ', $set).') '
              . 'VALUES (' . implode(', ', $vals).')';
-        $this->query($sql);
-        return $this->insert_id();
+           $this->query($sql);
+           return $this->insert_id();
 	}
 	
 	/**
@@ -130,7 +104,7 @@ class dbmysql {
 	    if(strtolower(substr($where_str,0,5))!='where' && $where_str) $where_str = "WHERE ".$where_str;
 	    $query = " SELECT COUNT($field_name) FROM $table_name $where_str ";
 	    $result = $this->query($query);
-	    $fetch_row = this->link->fetch_row($result);
+	    $fetch_row = $this->link->fetch_row($result);
 	    return $fetch_row[0];
 	}
 
@@ -146,9 +120,10 @@ class dbmysql {
 		return intval(($this->link) ? $this->link->errno() : mysqli_errno());
 	}
 
-	function result($query, $row) {
-		$query->data_seek($row)
-                return $query->fetch_row()
+	function resulta($query, $row) {
+		//$query->data_seek($row)
+                var $rowdata = $query->fetch_row()
+                return $rowdata[0]
 	}
 
 	function num_rows($query) {
@@ -164,7 +139,7 @@ class dbmysql {
 	}
 
 	function insert_id() {
-		return ($id = this->link->insert_id()) >= 0 ? $id : $this->result($this->query("SELECT last_insert_id()"), 0);
+		return ($id = $this->link->insert_id()) >= 0 ? $id : $this->result($this->query("SELECT last_insert_id()"), 0);
 	}
 
 	function fetch_row($query) {
@@ -172,7 +147,7 @@ class dbmysql {
 	}
 
 	function fetch_fields($query) {
-		return $query->fetch_fields();
+		return $query->fetch_field();
 	}
 
 	function version() {
@@ -184,7 +159,7 @@ class dbmysql {
 	}
 
 	function halt($message = '',$sql) {
-	     $sqlerror = $this->linke->error();
+	     $sqlerror = $this->link->error();
 		 $sqlerrno = mysqli_errno();
 		 $sqlerror = str_replace($dbhost,'dbhost',$sqlerror);
 		 echo"<html><head><title>CSSInfo</title><style type='text/css'>P,BODY{FONT-FAMILY:tahoma,arial,sans-serif;FONT-SIZE:10px;}A { TEXT-DECORATION: none;}a:hover{ text-decoration: underline;}TD { BORDER-RIGHT: 1px; BORDER-TOP: 0px; FONT-SIZE: 16pt; COLOR: #000000;}</style><body>\n\n";
