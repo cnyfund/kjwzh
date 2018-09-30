@@ -1,4 +1,8 @@
 <?php
+error_reporting(E_ALL);
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors',1);
+
 # 文件名称:mysql.php 2009-11-1 16:18:23
 # 数据库操作类
 class dbmysql {
@@ -17,7 +21,7 @@ class dbmysql {
 		return $this->link->select_db($dbname);
 	}
 
-	function fetch_array($query, $result_type = MYSQL_ASSOC) {
+	function fetch_array($query, $result_type = MYSQLI_ASSOC) {
 		if(!$query)
 		{
                         echo "come fetch none...";
@@ -72,6 +76,7 @@ class dbmysql {
                 if (!$rs) {
                     echo "no result...";
                 }
+		echo "There are " . count($rs) . " fields in result";
 		$this->free_result($query);
 		return $rs ;
 	}
