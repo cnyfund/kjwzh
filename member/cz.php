@@ -39,12 +39,13 @@ function list_(){
 	$mid = 111;
 	$total_count = $db->counter('h_recharge', "h_userName = '{$memberLogged_userName}'", 'id');
 	$page = (int)$page;
-	if($page_input){$page=$page_input;}
+	//if($page_input){$page=$page_input;}
 	$list_num = 10;
 	$met_pageskin = 5;
 	$rowset = new Pager($total_count,$list_num,$page);
 	$from_record = $rowset->_offset();
 	$query = "select * from `h_recharge` where h_userName = '{$memberLogged_userName}' order by h_addTime desc,id desc LIMIT $from_record, $list_num";
+        echo "cz query " . $query;
 	$result = $db->query($query);
 	while($list = $db->fetch_array($result))
 	{
@@ -67,6 +68,7 @@ function list_(){
 if($val['h_state']==1) {$ss='充值成功';}
 if($val['h_state']==2) {$ss='充值失败';}
 
+$pp='';
 if($val['h_bank']==1) {$pp='微信';}
 if($val['h_bank']==2) {$pp='支付宝';}
 			echo '  <li>

@@ -76,7 +76,7 @@ isset($pageTitle) or $pageTitle ='';
 				return false;
 				}*/
 			var url="/member/bin.php?act=login&username="+encodeURI(username)+"&pwd="+encodeURI(pwd)+"&remember="+encodeURI(remember.toString());
-			tishi2();
+                        tishi2();
 			$.ajax({ type : "get", async:true,  url : url, dataType : "json",
 				success: function(json){
 					tishi2close();
@@ -91,7 +91,8 @@ isset($pageTitle) or $pageTitle ='';
 				},
 				error:function(json){
 					tishi2close();
-					layer.alert('网络错误，请重新提交');
+                                        alert(url);
+					layer.alert("登录错误，" + json.msg + "请重新提交");
 				}
 			});
 		}

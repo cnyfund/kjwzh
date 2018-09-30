@@ -32,7 +32,8 @@ function list_(){
 	$mid = 111;
 	$total_count = $db->counter('h_withdraw', "h_userName = '{$memberLogged_userName}'", 'id');
 	$page = (int)$page;
-	if($page_input){$page=$page_input;}
+	//seems to be unused
+        //if($page_input){$page=$page_input;}
 	$list_num = 10;
 	$met_pageskin = 5;
 	$rowset = new Pager($total_count,$list_num,$page);

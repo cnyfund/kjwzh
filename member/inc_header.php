@@ -13,7 +13,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pager.php';
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
-<title><?php echo $pageTitle . $webInfo['h_webName'] . ' - ' . 会员中心; ?></title>
+<title><?php echo $pageTitle . $webInfo['h_webName'] . ' - ' . '会员中心'; ?></title>
 <meta name="keywords" content="<?php echo $webInfo['h_keyword']; ?>" />
 <meta name="description" content="<?php echo $webInfo['h_description']; ?>" />
 <link rel="stylesheet" href="/ui/css/bootstrap.min.css">

@@ -1,6 +1,5 @@
 <?php
 error_reporting(E_ALL);
-ini_set('error_reporting', E_ALL);
 ini_set('display_errors',1);
 
 # 文件名称:mysql.php 2009-11-1 16:18:23
@@ -11,6 +10,9 @@ class dbmysql {
 	function  dbconn($con_db_host,$con_db_id,$con_db_pass, $con_db_name = '',$db_charset='utf8',$pconnect = 0) {
                 if (!$this->link=new mysqli($con_db_host, $con_db_id, $con_db_pass, $con_db_name)) {
                      $this->halt('Can not connect to MySQL server');
+                }
+                if ($db_charset!='latin1') {
+                   $this->link->set_charset($db_charset);
                 }
         }	
 	function move_first($query) {
@@ -24,12 +26,10 @@ class dbmysql {
 	function fetch_array($query, $result_type = MYSQLI_ASSOC) {
 		if(!$query)
 		{
-                        echo "come fetch none...";
 			return "";
 		}
 		else
 		{
-                        echo "come to get first...";
 			return $query->fetch_array($result_type);
 		}
 	}
@@ -73,10 +73,6 @@ class dbmysql {
 	{
 		$query = $this->query($sql, $type);
 		$rs = $this->fetch_array($query);
-                if (!$rs) {
-                    echo "no result...";
-                }
-		echo "There are " . count($rs) . " fields in result";
 		$this->free_result($query);
 		return $rs ;
 	}
@@ -86,11 +82,8 @@ class dbmysql {
 	function query($sql, $type = '') {
 	   /*$func = $type == 'UNBUFFERED' && @function_exists('mysqli_unbuffered_query') ?
 			'mysqli_unbuffered_query' : 'mysqli_query';*/
-                echo "query(" . $sql . ")";
 		if(!($query = $this->link->query($sql))) {
-                     echo "query has error";
                      if(in_array($this->errno(), array(2006, 2013)) && substr($type, 0, 5) != 'RETRY') {
-                                echo "query get error, retry...";
 				$this->close();
 				global $config_db;
 				$db_settings = parse_ini_file("$config_db");
@@ -108,8 +101,8 @@ class dbmysql {
 	    $where_str = trim($where_str);
 	    if(strtolower(substr($where_str,0,5))!='where' && $where_str) $where_str = "WHERE ".$where_str;
 	    $query = " SELECT COUNT($field_name) FROM $table_name $where_str ";
-	    $result = $this->query($query);
-	    $fetch_row = $this->link->fetch_row($result);
+            $result = $this->link->query($query);
+	    $fetch_row = $result->fetch_row();
 	    return $fetch_row[0];
 	}
 

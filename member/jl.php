@@ -40,7 +40,8 @@ function list_(){
 	$where = "h_userName = '{$memberLogged_userName}' and h_price < 0 and h_type='购买产品'";
 	$total_count = $db->counter('h_log_point2', $where, 'id');
 	$page = (int)$page;
-	if($page_input){$page=$page_input;}
+	// Seems this is unused, comment it out
+        //if($page_input){$page=$page_input;}
 	$list_num = 10;
 	$met_pageskin = 5;
 	$rowset = new Pager($total_count,$list_num,$page);

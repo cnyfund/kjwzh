@@ -44,7 +44,7 @@
    return $this->offset=$this->pagesize*($this->_cur_page-1);
    }
       //html数字连接的标签
- function num_link($tex='?',$url='')
+ function num_link($text='?',$url='')
   {
        $setpage  = $this->_cur_page ? ceil($this->_cur_page/$this->pernum) : 1;
         $pagenum   = ($this->pages > $this->pernum) ? $this->pernum : $this->pages;
@@ -217,7 +217,7 @@ case 1:
   
   case 4 or 5 or 6 or 7 or 8 or 9:
   if($met_pageskin==4){
-   $text.="<style>";
+   $text="<style>";
    $text.=".digg4 { padding:3px; margin:3px; text-align:center; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;}";
    $text.=".digg4 a { border:1px solid #aaaadd; padding:2px 5px 2px 5px; margin:2px; color:#000099; text-decoration:none;}";
    $text.=".digg4 a:hover { border:1px solid #000099; color:#000000;}";
@@ -226,7 +226,7 @@ case 1:
    $text.=".digg4 span.disabled { border:1px solid #eee; padding:2px 5px 2px 5px; margin:2px; color:#ddd;}";
    $text.="</style>";
   }elseif($met_pageskin==5){
-   $text.="<style>";
+   $text="<style>";
    $text.=".digg4 { padding:3px; margin:3px; text-align:center; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;}";
    $text.=".digg4  a { border:1px solid #ccdbe4; padding:2px 8px 2px 8px; background-position:50%; margin:2px; color:#0061de; text-decoration:none;}";
    $text.=".digg4  a:hover { border:1px solid #2b55af; color:#fff; background-color:#3666d4;}";
@@ -235,7 +235,7 @@ case 1:
    $text.=".digg4  span.disabled { border:1px solid #ccdbe4; padding:2px 8px 2px 8px; margin:2px; color:#ddd;}";
    $text.=" </style>";
   }elseif($met_pageskin==6){
-   $text.="<style>";
+   $text="<style>";
    $text.=".digg4 { padding:3px; color:#ff6500; margin:3px; text-align:center; font-family: Tahoma, Arial, Helvetica, Sans-serif; font-size: 12px;}";
    $text.=".digg4 a { border:1px solid  #ff9600; padding:2px 7px 2px 7px; background-position:50% bottom; margin:2px; color:#ff6500; background-image:url(".$met_url."images/page6.jpg); text-decoration:none;}";
    $text.=".digg4 a:hover { border:1px solid #ff9600; color:#ff6500; background-color:#ffc794;}";
@@ -244,7 +244,7 @@ case 1:
    $text.=".digg4 span.disabled { border:1px solid #ffe3c6; padding:2px 7px 2px 7px; margin:2px; color:#ffe3c6;}";
    $text.=" </style>";  
   }elseif($met_pageskin==7){
-   $text.="<style>";
+   $text="<style>";
    $text.=".digg4  { padding:3px; margin:3px; text-align:center; font-family: Tahoma, Arial, Helvetica, Sans-serif, sans-serif; font-size: 12px;}";
    $text.=".digg4  a { border:1px solid  #2c2c2c; padding:2px 5px 2px 5px; background:url(".$met_url."images/page7.gif) #2c2c2c; margin:2px; color:#fff; text-decoration:none;}";
    $text.=".digg4  a:hover { border:1px solid #aad83e; color:#fff;background:url(".$met_url."images/page7_2.gif) #aad83e;}";
@@ -253,7 +253,7 @@ case 1:
    $text.=".digg4  span.disabled { border:1px solid #f3f3f3; padding:2px 5px 2px 5px; margin:2px; color:#ccc;}";
    $text.=" </style>";  
   }elseif($met_pageskin==8){
-   $text.="<style>";
+   $text="<style>";
    $text.=".digg4  { padding:3px; margin:3px; text-align:center; font-family:Tahoma, Arial, Helvetica, Sans-serif;  font-size: 12px;}";
    $text.=".digg4  a { border:1px solid #ddd; padding:2px 5px 2px 5px; margin:2px; color:#aaa; text-decoration:none;}";
    $text.=".digg4  a:hover { border:1px solid #a0a0a0; }";
@@ -262,7 +262,7 @@ case 1:
    $text.=".digg4  span.disabled { border:1px solid #f3f3f3; padding:2px 5px 2px 5px; margin:2px; color:#ccc;}";
    $text.=" </style>";  
   }elseif($met_pageskin==9){
-   $text.="<style>";
+   $text="<style>";
    $text.=".digg4 { padding:3px; margin:3px; text-align:center; font-family:Tahoma, Arial, Helvetica, Sans-serif;  font-size: 12px;}"; 
    $text.=".digg4  a { border:1px solid #ddd; padding:2px 5px 2px 5px; margin:2px; color:#88af3f; text-decoration:none;}"; 
    $text.=".digg4  a:hover { border:1px solid #85bd1e; color:#638425; background-color:#f1ffd6; }"; 

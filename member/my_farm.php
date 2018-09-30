@@ -18,13 +18,15 @@ function list_(){
 	$mid = 12;
 	$total_count = $db->counter('h_member_farm', "h_userName = '{$memberLogged_userName}' and h_isEnd = 0", 'id');
 	$page = (int)$page;
-	if($page_input){$page=$page_input;}
+	//if($page_input){$page=$page_input;}
 	$list_num = 10;
 	$met_pageskin = 5;
 	$rowset = new Pager($total_count,$list_num,$page);
 	$from_record = $rowset->_offset();
 	$query = "select * from `h_member_farm` where h_userName = '{$memberLogged_userName}' and h_isEnd = 0 order by h_addTime desc,id desc LIMIT $from_record, $list_num";
+
 	$result = $db->query($query);
+        $rs_list = array();
 	while($list = $db->fetch_array($result))
 	{
 		$rs_list[]=$list;
@@ -42,6 +44,7 @@ function list_(){
 	{
 		foreach ($rs_list as $key=>$val)
 		{
+                                
 			$idIndex = 618100 + $val['id'];
 			
 			if($val['h_settleLen'] <= 0){
@@ -49,7 +52,6 @@ function list_(){
 			}else{
 				$bfb = floatval($val['h_settleLen']) / floatval($val['h_life']) * 100;
 			}
-			
 			echo '<div class="col-sm-6 col-md-3">
     <div class="thumbnail">
       <img src="' , $val['h_pic'] , '">

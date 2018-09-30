@@ -1,4 +1,8 @@
 <?php
+error_reporting(E_ALL);
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors',1);
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/member/logged_data.php';
@@ -1740,6 +1744,7 @@ else if($act == 'point2_sell_post'){
 	//act=dl&x1=11111111111&x2=111111&x4=true&callback=jQuery111306571672858652009_1454218265556&_=1454218265557
 	//cjgo(0,0)
 	//play('0x25')
+        try {
 	if(strlen($username) != 11){
 		echo '{"state":false,"msg":"玩家编号错误，请检查！"}';
 		exit;
@@ -1802,4 +1807,7 @@ else if($act == 'point2_sell_post'){
 
 	
 	echo '{"state":true,"msg":"登录成功"}';
+        } catch (Throwable $e) {
+           echo '{"state":false,"msg":"' . $e->getMessage() . '"}';
+        }
 }
