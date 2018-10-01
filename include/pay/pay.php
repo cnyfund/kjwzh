@@ -1,5 +1,6 @@
 <?php
 require_once "PayException.php";
+require_once "FCBPayConfig.php";
 class pay{
 	    //默认配置
     protected $values = array(
@@ -7,15 +8,10 @@ class pay{
 		'charset'			=>	'utf-8',
 		'sign_type'			=> 'MD5',
     );
-	//protected $api_key =  '1K3IO1TXWPOOTE45ASAX1CDYLE3CLKBQ';
-        protected $api_key =  'UN57QVEE9RIS858PJ5GUAP2Y7WUS2VUO';
-        
-	//protected $secret_key =  'a6d6df9303ae9f6fd8dbb6a5807548b';
-        protected $secret_key =  '93a3a0f5c46c7111a4d880583ab06a19';
-	protected $debug_info = array();
-	//protected $IsTest = true;
-        protected $IsTest = true;
-
+    protected $api_key =  FCBPayConfig::APIKEY;
+    protected $secret_key =  FCBPayConfig::SECRETKEY;
+    protected $debug_info = array();
+    protected $IsTest = true;
 	 
     /**
      * 类架构函数
@@ -29,12 +25,12 @@ class pay{
 	/* 申请充值 */
 	public function applypurchase($biz_content=array()){
 		if($this->IsTest){
-			$api = 'http://54.203.195.52/api/v1/applypurchase/';
+			$api =  FCBPayConfig::DEVSITE . '/api/v1/applypurchase/';
 		}else{
-			$api = 'http://cnytrx.uuvc.com/api/v1/applypurchase/';
+			$api =  FCBPayConfig::PRODSITE . '/api/v1/applypurchase/';
 		}
 		
-		$this->SetValue('method','wallet.trade.buy');
+		$this->SetValue('method',FCBPayConfig::PAYAPPLYMETHOD);
 		$biz_content['api_account_type'] = 'Account';
 		$biz_content['payment_provider'] = 'heepay';
 		$biz_content['out_trade_no'] = "{$biz_content['out_trade_no']}";
@@ -58,11 +54,11 @@ class pay{
 	/* 提现 */
 	public function applyredeem($biz_content=array()){
 		if($this->IsTest){
-			$api = 'http://54.203.195.52/api/v1/applyredeem/';
+			$api = FCBPayConfig::DEVSITE . '/api/v1/applyredeem/';
 		}else{
-			$api = 'http://cnytrx.uuvc.com/api/v1/applyredeem/';
+			$api = FCBPayConfig::PRODSITE . '/api/v1/applyredeem/';
 		}
-		$this->SetValue('method','wallet.trade.sell');
+		$this->SetValue('method', FCBPayConfig::REDEEMMETHOD);
 		$biz_content['api_account_type'] = 'Account';
 		$biz_content['payment_provider'] = 'heepay';
 
@@ -256,8 +252,10 @@ class pay{
             }
         }
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        echo "about to send curl command to " . $url;
         $res = curl_exec($curl);
         //返回结果
+        echo "get curl command back" . $res;
         if ($res) {
 
             curl_close($curl);

@@ -111,11 +111,11 @@ class dbmysql {
 	}
 
 	function error() {
-		return (($this->link) ? $this->link->error() : mysqli_error());
+		return (($this->link) ? $this->link->error : mysqli_error());
 	}
 
 	function errno() {
-		return intval(($this->link) ? $this->link->errno() : mysqli_errno());
+		return intval(($this->link) ? $this->link->errno : mysqli_errno());
 	}
 
 	function resulta($query, $row) {

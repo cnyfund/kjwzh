@@ -24,7 +24,7 @@ if(PHP_VERSION < '4.1.0') {
 define('ROOTPATH', substr(dirname(__FILE__), 0, -7));
 define('MAGIC_QUOTES_GPC', get_magic_quotes_gpc());
 isset($_REQUEST['GLOBALS']) && exit('Access Error');
-require_once 'function.php';
+require_once '/include/function.php';
 foreach(array('_COOKIE', '_POST', '_GET') as $_request) {
 	foreach($$_request as $_key => $_value) {
 		$_key{0} != '_' && $$_key = daddslashes($_value);

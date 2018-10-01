@@ -172,54 +172,16 @@ function uCase($str)
 }
 
 function getUserIP(){
-	global $HTTP_SERVER_VARS;
-	
-	$temp = $HTTP_SERVER_VARS["HTTP_X_FORWARDED_FOR"];
-	if (isset($temp) && strcasecmp($temp, "unknown")){
-		return $temp;
-	}
-
-	$temp = $HTTP_SERVER_VARS["HTTP_CLIENT_IP"];
-	if (isset($temp) && strcasecmp($temp, "unknown")){
-		return $temp;
-	}
-
-	$temp = $HTTP_SERVER_VARS["REMOTE_ADDR"];
-	if (isset($temp) && strcasecmp($temp, "unknown")){
-		return $temp;
-	}
-	
-	$temp = $_SERVER["HTTP_X_FORWARDED_FOR"];
-	if (isset($temp) && strcasecmp($temp, "unknown")){
-		return $temp;
-	}
-	
-	$temp = $_SERVER["HTTP_CLIENT_IP"];
-	if (isset($temp) && strcasecmp($temp, "unknown")){
-		return $temp;
-	}
-	
-	$temp = $_SERVER["REMOTE_ADDR"];
-	if (isset($temp) && strcasecmp($temp, "unknown")){
-		return $temp;
-	}
-	
-	$temp = getenv("HTTP_X_FORWARDED_FOR");
-	if (isset($temp) && strcasecmp($temp, "unknown")){
-		return $temp;
-	}
-	
-	$temp = getenv("HTTP_CLIENT_IP");
-	if (isset($temp) && strcasecmp($temp, "unknown")){
-		return $temp;
-	}
-	
-	$temp = getenv("REMOTE_ADDR");
-	if (isset($temp) && strcasecmp($temp, "unknown")){
-		return $temp;
-	}
-
-    return 'Unknown';
+    if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+        //ip from share internet
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+        //ip pass from proxy
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    }else{
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
 }
 
 function returnTextarea($str)
@@ -411,6 +373,7 @@ function GetUrl($action)
 	$fullUrl = 'http://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
 	$parseurlinfo = parse_url($fullUrl);//Array ( [scheme] => http [host] => 127.0.0.1 [port] => 8080 [path] => /web/main.php [query] => a=1&b=2 )
 	$pathinfo = pathinfo(basename($fullUrl));//Array ( [dirname] => . [basename] => main.php?a=1&b=2 [extension] => php?a=1&b=2 [filename] => main )
+        
 	switch($action)
 	{
 		case 1:
@@ -425,10 +388,18 @@ function GetUrl($action)
 			}
 		case 2:
 			//赋文件名
-			return replace($pathinfo['basename'],'?' . $parseurlinfo['query'],'');
+                        if (array_key_exists('query', $parseurlinfo)) {
+			     return replace($pathinfo['basename'],'?' . $parseurlinfo['query'],'');
+                        } else {
+                             return $pathinfo['basename'];
+                        }
 		case 3:
 			//赋地址栏参数
-			return $parseurlinfo['query'];
+                        if (array_key_exists('query', $parseurlinfo)) {
+                             return $parseurlinfo['query'];
+                        } else {
+                             return '';
+                        }
 		case 4:
 			//赋文件名+地址栏参数（不以“/”开始）
 			return $pathinfo['basename'];

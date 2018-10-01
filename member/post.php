@@ -1,6 +1,6 @@
 <?php
 header("Content-type: text/html;charset=utf-8");
-require_once 'function.php';
+require_once '/include/function.php';
 //建立数据库连接
 $db_settings = parse_ini_file('dbConfig.php');
 @extract($db_settings);

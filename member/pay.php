@@ -13,8 +13,8 @@ $total_fee = $ccc*100;
 $pay = new pay();
 $out_trade_no = date('YmdHis').rand(100000,999999);
 $subject = 'chongzhi';
-$config['notify_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/notify.php';
-$config['return_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/return.php';
+$config['notify_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/notify.php';
+$config['return_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/return.php';
 $config['out_trade_no'] = $out_trade_no;
 $config['subject'] = $subject;
 $config['total_fee'] = $total_fee;
@@ -45,7 +45,7 @@ $config['attach'] = 'username='.$_COOKIE['m_username'];
 				@$db->query($sql);
 		
 $data  = $pay->applypurchase($config);
-//VAR_DUMP($data);
+VAR_DUMP($data);
 if($data['return_code']=='FAILED'){
 	exit('<script language="javascript">alert("'.$data['return_msg'].'");window.history.back(-1);</script>');
 }elseif($data['return_code']=='SUCCESS'){

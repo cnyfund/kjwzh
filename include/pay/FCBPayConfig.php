@@ -5,7 +5,7 @@
  * 配置账号信息
  *
  */
-class Config {
+class FCBPayConfig {
 
     //=======【基本信息设置】=====================================
     //
@@ -23,11 +23,18 @@ class Config {
      * **URL：请求地址
      * @var string
      */
-    const APPID = '';
-    const KEY = '';
+        //protected $api_key =  '1K3IO1TXWPOOTE45ASAX1CDYLE3CLKBQ';
+        //protected $api_key =  'UN57QVEE9RIS858PJ5GUAP2Y7WUS2VUO';
+
+        //protected $secret_key =  'a6d6df9303ae9f6fd8dbb6a5807548b';
+        //protected $secret_key =  '93a3a0f5c46c7111a4d880583ab06a19';
+    const APIKEY = '04OOLU8G940WOTGNU9884XTXJ65JX112';
+    const SECRETKEY = 'f717cfe71dcacc099a55813acf8dab3b';
+    const DEVSITE = 'http://54.203.195.52';
+    const PRODSITE = 'http://cnytrx.uuvc.com';
     const DEVACCOUNTID = '';
     const DEVOPENID = '';
-    const BINDNOTIFYURL = 'http://';
+    const NOTIFYURL = 'http://';
     const BINDRETURNURL = 'http://';
     const PAYNOTIFYURL = 'http://';
     const PAYRETURNURL = 'http://';
@@ -37,12 +44,10 @@ class Config {
     const PAYQUERYURL = 'https://Wallet.heepay.com/Api/v1/PayQuery';
     const PAYCLOSEURL = 'https://Wallet.heepay.com/Api/v1/PayClose';
     const ACCOUNTVERITYURL = 'https://Wallet.heepay.com/Api/v1/AccountVerify';
-    const BINDAPPLYMETHOD = 'wallet.bind.apply';
-    const BINDQUERYMETHOD = 'wallet.bind.query';
-    const PAYAPPLYMETHOD = 'wallet.pay.apply';
-    const PAYQUERYMETHOD = 'wallet.pay.query';
-    const PAYCLOSEMETHOD = 'wallet.pay.close';
-    const ACCOUNTVERITYMETHOD = 'wallet.account.verify';
+    const PAYAPPLYMETHOD = 'wallet.trade.buy';
+    const PAYQUERYMETHOD = 'wallet.trade.query';
+    const PAYCLOSEMETHOD = 'wallet.trade.close';
+    const REDEEMMETHOD = 'wallet.trade.sell';
     const VERSION = '1.0';
     const CHARSET = 'utf-8';
     const SIGNTYPE = 'MD5';
