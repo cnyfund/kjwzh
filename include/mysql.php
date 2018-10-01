@@ -83,6 +83,7 @@ class dbmysql {
 	   /*$func = $type == 'UNBUFFERED' && @function_exists('mysqli_unbuffered_query') ?
 			'mysqli_unbuffered_query' : 'mysqli_query';*/
 		if(!($query = $this->link->query($sql))) {
+                     echo "query failed " . $sql . " error no " . $this->errno();
                      if(in_array($this->errno(), array(2006, 2013)) && substr($type, 0, 5) != 'RETRY') {
 				$this->close();
 				global $config_db;

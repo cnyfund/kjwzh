@@ -382,6 +382,9 @@ function GetUrl($action)
 			{
 				return 'http://' . $_SERVER['SERVER_NAME'];
 			}
+                        elseif ($_SERVER["SERVER_PORT"] == 443) {
+                                return 'https://' . $_SERVER['SERVER_NAME'];
+                        }
 			else
 			{
 				return 'http://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER["SERVER_PORT"];
