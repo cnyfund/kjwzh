@@ -1,0 +1,653 @@
+    1  sudo apt update && sudo apt upgrade
+    2  sudo apt install tasksel
+    3  sudo tasksel install lamp-server
+    4  sudo apt install apache2
+    5  sudo vi /etc/apache2/apache2.conf 
+    6  cd /etc/apache2/
+    7  cd sites-available/
+    8  ls -la
+    9  cp default-ssl.conf 9lp.com.conf
+   10  sudo cp default-ssl.conf 9lp.com.conf
+   11  vi 9lp.com.conf 
+   12  sudo vi 9lp.com.conf
+   13  sudo a2ensite 9lp.com.conf 
+   14  sudo a2dssite 000-default.conf 
+   15  sudo a2dissite 000-default.conf 
+   16  sudo systemctl reload apache2
+   17  mysql -h localhost -u root -p
+   18  sudo apt install php5.4 libapache2-mode-php5.4 php5.4-mysql
+   19  sudo apt search php5
+   20  sudo apt search php7.0
+   21  dpkg -l | grep php
+   22  sudo apt install php7.0 libapache2-mod-php7.0 php7.0-mysql
+   23  sudo apt install php7.0-curl php7.0-json php7.0-cgi
+   24  sudo vi /etc/php/7.0/apache2/php.ini 
+   25  sudo mkdir /var/log/php
+   26  sudo chown www-data /var/log/php
+   27  sudo systemctl restart apache2
+   28  cd /var/www/html/
+   29  ls -la
+   30  mkdir 9lp.com/public_html
+   31  mkdir -p 9lp.com/public_html
+   32  sudo mkdir -p 9lp.com/public_html
+   33  sudo mkdir -p 9lp.com/logs
+   34  ls -la
+   35  cd 9lp.com
+   36  ls -la
+   37  sudo systemctl reload apache2
+   38  cd public_html/
+   39  vi phptest.php
+   40  sudo vi phptest.php
+   41  cd /var/log/apache2/
+   42  ls -la
+   43  vi error.log 
+   44  sudo apachectl restart
+   45  ps aux | grep apcahce
+   46  vi error.log 
+   47  tail -f error.log &
+   48  sudo apachectl restart
+   49  sudo apachectl stop
+   50  sudo apachectl start
+   51  ps aux | grep apache
+   52  ls -la
+   53  vi access.log 
+   54  telnet 13.231.15.208 443
+   55  telnet 13.231.15.208 80
+   56  netstat | grep 443
+   57  netstat -nlp | grep 443
+   58  sudo netstat -nlp | grep 443
+   59  sudo netstat -nlp 
+   60  cd /etc/apache2/
+   61  ls -la
+   62  cd sites-enabled/
+   63  ls -la
+   64  vi 9lp.com.conf 
+   65  sudo vi 9lp.com.conf 
+   66  cd ..
+   67  vi apache2.conf 
+   68  cd sites-enabled/
+   69  vi apache2.conf 
+   70  vi 9lp.com.conf 
+   71  cd ..
+   72  grep -r mod_ssl.c .
+   73  vi mods-available/
+   74  vi mods-available/ssl.conf 
+   75  ls -la
+   76  vi mods-available/
+   77  cd mods-enabled/
+   78  ls -la
+   79  sudo a2enmod ssl
+   80  sudo service apache2 restart
+   81  ps aux | grep apache
+   82  sudo apachectl start
+   83  exit
+   84  cd /etc/
+   85  ls -la
+   86  cd ssl/
+   87  ls -la
+   88  cd certs/
+   89  ls -la
+   90  vi /etc/apache2/sites-enabled/9lp.com.conf 
+   91  sudo cp /home/ubuntu/server.pem 9lp.com-server.pem
+   92  sudo cp /home/ubuntu/server.key ../private/9lp.com-server.key
+   93  mv 9lp.com-server.pem 9lp-server.pem
+   94  sudo mv 9lp.com-server.pem 9lp-server.pem
+   95  cd ../private/
+   96  sudo cd ../private/
+   97  cd ../private/
+   98  sudo su
+   99  sudo apachectl start
+  100  ps aux | grep apache
+  101  tail -f /var/log/apache2/error.log 
+  102  cd /var/www/html/9lp.com/public_html/
+  103  vi phpinfo.php
+  104  sudo vi phpinfo.php
+  105  ls -la
+  106  mkdir workspace
+  107  cd workspace/
+  108  sudo apt install git
+  109  git clone https://github.com/biz2013/kjwzh.git
+  110  cd /etc/apache2/
+  111  ls -la
+  112  cd sites-enabled/
+  113  ls -la
+  114  vi 9lp.com.conf 
+  115  cd /var/www/html/9lp.com/
+  116  ls -la
+  117  cd public_html/
+  118  ls -la
+  119  mv php*.php ~/workspace/kjwzh/
+  120  sudo mv php*.php ~/workspace/kjwzh/
+  121  cd ..
+  122  rm public_html/
+  123  rm -rf public_html/
+  124  sudo rm -rf public_html/
+  125  ln -s public_html /home/ubuntu/workspace/kjwzh/
+  126  ls -la
+  127  ln -s /home/ubuntu/workspace/kjwzh/ public_html
+  128  sudo ln -s /home/ubuntu/workspace/kjwzh/ public_html
+  129  ls -la
+  130  cd ~/workspace/kjwzh/
+  131  mysql -h localhost -u root -p
+  132  cat include/conn.php 
+  133  cat include/dbConfig.php 
+  134  mysql -u sql918033 -p -databaase sql918033 < sql918033.sql 
+  135  mysql -p -u sql918033 databaase sql918033 < sql918033.sql 
+  136  mysql -p -u sql918033 sql918033 < sql918033.sql 
+  137  ftp 45.114.124.178
+  138  mkdir backup
+  139  ls -la
+  140  rm -rf public_html 
+  141  ls -la
+  142  cd DB_SQL
+  143  ls -la
+  144  exit
+  145  cd workspace/kjwzh/
+  146  ls -la
+  147  cd backup/
+  148  ls -la
+  149  unzip mysql_sql918033_2018-09-25_03_20_00.zip 
+  150  sudo apt install unzip
+  151  unzip mysql_sql918033_2018-09-25_03_20_00.zip 
+  152  vi sql918033_2018-09-25_03_20_00.sql 
+  153  cd ..
+  154  grep -r mysqldump .
+  155  grep -rdump .
+  156  grep -r dump .
+  157  grep help
+  158  grep --help
+  159  grep -r -exclude=ui dump .
+  160  grep -exclude=ui -r dump .
+  161  grep -r dump -exclude=ui .
+  162  grep -r dump --exclude=ui .
+  163  grep -r --exclude=ui dump .
+  164  grep -r --exclude-dir=ui dump .
+  165  cd backup/
+  166  ls -la
+  167  vi sql918033_2018-09-25_03_20_00.sql 
+  168  cat ../include/dbConfig.php 
+  169  mysql -p -u sql918033 sql918033 < sql918033_2018-09-25_03_20_00.sql 
+  170  mysql -u root -p
+  171  sudo apache2ctl stop
+  172  sudo apache2ctl start
+  173  sudo su
+  174  mysql -h localhost -u root -p
+  175  cd workspace/kjwzh/
+  176  vi login.php
+  177  vi member/login.php
+  178  mysql -h localhost -u root -p
+  179  cd workspace/kjwzh/
+  180  ls -la
+  181  git pull
+  182  grep -r post.php .
+  183  grep -r post .
+  184  grep -r post . | grep .php
+  185  grep -r post.php .
+  186  grep -r conn.php .
+  187  ps aux | grep apache
+  188  vi member/login.php 
+  189  cd member/
+  190  cp login.php login.test.phpp
+  191  cp login.bak.php login.php 
+  192  sudo apachectl restart
+  193  vi login.php 
+  194  cp login.test.php login.php
+  195  cp login.test.phpp login.php
+  196  vi ../include/conn.php 
+  197  sudo apachectl restart
+  198  vi login.php 
+  199  vi ../include/conn_test.php 
+  200  vi ../include/mysql.php 
+  201  vi login.php 
+  202  vi ../include/conn_test.php 
+  203  vi ../include/mysql.php 
+  204  vi login.php 
+  205  vi ../include/conn_test.php 
+  206  vi ../include/mysql.php 
+  207  vi login.test.phpp 
+  208  vi login.bak.php 
+  209  vi login.php 
+  210  cp login.bak.php login.php 
+  211  vi ../include/conn.php 
+  212  vi login.php 
+  213  vi ../include/conn.php 
+  214  vi login.php 
+  215  cp login.test.phpp login.php 
+  216  vi login.php 
+  217  cd ../include/
+  218  diff conn.php conn_test.php 
+  219  vi conn.php 
+  220  diff conn.php conn_test.php 
+  221  vi login.php
+  222  vi ../member/login.php 
+  223  diff conn.php conn_test.php 
+  224  vi mysql.php 
+  225  vi ../member/login.php 
+  226  diff conn.php conn_test.php 
+  227  vi conn.php 
+  228  vi ../member/login.php 
+  229  cd ../member/
+  230  cp login.bak.php login.php 
+  231  grep -r "网络错误，请重新提交" .
+  232  rm login.bak.php 
+  233  vi login.php 
+  234  vi bin.php 
+  235  vi mysql.php 
+  236  vi bin.php 
+  237  vi ../include/mysql.php 
+  238  vi bin.php 
+  239  vi login.php 
+  240  grep -r tishi2close .
+  241  cd ../include/
+  242  grep -r tishi2close .
+  243  cd ..
+  244  grep -r tishi2close .
+  245  vi include/conn.php 
+  246  vi include/dbConfig.php 
+  247  find . -name dbConfig.php
+  248  vi member/dbConfig.php 
+  249  diff member/dbConfig.php include/dbConfig.php 
+  250  rm member/dbConfig.php 
+  251  vi member/login.php 
+  252  vi member/bin.php 
+  253  vi member/login.php 
+  254  vi member/bin.php 
+  255  vi member/login.php 
+  256  git checkout member/login.php
+  257  vi member/login.php 
+  258  vi include/mysql.php 
+  259  vi member/bin.php 
+  260  vi include/mysql.php 
+  261  rm member/mysql.php 
+  262  vi member/bin.php 
+  263  vi include/mysql.php 
+  264  cd member/
+  265  cp login.php login.bak.php
+  266  cp login.test.phpp login.php
+  267  vi bin.php 
+  268  vi login.php 
+  269  vi bin.php 
+  270  vi ../include/mysql.php 
+  271  sudo apachectl restart
+  272  sudo apachectl stop
+  273  sudo apachectl start
+  274  vi ../include/mysql.php 
+  275  grep -r listfields .
+  276  cd ..
+  277  grep -r listfields .
+  278  vi include/mysql.php 
+  279  grep -r list_fields .
+  280  vi include/mysql.php 
+  281  grep -r fetch_row .
+  282  grep -r fetch_array .
+  283  vi include/mysql.php 
+  284  cd member/
+  285  cp login.bak.php login.php
+  286  vi login.php
+  287  vi ../include/mysql.php 
+  288  vi bin.php 
+  289  vi login.test.phpp 
+  290  vi ../include/mysql.php 
+  291  vi bin.php 
+  292  vi ../include/mysql.php 
+  293  sudo apachectl restart
+  294  vi bin.php 
+  295  vi ../include/mysql.php 
+  296  vi bin.php 
+  297  vi ../include/mysql.php 
+  298  cd ..
+  299  grep -r -i "no result" .
+  300  vi include/mysql.php 
+  301  vi member/login.php 
+  302  vi member/bin.php 
+  303  vi include/mysql.php 
+  304  vi member/bin.php *
+  305  grep -r -i "SELECT * FROM" .
+  306  grep -r -i "SELECT * FROM `h_config`" .
+  307  grep -r h_config .
+  308  vi member/webConfig.php 
+  309  cd member/bin.php
+  310  vi  member/bin.php
+  311  cd member/
+  312  cp login.test.phpp login.php 
+  313  vi login.php 
+  314  cp login.php login.test.php
+  315  rm login.test.phpp 
+  316  vi login.php 
+  317  vi ../include/
+  318  grep -r result( .
+  319  grep -r -i "result(" .
+  320  cd ..
+  321  grep -r -i "result(" .
+  322  vi include/mysql.php 
+  323  grep -r insert_id .
+  324  vi include/mysql.php 
+  325  cd workspace/kjwzh/
+  326  ls -la
+  327  cd include/
+  328  vi mysql.php 
+  329  vi ../member/
+  330  cd ../member/
+  331  vi login.php 
+  332  git commit -m ../include/mysql.php 
+  333  cd ../include/
+  334  git commit -m "fix mysql" .
+  335  git push
+  336  vi login.php
+  337  cd ../login.php
+  338  cd ../member/
+  339  vi login.php
+  340  cp login.test.php login.php
+  341  vi login.php 
+  342  cp login.php login.test.php
+  343  cp login.bak.php login.php
+  344  vi login.php 
+  345  ls -la
+  346  ls login*
+  347  cat login.bak.php 
+  348  cat login.test.php 
+  349  vi login.php 
+  350  vi login.bak.php 
+  351  vi login.test.php 
+  352  vi ../include/mysql.php 
+  353  vi ../include/webConfig.php 
+  354  mysql -h localhost -u root -p
+  355  vi ../include/mysql.php 
+  356  vi ../include/webConfig.php 
+  357  cd workspace/kjwzh/
+  358  ls -la
+  359  vi include/webConfig.php 
+  360  mysql -h localhost -u root -p
+  361  vi include/webConfig.php 
+  362  mysql -h localhost -u root -p
+  363  vi include/webConfig.php 
+  364  grep -r rewriteOpen .
+  365  grep -r point2_log_in.php .
+  366  vi point2_log_in.php
+  367  vi member/point2_log_in.php
+  368  grep -r my.php
+  369  grep -r inc_footer .
+  370  vi member/login.php 
+  371  vi member/login.bak.php 
+  372  git checkout member/login.php
+  373  vi member/login.php 
+  374  vi include/webConfig.php 
+  375  vi member/bin.php 
+  376  vi include/mysql.php 
+  377  vi member/bin.php 
+  378  vi member/login.php 
+  379  vi member/bin.php 
+  380  vi member/login.php 
+  381  grep -r tishi2close .
+  382  vi ui/js/long.js 
+  383  vi member/login.php
+  384  grep -r tishi2() .
+  385  grep -r -i tishi2() .
+  386  grep -r -i "tishi2()" .
+  387  vi ui/js/long.js 
+  388  grep -r -i "var layer" .
+  389  grep -r -i "layer" .
+  390  grep -r -i "layer" . | grep js
+  391  :q1
+  392  vi member/login.php 
+  393  vi member/bin.php 
+  394  vi member/login.php 
+  395  vi member/function_utility.php 
+  396  grep -r -i "getUser
+  397  vi member/function_utility.php 
+  398  vi member/login.php 
+  399  vi member/bin.php
+  400  vi member/function_utility.php 
+  401  vi include/mysql.php 
+  402  vi member/my_farm.php 
+  403  vi include/mysql.php 
+  404  vi member/point2_withdraw_log.php 
+  405  grep -r -i "global $page_input" .
+  406  grep -r -i "global $page_input" . | grep page_input
+  407  grep -r page_input .
+  408  exit
+  409  cd workspace/kjwzh/
+  410  ls -la
+  411  git commit -m "save the old login" .
+  412  git push
+  413  cd member/
+  414  cp login.test.php login.php
+  415  vi login.php 
+  416  cd workspace/kjwzh/include/
+  417  vi mysql.php 
+  418  grep -r error_reporting .
+  419  cd ..
+  420  grep -r page_input
+  421  grep -r page
+  422  grep -r page | grep php
+  423  vi member/log_login.php 
+  424  vi include/mysql.php 
+  425  vi member/function_utility.php 
+  426  vi include/pager.php 
+  427  grep -r lang_PageTotal .
+  428  vi include/mysql.php 
+  429  grep -r page_input
+  430  cd member
+  431  cp login.test.php syntaxtest.php
+  432  vi syntaxtest.php 
+  433  ls -la syntaxtest.php
+  434  ls -la
+  435  rm .login.php.swp 
+  436  vi syntaxtest.php 
+  437  ls -la login.php 
+  438  cp login.php login.bak.php
+  439  cp syntaxtest.php login.php 
+  440  vi login.php 
+  441  vi syntaxtest.php 
+  442  cp login.bak.php login.php
+  443  vi inc_header.php 
+  444  vi syntaxtest.php 
+  445  vi ../include/mysql.php 
+  446  vi point2_withdraw_log.php 
+  447  vi function_utility.php 
+  448  grep -r GetUrl .
+  449  vi function_utility.php 
+  450  grep -r exits .
+  451  vi function_utility.php 
+  452  vi ../include/pager.php 
+  453  vi jl.php
+  454  vi my_farm.php 
+  455  mysql -h localhost -u root -p
+  456  vi jl.php 
+  457  vi my_farm.php
+  458  cd ../
+  459  ls -la
+  460  tar xvzf ../uploadimgs.tgz 
+  461  cd member/
+  462  vi my_farm.php 
+  463  vi cz.php 
+  464  mysql -h localhost -u root -p
+  465  vi cz.php 
+  466  vi pi.php 
+  467  vi inc_header.php
+  468  vi pi.php 
+  469  vi inc_header.php 
+  470  vi pi.php 
+  471  cd ../
+  472  git add upload/
+  473  git commit -m "fixing the POS site" .
+  474  git push
+  475  cd member/
+  476  vi cz.php 
+  477  git commit -m "remove the extra" .
+  478  git push
+  479  cd workspace/kjwzh/include/
+  480  vi pay/pay.php 
+  481  cd pay/
+  482  ls -la
+  483  vi config.php 
+  484  vi PayException.php 
+  485  vi pay.php 
+  486  mv config.php payconfig.php
+  487  mv payconfig.php FCBPayConfig.php
+  488  git add FCBPayConfig.php 
+  489  vi pay.php 
+  490  vi FCBPayConfig.php 
+  491  vi pay.php 
+  492  vi FCBPayConfig.php 
+  493  vi pay.php 
+  494  vi FCBPayConfig.php 
+  495  vi pay.php 
+  496  vi FCBPayConfig.php 
+  497  vi pay.php 
+  498  vi FCBPayConfig.php 
+  499  vi pay.php 
+  500  cd ..
+  501  ..
+  502  cd ..
+  503  grep -r SetNotify_Url .
+  504  vi include/pay/pay.php 
+  505  grep -r SetNotify_url .
+  506  vi include/pay/pay.php 
+  507  grep -r applypurchase .
+  508  vi member/pay.php 
+  509  vi notify.php 
+  510  vi return.php 
+  511  grep -r -i "pay.php" .
+  512  vi member/jincz.php 
+  513  vi member/pay.php 
+  514  vi include/pay/FCBPayConfig.php 
+  515  vi include/pay/pay.php
+  516  vi member/pay.php 
+  517  vi include/pay/pay.php
+  518  vi member/pay.php 
+  519  vi include/mysql.php 
+  520  vi member/pay.php 
+  521  vi include/mysql.php 
+  522  vi member/pay.php 
+  523  cd workspace/kjwzh/member/
+  524  vi pay.php
+  525  vi ../include/pay/pay.php
+  526  sudo apt-get install php-xml
+  527  df
+  528  sudo apache2ctl restart
+  529  vi ../include/pager.php 
+  530  vi pay.php 
+  531  vi ../include/pay/pay.php 
+  532  vi ../include/pay/FCBPayConfig.php 
+  533  cd workspace/kjwzh/include/
+  534  vi function_utility.php 
+  535  diff function_utility.php ../member/function_utility.php 
+  536  :q1
+  537  cd ..
+  538  grep -r FPrevUrl .
+  539  grep -r getUserIP
+  540  grep -r writeVideoPlay .
+  541  grep -r -i "function_utilit" .
+  542  grep -r -i "function.php" .
+  543  vi notify.php 
+  544  vi include/conn.php 
+  545  cd workspace/
+  546  cd kjwzh/
+  547  grep -r function_util .
+  548  grep -r function.php
+  549  vi member/post.php 
+  550  grep -r post.php .
+  551  grep -r post.php
+  552  vi include/pay/pay.php
+  553  vi notify.php 
+  554  cp member/function_utility.php include/
+  555  rm include/conn_test.php 
+  556  vi member/login.php 
+  557  vi member/post.php 
+  558  vi member/function.php 
+  559  vi include/conn.php 
+  560  vi member/post.php 
+  561  grep -r function.php
+  562  grep -r function\.php
+  563  grep -r -i "function.php"
+  564  git commit -m "try to fix functions" .
+  565  git push
+  566  vi include/function_utility.php 
+  567  sudo apache2ctl restart
+  568  vi include/function_utility.php 
+  569  cd /etc/php/7.0/apache2
+  570  vi php.ini 
+  571  vi /var/log/apache2/error.log
+  572  cd ~/workspace/kjwzh/include/
+  573  vi function_utility.php 
+  574  cd ..
+  575  vi include/function.php 
+  576  cd member/
+  577  cat function.php 
+  578  rm function.php 
+  579  diff function_db.php ../include/function_db.php 
+  580  diff function_item.php ../include/function_item.php 
+  581  vi function_item.php 
+  582  :q1
+  583  vi function_item.php 
+  584  grep -r settle_farm_ztj
+  585  vi bin.php 
+  586  vi ../include/conn.php 
+  587  vi bin.php 
+  588  grep -r 物品产币分红 .
+  589  grep include_path
+  590  grep include_path .
+  591  grep -r  include_path
+  592  grep -r function.php .
+  593  grep -r post.php
+  594  cd ..
+  595  grep -r post.php
+  596  grep -r function.php .
+  597  grep -r post.php .
+  598  vi include/function.php 
+  599  rm member/function_item.php 
+  600  rm member/function_db.php 
+  601  vi member/login.php 
+  602  vi /var/log/apache2/error.log
+  603  vi include/function_utility.php 
+  604  vi include/conn.php 
+  605  vi member/
+  606  cd member/
+  607  cp login.test.php login.php
+  608  vi login.php 
+  609  vi ../include/conn.php 
+  610  vi ../include/function.php 
+  611  git checkout login.php
+  612  vi login.php 
+  613  sudo apache2ctl restart
+  614  vi ../include/pager.php 
+  615  cd ..
+  616  grep -r -i "new Pager" .
+  617  vi ../include/pager.php 
+  618  vi include/pager.php 
+  619  vi include/mysql.php 
+  620  grep -r -i "new dbmysql" .
+  621  grep -r -i "new dbconn" .
+  622  vi include/mysql.php 
+  623  vi include/pager.php 
+  624  sudo apache2ctl restart
+  625  vi notify.php 
+  626  grep -r HTTP_RAW_POST_DATA .
+  627  grep -r HTTP_RAW_POST_DATA . | grep php
+  628  grep -r HTTP_RAW_POST_DATA . | grep -v sql918033
+  629  vi notify.php 
+  630  mysql -h localhost -u root -p
+  631  vi notify.php 
+  632  mysql -h localhost -u root -p
+  633  vi notify.php 
+  634  cp notify.php notify.test.php
+  635  git checout notify.php
+  636  git checkout notify.php
+  637  cp notify.bak.php
+  638  cp notify.bak.php notify.bak.php
+  639  cp notify.php notify.bak.php
+  640  cp notify.test.php notify.php
+  641  vi notify.php 
+  642  cp notify.php notify.test.php
+  643  vi notify.php 
+  644  cp notify.test.php notify.php 
+  645  vi notify.php 
+  646  cp notify.test.php notify.php 
+  647  vi notify.php 
+  648  vi notify.
+  649  vi notify.php 
+  650  cp notify.test.php notify.php 
+  651  vi notify.php 
+  652  cp notify.test.php notify.php 
+  653  history

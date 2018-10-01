@@ -24,7 +24,7 @@ if(PHP_VERSION < '4.1.0') {
 define('ROOTPATH', substr(dirname(__FILE__), 0, -7));
 define('MAGIC_QUOTES_GPC', get_magic_quotes_gpc());
 isset($_REQUEST['GLOBALS']) && exit('Access Error');
-require_once '/include/function.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/function.php';
 foreach(array('_COOKIE', '_POST', '_GET') as $_request) {
 	foreach($$_request as $_key => $_value) {
 		$_key{0} != '_' && $$_key = daddslashes($_value);
@@ -37,13 +37,7 @@ ob_end_clean();
 function_exists('ob_gzhandler') ? ob_start('ob_gzhandler') :ob_start();
 
 //用户IP
-if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
-	$m_user_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-} elseif(isset($_SERVER['HTTP_CLIENT_IP'])){
-	$m_user_ip = $_SERVER['HTTP_CLIENT_IP'];
-} else{
-	$m_user_ip = $_SERVER['REMOTE_ADDR'];
-}
+$m_user_ip = getUserIP();
 $m_user_ip  = preg_match('/^([0-9]{1,3}\.){3}[0-9]{1,3}$/',$m_user_ip) ? $m_user_ip : 'Unknown';
 
 //建立数据库连接

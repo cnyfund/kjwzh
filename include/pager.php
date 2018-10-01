@@ -1,7 +1,7 @@
 <?php
 # 文件名称:pager.php
 # mysql数据分页
-    class Pager
+class Pager
     {
       var   $_total;                          //记录总数
       var  $pagesize;                       //每一页显示的记录数
@@ -10,7 +10,7 @@
       var  $offset;                      //记录偏移量
       var  $pernum = 10;                //页码偏移量，这里可随意更改
     
-      function Pager($total,$pagesize,$_cur_page)
+      function __construct($total,$pagesize,$_cur_page)
         {   
         $this->_total=$total;
         $this->pagesize=$pagesize;
