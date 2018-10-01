@@ -340,8 +340,8 @@ $pay = new pay();
 
 $total_fee = $num - $num * $webInfo['h_withdrawFee'];
 $subject = 'withdraw:'.$memberLogged_userName;
-$config['notify_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/notify.php';
-$config['return_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/return.php';
+$config['notify_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/notify.php';
+$config['return_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/return.php';
 
 $config['out_trade_no'] = $out_trade_no;
 $config['subject'] = $subject;
