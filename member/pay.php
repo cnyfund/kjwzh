@@ -36,20 +36,18 @@ $config['attach'] = 'username='.$_COOKIE['m_username'];
 				$sql .= "h_userName = '{$_COOKIE['m_username']}', ";
 				$sql .= "h_money = '{$ccc}', ";
 				//	$sql .= "h_fee = '" . ($num * $webInfo['h_withdrawFee']) . "', ";
-				$sql .= "h_bank = '', ";
+				$sql .= "h_bank = 0, ";
 				$sql .= "h_bankFullname = 'out_trade_no:{$out_trade_no}', ";
 				$sql .= "h_state = 0, h_isReturn=0, ";
 				$sql .= "h_addTime = '{$pay_time}', ";
 				$sql .= "out_trade_no = '{$out_trade_no}', ";
 				$sql .= "h_actIP = '" . getUserIP() . "' ";
 				$rc = $db->query($sql);
-exit('recharge: ' . $sql . ' rc=' . $rc);
-/*error_log("create recharge record" . $sql);		
 $data  = $pay->applypurchase($config);
 VAR_DUMP($data);
 if($data['return_code']=='FAILED'){
 	exit('<script language="javascript">alert("'.$data['return_msg'].'");window.history.back(-1);</script>');
 }elseif($data['return_code']=='SUCCESS'){
 	header('Location:'.$data['payment_url']);
-}*/
+}
 ?>
