@@ -147,10 +147,11 @@ layui.use('upload', function(){
                  if($("#x4-cos").text().substr(0,6)=="密码错误" || e=='密码错误'){
 					layer.msg("您输入的密码不正确，请重新输入！",{end:function(){location.reload();}});
 					}
-				}	
-			},'html'
-			);
-		}	
+                        }else {
+                            layer.msg("提现返回空字符串");
+                        }	
+		 },'html');
+	}	
 		
 	
     </script>  
