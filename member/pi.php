@@ -1,7 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
-
+require_once $_SERVER['DOCUMENT_ROOT'] . '/member/current_user_info.php';
 
 $pageTitle = '支付方式 - ';
 $body_style ="background:#fff;";
@@ -11,15 +11,15 @@ require_once 'inc_header.php';
 	<div class="box">
     	<div class="lo_1 lo_2">
         	<span>开户机构</span>
-            <input type="text" id="x1" size="60" maxlength="60" placeholder="开户机构" style="color:#333" value="<?php echo $rs['h_fullName']?$rs['h_fullName']:'汇付宝';?>" >
+            <input type="text" id="x1" size="60" maxlength="60" placeholder="开户机构" style="color:#333" value="<?php echo $current_user_info['h_fullName']?$current_user_info['h_fullName']:'汇付宝';?>" >
         </div>
 		<div class="lo_1 lo_2">
         	<span>收款账号</span>
-            <input type="text" id="x2" size="60" maxlength="60" placeholder="您的收款账号"  style="color:#333" value="<?php echo $rs['h_alipayUserName'];?>" >
+            <input type="text" id="x2" size="60" maxlength="60" placeholder="您的收款账号"  style="color:#333" value="<?php echo $current_user_info['h_alipayUserName'];?>" >
         </div>
 		<div class="lo_1 lo_2">
         	<span>姓名</span>
-            <input type="text" id="x3" size="60" maxlength="60" style="color:#333"  placeholder="您的收款姓名" value="<?php echo $rs['h_alipayFullName'];?>" >
+            <input type="text" id="x3" size="60" maxlength="60" style="color:#333"  placeholder="您的收款姓名" value="<?php echo $current_user_info['h_alipayFullName'];?>" >
         </div>
              
         <button type="submit" class="lo_login xiugai1_go">保存</button>

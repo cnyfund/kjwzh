@@ -125,11 +125,11 @@ class dbmysql {
 	}
 
 	function num_rows($query) {
-		return $query->num_rows();
+		return $query->num_rows;
 	}
 
 	function num_fields($query) {
-		return $query->num_fields();
+		return $query->field_count;
 	}
 
 	function free_result($query) {

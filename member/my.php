@@ -3,8 +3,8 @@
 require_once 'inc_header.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
-$sql = "select *,(select count(id) from `h_member` where h_parentUserName = a.h_userName and h_isPass = 1) as comMembers from `h_member` a where h_userName = '{$memberLogged_userName}' LIMIT 1";
-$rs = $db->get_one($sql);
+require_once $_SERVER['DOCUMENT_ROOT'] . '/member/current_user_info.php';
+
 ?>
 <html>
 	<head>
@@ -94,7 +94,7 @@ li img{display:inherit;}
 		<img src="/ui/touxiang.png" align="center" alt="" name="face_url" width="200" height="200" id="face_url">
 	</p>
    <li>
-     <div align="center" style="padding-top:8px;font-size:16px;color:#ff0000;"> 可提余额<?php echo $rs['h_point2'];?>元</br></div>
+     <div align="center" style="padding-top:8px;font-size:16px;color:#ff0000;"> 可提余额<?php echo $current_user_info['h_point2'];?>元</br></div>
    </li> 
    </br>
 <p><a href="/" onClick="ewm();" style="font-size:16px;color:#fff;"> 退出登录 </a></p>

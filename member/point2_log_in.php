@@ -42,7 +42,7 @@ function list_(){
 	$where = "h_userName = '{$memberLogged_userName}' and h_price > 0 and (h_type='动态奖励' or h_type='分红' or (h_type='管理员操作' and h_about='补发结算'))";
 	$total_count = $db->counter('h_log_point2', $where, 'id');
 	$page = (int)$page;
-	if($page_input){$page=$page_input;}
+	//if($page_input){$page=$page_input;}
 	$list_num = 10;
 	$met_pageskin = 5;
 	$rowset = new Pager($total_count,$list_num,$page);

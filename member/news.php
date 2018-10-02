@@ -17,7 +17,7 @@ function news_list(){
 	$mid = 111;
 	$total_count = $db->counter('h_article', "h_menuId = 108", 'id');
 	$page = (int)$page;
-	if($page_input){$page=$page_input;}
+	//if($page_input){$page=$page_input;}
 	$list_num = 10;
 	$met_pageskin = 5;
 	$rowset = new Pager($total_count,$list_num,$page);
