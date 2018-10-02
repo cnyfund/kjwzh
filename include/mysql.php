@@ -16,7 +16,7 @@ class dbmysql {
                 }
         }	
 	function move_first($query) {
-		$this->link->data_seek($query,0);
+		$query->data_seek(0);
 	}
 
 	function select_db($dbname) {
