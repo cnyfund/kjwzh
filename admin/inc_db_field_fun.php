@@ -1,4 +1,5 @@
 <?php
+$clause = array_key_exists("clause", $_GET)? $_GET['clause'] : "";
 switch($clause)
 {
 	case "addinfo":

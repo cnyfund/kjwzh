@@ -1,7 +1,6 @@
 <?php
-require_once '../include/conn.php';
-
-require_once 'chkLogged.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/admin/chkLogged.php';
 
 footer();
 ?>

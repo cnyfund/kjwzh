@@ -1,5 +1,5 @@
 <?php
-require_once '../include/conn.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 ?>
 <HTML>
 <HEAD>
@@ -25,6 +25,7 @@ body{
 <BODY>
 <div class="wxh-container">
 <?php
+$clause = array_key_exists("clause", $_GET)? $_GET['clause'] : "";
 if($clause == "chklogin")
 {
 	session_start();

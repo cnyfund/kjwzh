@@ -6,7 +6,7 @@ if($mid <= 0){HintAndBack("抱歉，栏目ID错误！",1);}
 $rs = $db->get_one("select * from `h_menu` where id = '$mid' LIMIT 1");
 if($rs)
 {
-	$mTitle = $rs[h_title];
+	$mTitle = $rs['h_title'];
 	
 	$picBigWidth = $rs['h_picBigWidth'];
 	$picBigHeight = $rs['h_picBigHeight'];

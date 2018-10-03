@@ -2,6 +2,7 @@
 require_once 'header.php';
 
 require_once '../include/pager.php';
+$clause = array_key_exists("clause", $_GET)? $_GET['clause'] : "";
 
 switch($clause)
 {
@@ -23,6 +24,7 @@ function main()
 	global $db,$LoginEdUserName;
 	
 	global $stype,$keyword;
+        $where = "";
 	if(strlen($keyword) > 0){
 		// or h_info like '%{$keyword}%'
 		$where = " and (h_userName like '%{$keyword}%' or h_toUserName like '%{$keyword}%')";

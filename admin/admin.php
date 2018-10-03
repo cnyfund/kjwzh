@@ -1,5 +1,6 @@
 <?php
 require_once 'header.php';
+$clause = array_key_exists("clause", $_GET)? $_GET['clause'] : "";
 
 switch($clause)
 {
@@ -135,7 +136,7 @@ function editinfo()
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td width="20%" align="center">管理员帐号</td>
-    <td><input name="userName" type="text" class="inputclass2" maxlength="25" value="<?php echo $rs[h_userName]; ?>" /> <font color="#ff0000">*</font></td>
+    <td><input name="userName" type="text" class="inputclass2" maxlength="25" value="<?php echo $rs['h_userName']; ?>" /> <font color="#ff0000">*</font></td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">管理员密码</td>
@@ -144,20 +145,20 @@ function editinfo()
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">管理员昵称</td>
-    <td><input name="nickName" type="text" class="inputclass2" maxlength="25" value="<?php echo $rs[h_nickName]; ?>" /> 
+    <td><input name="nickName" type="text" class="inputclass2" maxlength="25" value="<?php echo $rs['h_nickName']; ?>" /> 
     <font color="#ff0000">*</font></td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">管理员状态</td>
-    <td><?php if($rs[h_userName] == $LoginEdUserName)
+    <td><?php if($rs['h_userName'] == $LoginEdUserName)
 	{
 		echo '√正常<input name="isPass" type="hidden" value="1" />';
 	}
 	else
 	{
 		?><select name="isPass">
-      <option value="0" <?php if($rs[h_isPass] == 0) echo 'selected'; ?>>锁定，不可登录</option>
-	  <option value="1" <?php if($rs[h_isPass] == 1) echo 'selected'; ?>>正常，可登录</option>
+      <option value="0" <?php if($rs['h_isPass'] == 0) echo 'selected'; ?>>锁定，不可登录</option>
+	  <option value="1" <?php if($rs['h_isPass'] == 1) echo 'selected'; ?>>正常，可登录</option>
     </select>
     <font color="#ff0000">*</font><?php
 	}?></td>
@@ -242,25 +243,25 @@ foreach ($rs_list as $key=>$val)
 {
 ?>
   <tr align="center" class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';"> 
-    <td height="25"><?php echo $val[h_userName]; ?></td>
-    <td><?php echo $val[h_nickName]; ?></td>
-    <td><?php if($val[h_isPass] == 1)
+    <td height="25"><?php echo $val['h_userName']; ?></td>
+    <td><?php echo $val['h_nickName']; ?></td>
+    <td><?php if($val['h_isPass'] == 1)
 		{
-			if($val[h_userName] == $LoginEdUserName)
+			if($val['h_userName'] == $LoginEdUserName)
 			{
 				echo '√正常';
 			}
 			else
 			{
-				echo '<a href="?clause=lockinfo&id=' . $val[id] . '" style="color#ff0000;">√正常</a>';
+				echo '<a href="?clause=lockinfo&id=' . $val['id'] . '" style="color#ff0000;">√正常</a>';
 			}
 		}
 		else
 		{
-			echo '<a href="?clause=unlockinfo&id=' . $val[id] . '">×锁定</a>';
+			echo '<a href="?clause=unlockinfo&id=' . $val['id'] . '">×锁定</a>';
 		}?></td>
-    <td><a href="?clause=editinfo&id=<?php echo $val[id]; ?>">修改</a> | 
-	<a style="cursor:pointer;" onClick="javascript:hintandturn('确定要删除吗？数据将不可恢复！','?clause=delinfo&id=<?php echo $val[id]; ?>',true);">删除</a></td>
+    <td><a href="?clause=editinfo&id=<?php echo $val['id']; ?>">修改</a> | 
+	<a style="cursor:pointer;" onClick="javascript:hintandturn('确定要删除吗？数据将不可恢复！','?clause=delinfo&id=<?php echo $val['id']; ?>',true);">删除</a></td>
   </tr>
 <?php
 }

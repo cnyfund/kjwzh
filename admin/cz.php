@@ -2,7 +2,7 @@
 require_once 'header.php';
 
 require_once '../include/pager.php';
-
+$clause = array_key_exists("clause", $_GET)? $_GET['clause'] : "";
 switch($clause)
 {
 	case "addinfo":
@@ -124,7 +124,7 @@ foreach ($rs_list as $key=>$val)
     <td><?php echo $val['h_money']; ?></td>
 	    <td><?php if ($val['h_bank']==1) echo '微信'; if($val['h_bank']==2) echo '支付宝'; ?></td>
   <td><?php echo $val['h_bank'] , '（' , $val['h_bankFullname'] , '）'; ?></td>
-	 <td><?php echo $val['h_alipayUserName']; ?></td>
+	 <td><?php echo $val['h_bankCardId']; ?></td>
     <td><?php echo $val['h_addTime']; ?></td>
     <td>
 <form action="?clause=saveinfo&id=<?php echo $val['id']; ?>" method="post" name="addinfo" target="iframe_qpost">

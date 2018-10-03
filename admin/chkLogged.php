@@ -1,7 +1,7 @@
 <?php
 session_start();
-$LoginEdUserName = $_COOKIE['h_userName'];
-$LoginEdPassWord = $_COOKIE['h_passWord'];
+$LoginEdUserName = isset($_COOKIE['h_userName']) ? $_COOKIE['h_userName'] : "";
+$LoginEdPassWord = isset($_COOKIE['h_passWord']) ? $_COOKIE['h_passWord'] : "";
 //验证是否登录
 if($LoginEdUserName != "" && $LoginEdPassWord != "")
 {

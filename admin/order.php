@@ -2,6 +2,7 @@
 require_once 'header.php';
 
 require_once '../include/pager.php';
+$clause = array_key_exists("clause", $_GET)? $_GET['clause'] : "";
 
 switch($clause)
 {
@@ -93,6 +94,7 @@ function main()
 	$result = $db->query($query);
 	//$query = "Select * from `h_member_shop_order` order by h_addTime desc";
 	//$result = $db->query($query);
+        $rs_list = array();
 	while($list = $db->fetch_array($result))
 	{
 		$rs_list[]=$list;

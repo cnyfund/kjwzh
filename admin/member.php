@@ -2,7 +2,7 @@
 require_once 'header.php';
 
 require_once '../include/pager.php';
-
+$clause = array_key_exists("clause", $_GET)? $_GET['clause'] : "";
 switch($clause)
 {
 	case "addinfo":
@@ -427,22 +427,22 @@ foreach ($rs_list as $key=>$val)
     <td><?php echo $val['h_regTime']; ?></td>
     <td><?php if($val['h_isPass'] == 1)
 		{
-			echo '<a href="?clause=lockinfo&id=' . $val[id] . '">√已激活</a>';
+			echo '<a href="?clause=lockinfo&id=' . $val['id'] . '">√已激活</a>';
 		}
 		else
 		{
-			echo '<a href="?clause=unlockinfo&id=' . $val[id] . '" style="color:#ff0000;">×未激活</a>';
+			echo '<a href="?clause=unlockinfo&id=' . $val['id'] . '" style="color:#ff0000;">×未激活</a>';
 		}?></td>
     <td><?php if($val['h_isLock'] == 1)
 		{
-			echo '<a href="?clause=unlockinfo1&id=' . $val[id] . '" style="color:#ff0000;">×锁定</a>';
+			echo '<a href="?clause=unlockinfo1&id=' . $val['id'] . '" style="color:#ff0000;">×锁定</a>';
 		}
 		else
 		{
-			echo '<a href="?clause=lockinfo1&id=' . $val[id] . '">√正常</a>';
+			echo '<a href="?clause=lockinfo1&id=' . $val['id'] . '">√正常</a>';
 		}?></td>
     <td><?php echo $val['h_lastTime']; ?></td>
-    <td><a href="?clause=editinfo&id=<?php echo $val[id]; ?>">修改</a> | 
+    <td><a href="?clause=editinfo&id=<?php echo $val['id']; ?>">修改</a> | 
 	<a style="cursor:pointer;" onClick="javascript:hintandturn('确定要删除吗？数据将不可恢复！','?clause=delinfo&id=<?php echo $val['id']; ?>',true);">删除</a></td>
   </tr>
 <?php

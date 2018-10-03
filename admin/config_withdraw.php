@@ -1,6 +1,6 @@
 <?php
 require_once 'header.php';
-
+$clause = array_key_exists("clause", $_GET)? $_GET['clause'] : "";
 switch($clause)
 {
 	case "saveeditinfo":

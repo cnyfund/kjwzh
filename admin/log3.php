@@ -2,6 +2,7 @@
 require_once 'header.php';
 
 require_once '../include/pager.php';
+$clause = array_key_exists("clause", $_GET)? $_GET['clause'] : "";
 
 switch($clause)
 {
