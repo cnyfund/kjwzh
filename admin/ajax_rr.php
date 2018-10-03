@@ -4,7 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once 'chkLogged.php';
 
 echo '[';
-
+$id=isset($id)?$id:"";
 if(strlen($id) <= 0){
 	$query = "select *,(select count(id) from `h_member` where h_parentUserName = a.h_userName) as comMembers from `h_member` a where h_parentUserName = '' or h_parentUserName is null order by h_regTime asc,id asc";
 	$lv = -1;
