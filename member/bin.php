@@ -268,21 +268,21 @@ else if($act == 'point2_withdraw'){
 		echo '请输入收款姓名';
 		exit;
 	}
-    if(strlen($h_passWordII) <= 0){
+    /*if(strlen($h_passWordII) <= 0){
           //echo '请输入安全密码';
           //exit;
       }
 	$pwdII = md5($h_passWordII);
-    	
+    */	
 	$rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUserName = a.h_userName and h_isPass = 1) as comMembers from `h_member` a where h_userName = '{$memberLogged_userName}'");
 	if(!$rs){
 		echo '未找到您的登录信息';
 		exit;
 	}
-    if($rs['h_passWordII']!=$pwdII){
+    /*if($rs['h_passWordII']!=$pwdII){
    		//echo '密码错误';
 		//exit;
-    }
+    }*/
   
 	if($rs['h_point2'] < $num){
 		echo '您的元不足';
