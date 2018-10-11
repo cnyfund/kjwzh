@@ -131,7 +131,14 @@ layui.use('upload', function(){
 			tishi4("请输入开户机构",'#x5');
 			return false;
 		}
-		layer.msg("共计提现"+$("#x2").val()+"元,确认无误请点击申请提现",{time: 20000, btn: ['确定提现', '我点错了'],btn1: function(){goumai_go2()}});
+		layer.msg("共计提现"+$("#x2").val()+"元,确认无误请点击申请提现",{time: 20000, btn: ['确定提现', '我点错了'],btn1: function(index){
+                        goumai_go2();
+                        layer.close(index);
+                      }, 
+                      btn2: function(index) {
+                        layer.close(index);
+                      }
+                   });
 
 		}
 	function goumai_go2(){
@@ -139,6 +146,7 @@ layui.use('upload', function(){
 		//+"&x4="+encodeURI($("#x5").prop('checked'))
 		$.get("/member/bin.php?act=point2_withdraw&num="+encodeURI($("#x2").val())+"&alipayUserName="+encodeURI($("#x3").val())+"&alipayFullName="+encodeURI($("#x4").val())+"&h_fullName="+encodeURI($("#x5").val())+"&qrcode="+encodeURI($("#qrcode").val()),function(e){
 			tishi2close();
+           
 			if(e!=""){
 				$("#x4-cos").html(unescape(e));
 				if($("#x4-cos").text().substr(0,6)=="申请提现成功" || e=='申请提现成功'){
