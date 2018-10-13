@@ -11,7 +11,7 @@ class pay{
     protected $api_key =  FCBPayConfig::APIKEY;
     protected $secret_key =  FCBPayConfig::SECRETKEY;
     protected $debug_info = array();
-    protected $IsTest = true;
+    protected $IsTest = false;
 	 
     /**
      * 类架构函数

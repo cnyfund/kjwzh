@@ -54,22 +54,22 @@ function editinfo()
     </tr>
     <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
       <td width="15%" align="center">网站名称</td>
-      <td><input name="h_webName" type="text" class="inputclass2" maxlength="50" value="<?php echo $rs[h_webName]; ?>" />
+      <td><input name="h_webName" type="text" class="inputclass2" maxlength="50" value="<?php echo $rs['h_webName']; ?>" />
           <font color="#ff0000">*</font></td>
     </tr>
     <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
       <td width="15%" align="center">标题栏关键字</td>
-      <td><input name="h_webKeyword" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs[h_webKeyword]; ?>" />
+      <td><input name="h_webKeyword" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs['h_webKeyword']; ?>" />
           <font color="#ff0000">*</font> 利于搜索引擎收录，250字以内</td>
     </tr>
     <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
       <td align="center">网站关键字</td>
-      <td><textarea name="h_keyword" class="textareaclass4"><?php echo $rs[h_keyword]; ?></textarea>
+      <td><textarea name="h_keyword" class="textareaclass4"><?php echo $rs['h_keyword']; ?></textarea>
           <font color="#ff0000">*</font> 利于搜索引擎收录，请不要回车换行</td>
     </tr>
     <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
       <td align="center">网站介绍</td>
-      <td><textarea name="h_description" class="textareaclass4"><?php echo $rs[h_description]; ?></textarea>
+      <td><textarea name="h_description" class="textareaclass4"><?php echo $rs['h_description']; ?></textarea>
           <font color="#ff0000">*</font> 利于搜索引擎收录，请不要回车换行</td>
     </tr>
     <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">

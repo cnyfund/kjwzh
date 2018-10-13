@@ -126,7 +126,7 @@ function menu()
   <tr> 
     <td height="23" class="tdbottom" align="center">
 <form action="" method="get">
-搜索：<input name="keyword" value="<?php echo $_GET['keyword'];?>" type="text" />
+搜索：<input name="keyword" value="<?php echo isset($_GET['keyword'])?$_GET['keyword']:''; ?>" type="text" />
 <input type="submit" class="bttn" value="提交搜索" name="Submit">
 </form>
     </td>

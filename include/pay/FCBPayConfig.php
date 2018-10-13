@@ -28,10 +28,12 @@ class FCBPayConfig {
 
         //protected $secret_key =  'a6d6df9303ae9f6fd8dbb6a5807548b';
         //protected $secret_key =  '93a3a0f5c46c7111a4d880583ab06a19';
-    const APIKEY = '04OOLU8G940WOTGNU9884XTXJ65JX112';
-    const SECRETKEY = 'f717cfe71dcacc099a55813acf8dab3b';
-    const DEVSITE = 'http://54.203.195.52';
-    const PRODSITE = 'http://cnytrx.uuvc.com';
+    //const APIKEY = '04OOLU8G940WOTGNU9884XTXJ65JX112';
+    //const SECRETKEY = 'f717cfe71dcacc099a55813acf8dab3b';
+    const APIKEY = 'UN57QVEE9RIS858PJ5GUAP2Y7WUS2VUO';
+    const SECRETKEY = '93a3a0f5c46c7111a4d880583ab06a19';
+    const DEVSITE = 'https://35.165.113.89';
+    const PRODSITE = 'https://www.uuvc.com';
     const DEVACCOUNTID = '';
     const DEVOPENID = '';
     const NOTIFYURL = 'http://';
