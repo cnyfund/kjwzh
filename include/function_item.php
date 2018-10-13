@@ -355,7 +355,7 @@ function settle_farm_day($userName){
 	$bonusAll = 0;
 	$now = date('Y-m-d H:i:s');
 	
-	$sql = "select * from `h_member_farm` where h_userName = '{$userName}' and h_isEnd = 0 and timestampdiff(day,h_addTime,sysdate() + interval 8 hour) >= 0 and (timestampdiff(day,h_lastSettleTime,sysdate() + interval 8 hour) > 0 or h_lastSettleTime is null)";
+	$sql = "select * from `h_member_farm` where h_userName = '{$userName}' and h_isEnd = 0 and timestampdiff(hour,h_addTime,sysdate() + interval 8 hour) >= 23 and (timestampdiff(day,h_lastSettleTime,sysdate() + interval 8 hour) > 0 or h_lastSettleTime is null)";
 	$query = $db->query($sql);
 	//遍历
 	while($rs = $db->fetch_array($query)){
@@ -364,7 +364,7 @@ function settle_farm_day($userName){
 		if(is_null($rs['h_lastSettleTime'])){
 			$rs['h_lastSettleTime'] = $rs['h_addTime'];
 		}
-		$dateDiffDay = FDateDiff0($rs['h_lastSettleTime'],time(),'d');
+		$dateDiffDay = FDateDiff0($rs['h_lastSettleTime'],time()+3600,'d');
 		
 		//剩余需要结算的天数
 		$ShengYuDay = $rs['h_life'] - $rs['h_settleLen'];//剩余生存天数
