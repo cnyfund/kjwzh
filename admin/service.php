@@ -49,7 +49,7 @@ function editinfo()
     </tr>
     <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
       <td width="15%" align="center">公告内容</td>
-      <td><input name="h_serviceQQ" type="text" class="inputclass2" maxlength="50" value="<?php echo $rs[h_serviceQQ]; ?>" />
+      <td><input name="h_serviceQQ" type="text" class="inputclass2" maxlength="50" value="<?php echo $rs['h_serviceQQ']; ?>" />
           <font color="#ff0000">*</font></td>
     </tr>
     <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">

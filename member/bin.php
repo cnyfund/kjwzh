@@ -963,7 +963,7 @@ else if($act == 'point2_sell_post'){
 		}
 		//判断今天购买是否超量
 		//$rs1 = $db->get_one("select sum(h_num) as sumNum from `h_member_farm` where h_userName = '{$memberLogged_userName}' and h_pid = '{$rs_list['id']}' and h_isEnd = 0 and timestampdiff(day,h_addTime,sysdate()) = 0");
-		$rs1 = $db->get_one("select sum(h_num) as sumNum from `h_member_farm` where h_userName = '{$memberLogged_userName}' and h_pid = '{$rs_list['id']}' and datediff(h_addTime,sysdate()) = 0"); // and h_isEnd = 0
+		$rs1 = $db->get_one("select sum(h_num) as sumNum from `h_member_farm` where h_userName = '{$memberLogged_userName}' and h_pid = '{$rs_list['id']}' and datediff(h_addTime,sysdate() + interval 8 hour) = 0"); // and h_isEnd = 0
 		if($rs1){
 			if((intval($rs1['sumNum']) + $goodsIN[$rs_list['id']]) > $rs_list['h_dayBuyMaxNum']){
 				echo $rs_list['h_title'] , '每天最多只能购买' , $rs_list['h_dayBuyMaxNum'] , '个，您今天最多还能购买' , ($rs_list['h_dayBuyMaxNum'] - intval($rs1['sumNum'])) , '个';
@@ -1143,7 +1143,7 @@ else if($act == 'point2_sell_post'){
 		}
 		//判断今天购买是否超量
 		//$rs1 = $db->get_one("select sum(h_num) as sumNum from `h_member_farm` where h_userName = '{$memberLogged_userName}' and h_pid = '{$rs_list['id']}' and h_isEnd = 0 and timestampdiff(day,h_addTime,sysdate()) = 0");
-		$rs1 = $db->get_one("select sum(h_num) as sumNum from `h_member_farm` where h_userName = '{$memberLogged_userName}' and h_pid = '{$rs_list['id']}' and h_isEnd = 0 and datediff(h_addTime,sysdate()) = 0");
+		$rs1 = $db->get_one("select sum(h_num) as sumNum from `h_member_farm` where h_userName = '{$memberLogged_userName}' and h_pid = '{$rs_list['id']}' and h_isEnd = 0 and datediff(h_addTime,sysdate() + interval 8 hour) = 0");
 		if($rs1){
 			if((intval($rs1['sumNum']) + $goodsIN[$rs_list['id']]) > $rs_list['h_dayBuyMaxNum']){
 				echo $rs_list['h_title'] , '每月最多只能购买' , $rs_list['h_dayBuyMaxNum'] , '个，您本月最多还能购买' , ($rs_list['h_dayBuyMaxNum'] - intval($rs1['sumNum'])) , '个';

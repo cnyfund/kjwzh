@@ -109,7 +109,7 @@ if (($ddh=="") or ($money=="") or ($key=="")){
 		}
 		//判断今天购买是否超量
 		//$rs1 = $db->get_one("select sum(h_num) as sumNum from `h_member_farm` where h_userName = '{$name}' and h_pid = '{$rs_list['id']}' and h_isEnd = 0 and timestampdiff(day,h_addTime,sysdate()) = 0");
-		$rs1 = $db->get_one("select sum(h_num) as sumNum from `h_member_farm` where h_userName = '{$name}' and h_pid = '{$rs_list['id']}' and h_isEnd = 0 and datediff(h_addTime,sysdate()) = 0");
+		$rs1 = $db->get_one("select sum(h_num) as sumNum from `h_member_farm` where h_userName = '{$name}' and h_pid = '{$rs_list['id']}' and h_isEnd = 0 and datediff(h_addTime,sysdate() + interval 8 hour) = 0");
 		if($rs1){
 			if((intval($rs1['sumNum']) + $goodsIN[$rs_list['id']]) > $rs_list['h_dayBuyMaxNum']){
 			}

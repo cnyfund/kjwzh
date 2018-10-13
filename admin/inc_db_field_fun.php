@@ -143,13 +143,13 @@ function admin_article_main()
 	}
 
 	$list_num = $admin_article_page_config['config']['listNum'];
-	$whereLM = $admin_article_page_config['config']['whereLM'];
+	$whereLM = isset($admin_article_page_config['config']['whereLM'])?$admin_article_page_config['config']['whereLM']:Null;
 	if($whereLM){
 		$whereLM = "h_location = '$location' and h_menuId = $mid";
 	}else{
 		$whereLM = "1 = 1";
 	}
-	$orderBy = $admin_article_page_config['config']['orderBy'];
+	$orderBy = isset($admin_article_page_config['config']['orderBy'])?$admin_article_page_config['config']['orderBy']:Null;
 	if(!$orderBy){
 		$orderBy = "h_order asc,h_addTime desc,id desc";
 	}
@@ -202,11 +202,11 @@ function admin_article_main()
 						}
 						if($action_key == 'edit')
 						{
-							echo '<a href="?clause=editinfo&id=' . $val[id] . '&' . $pageParms . '">' . $action_val . '</a>';
+							echo '<a href="?clause=editinfo&id=' . $val['id'] . '&' . $pageParms . '">' . $action_val . '</a>';
 						}
 						if($action_key == 'delete')
 						{
-							echo '<a href="#nolink" onClick="hintandturn(\'确定要删除吗？数据将不可恢复！\',\'?clause=delinfo&id=' . $val[id] . '&' . $pageParms . '\',true);">' . $action_val . '</a>';
+							echo '<a href="#nolink" onClick="hintandturn(\'确定要删除吗？数据将不可恢复！\',\'?clause=delinfo&id=' . $val['id'] . '&' . $pageParms . '\',true);">' . $action_val . '</a>';
 						}
 					}
 				}
@@ -243,11 +243,11 @@ function admin_article_main()
 						$fci = 0;
 						foreach($config_key_arr as $config_key_arr_val)
 						{
-							if(is_array($config_val['shtmls'])){
+							if(isset($config_val['shtmls']) && is_array($config_val['shtmls'])){
 								echo $config_val['shtmls'][$fci];
 							}
 							
-							if(is_array($config_val['case'][$fci])){
+							if(isset($config_val['case']) && is_array($config_val['case'][$fci])){
 								foreach($config_val['case'][$fci] as $caseKey=>$caseVal){
 									if($caseKey == $val[$config_key_arr_val]){
 										echo $caseVal;

@@ -355,7 +355,7 @@ function settle_farm_day($userName){
 	$bonusAll = 0;
 	$now = date('Y-m-d H:i:s');
 	
-	$sql = "select * from `h_member_farm` where h_userName = '{$userName}' and h_isEnd = 0 and timestampdiff(day,h_addTime,sysdate()) >= 0 and (timestampdiff(day,h_lastSettleTime,sysdate()) > 0 or h_lastSettleTime is null)";
+	$sql = "select * from `h_member_farm` where h_userName = '{$userName}' and h_isEnd = 0 and timestampdiff(day,h_addTime,sysdate() + interval 8 hour) >= 0 and (timestampdiff(day,h_lastSettleTime,sysdate() + interval 8 hour) > 0 or h_lastSettleTime is null)";
 	$query = $db->query($sql);
 	//遍历
 	while($rs = $db->fetch_array($query)){
@@ -376,7 +376,6 @@ function settle_farm_day($userName){
 		}else{
 		  $mustSettleDay = 1;
 		}  
-		
 		if($mustSettleDay > 0){
 			//是否死亡
 			if(($mustSettleDay + $rs['h_settleLen']) >= $rs['h_life']){
