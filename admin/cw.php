@@ -41,7 +41,6 @@ function main()
 	$list_num = 15;
 	$total_count = $db->counter("`h_member_farm`", "1 = 1 {$where}", 'id');$page = (int)$page;$rowset = new Pager($total_count,$list_num,$page);$from_record = $rowset->_offset();$page_list = $rowset->link('?page=');
 	$query = "select * from `h_member_farm` where 1 = 1 {$where} order by h_addTime desc,id desc LIMIT $from_record, $list_num";
-        print('query is ' . $query);
 	$result = $db->query($query);
 	//$query = "Select * from `h_money_log` order by h_addTime desc";
 	//$result = $db->query($query);

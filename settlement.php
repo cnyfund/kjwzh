@@ -4,8 +4,6 @@ header("Content-type: text/html; charset=utf-8");
 require_once 'include/conn.php';
 $webInfo = $db->get_one("SELECT * FROM `h_config`");
 echo "开始自动结算 ".date('Y-m-d H:i:s') ."<br>";
-settle_farm_day('15811302702'); //结算
-$info[] = "用户15811302702 结算成功！\r\n";
 $query = "select distinct h_userName from `h_member_farm` where h_isEnd=0 and timestampdiff(day,h_addTime,sysdate() + interval 8 hour) >= 0 and (timestampdiff(day,h_lastSettleTime,sysdate() + interval 8 hour) > 0 or h_lastSettleTime is null)";
 $result = $db->query($query);
 $rs_list = array();
