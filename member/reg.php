@@ -280,7 +280,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/member/logged_data.php';
 				},
 				error:function(json){
 					tishi2close();
-					layer.alert('网络错误，请重新提交');
+					layer.alert('--网络错误，请重新提交--');
 				}
 			});
 		}

@@ -1696,10 +1696,11 @@ else if($act == 'point2_sell_post'){
 	}
 
 	session_start();
-	if($vCode != $_SESSION['code']){
+        /* comment out due to uslessness */
+	/*if($vCode != $_SESSION['code']){
 		//echo '{"state":false,"msg":"验证码错误，请检查！"}';
 		//exit;
-	}
+	}*/
 	
 	$rs = $db->get_one("select * from `h_member` where h_userName = '{$comMember}'");
 	if(!$rs){
