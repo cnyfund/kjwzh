@@ -24,7 +24,7 @@ $rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUse
         </div>
 		<div class="lo_1 lo_2">
         	<span>提现金额</span>
-            <input type="text" placeholder="提现手续费0.25%" id="x2" value="" size="60" maxlength="60" style="color:#333" >
+            <input type="text" placeholder="未包含相应的平台提现费" id="x2" value="" size="60" maxlength="60" style="color:#333" >
         </div>
 		<div class="lo_1 lo_2">
         	<span>收款账号</span>
