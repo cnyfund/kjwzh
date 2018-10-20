@@ -109,7 +109,7 @@ mgo(21);
 			async: {
 				enable: true,
 				url:"/member/bin.php?act=rr",
-				autoParam:["id", "name=n", "icon"],
+				autoParam:["id", "name=n", "level=lv","icon"],
 				otherParam:{"act":"ax"},
 				dataFilter: filter
 			}
