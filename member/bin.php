@@ -1630,7 +1630,7 @@ else if($act == 'point2_sell_post'){
 }else if($act == 'rr'){
 	if($memberLogged){
 		echo '[';
-		
+                $id=isset($id)?$id:"";
 		if(strlen($id) <= 0){
 			echo '{';
 			echo 'id:"' , $memberLogged_userName , '"';

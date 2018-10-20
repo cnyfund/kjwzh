@@ -121,7 +121,7 @@ $(function() {
 <div class="novice_f">
 	<div class="novice_f_in">
     	<img src="/res/picture/cainiao.png"/>
-        <h2>生产计划（未含平台提现0.25%）</h2>
+        <h2>生产计划（未包含相应的平台提现费）</h2>
     </div>
 </div>
 
