@@ -1642,7 +1642,6 @@ else if($act == 'point2_sell_post'){
                         $lv=-1; 
 		}else{
 			$query = "select *,(select count(id) from `h_member` where h_parentUserName = a.h_userName) as comMembers from `h_member` a where h_parentUserName = '{$id}' order by h_regTime asc,id asc";
-    
 			$result = $db->query($query);
 			$ci = 0;
 			while($rs_list = $db->fetch_array($result)){
@@ -1663,7 +1662,7 @@ else if($act == 'point2_sell_post'){
 				echo ', icon:"/ui/zTree_v3/css/zTreeStyle/img/diy/1_open.png"';
 				echo '}';
 			}
-	        }	
+	        }
 
 		echo ']';
 	}else{
