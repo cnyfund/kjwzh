@@ -375,7 +375,10 @@ function settle_farm_day($userName){
 		  $mustSettleDay = $ShengYuDay;
 		}else{
 		  $mustSettleDay = 1;
-		}  
+		}
+ 
+		// remember which farm purchase that this settlement is about
+                $farmId = $rs['id'];
 		if($mustSettleDay > 0){
 			//是否死亡
 			if(($mustSettleDay + $rs['h_settleLen']) >= $rs['h_life']){
@@ -396,23 +399,29 @@ function settle_farm_day($userName){
 				$sql .= "h_type = '出局返利', ";
 				$sql .= "h_about = '{$rs['h_title']} 出局返利', ";
 				$sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
+                                $sql .= "h_member_farm = " . $farmId . ", ";
+                                $sql .= "h_additonal_info = 'settle_farm_day()', ";
 				$sql .= "h_actIP = '" . getUserIP() . "' ";
 				$db->query($sql);
-				
-				
-				
-				
-				
 			}else{
 				$isEnd = 0;
-			}
 			
-			//需要结算的元
-			$mustSettleMoney = $mustSettleDay * $rs['h_point2Day'] * intval($rs['h_num']);
+				//需要结算的元
+			   	$mustSettleMoney = $mustSettleDay * $rs['h_point2Day'] * intval($rs['h_num']);
 			
-			//累加，最后一次性发放
-			$bonusAll += $mustSettleMoney;
-			
+                        	//记录
+                        	$sql = "insert into `h_log_point2` set ";
+                        	$sql .= "h_userName = '" . $userName . "', ";
+                        	$sql .= "h_price = '" . $mustSettleMoney . "', ";
+                        	$sql .= "h_type = '计算每个购买的矿机每日利息', ";
+                        	$sql .= "h_about = '{$rs['h_title']} 计算每个购买的矿机每日利息', ";
+                        	$sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
+                        	$sql .= "h_member_farm = " . $farmId . ", ";
+                        	$sql .= "h_additonal_info = 'settle_farm_day()', ";
+                        	$sql .= "h_actIP = '" . getUserIP() . "' ";
+				//累加，最后一次性发放
+				$bonusAll += $mustSettleMoney;
+		        }	
 			//更新为已发放
 			$sql = "update `h_member_farm` set h_settleLen = h_settleLen + ({$mustSettleDay}),h_lastSettleTime = '{$now}',h_isEnd = '{$isEnd}' where id = '{$rs['id']}'";
 			$db->query($sql);

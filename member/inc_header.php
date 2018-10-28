@@ -5,7 +5,9 @@ if(!$memberLogged){
 	header("Location: /member/login.php");
 	exit();
 }
-
+if (!isset($pageTitle)){
+  $pageTitle='';
+}
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pager.php';
 ?><!DOCTYPE html>
 <html lang="zh-CN">
@@ -48,14 +50,14 @@ var browserWidth = window.innerWidth || document.documentElement.clientWidth || 
 </script>
 </head>
 <body style="<?php echo isset($body_style)?$body_style:'';?>">
-<div class="top">
+<!--<div class="top">
 	<div class="box">
         <a href="<?php echo isset($back_url)?$back_url:'javascript:window.history.back();';?>" class="return"><img src="/res/picture/return.png"></a>
-       <?php 
+       <?php
 	   $pageTitle = explode('-',$pageTitle);
 	   echo $pageTitle[0];?>    
     </div>
-</div>
+</div>-->
 
 
 <script type="text/javascript">

@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <?php
-require_once 'inc_header.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/member/inc_header.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/member/current_user_info.php';
-
 ?>
 <html>
 	<head>

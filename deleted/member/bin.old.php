@@ -551,6 +551,230 @@ else if($act == 'point2_sell_quit'){
 	$db->query($sql);
 	
 	echo '修改成功';
+}
+else if($act == 'point2_buy_payed'){
+	if(!$memberLogged){
+		echo '您没有登录，请登录后再操作！';
+		exit;
+	}
+	
+	$rss = $db->get_one("select * from `h_point2_sell` where id = '{$id}'");
+	if(!$rss){
+		echo '未找到您已经购买的元信息';
+		exit;
+	}
+	if($rss['h_buyUserName'] != $memberLogged_userName){
+		echo '抱歉，越权操作';
+		exit;
+	}
+	if($rss['h_state'] != '等待买家付款'){
+		echo '抱歉，本订单状态，无法付款';
+		exit;
+	}
+	
+	//付款
+	$sql = "update `h_point2_sell` set ";
+	$sql .= "h_buyIsPay = 1 ";
+	$sql .= ",h_state = '等待卖家确认收款' ";
+	$sql .= ",h_payTime = '" . date('Y-m-d H:i:s') . "' ";
+	$sql .= "where id = '{$id}'";
+	$db->query($sql);
+	settle_farm_day($memberLogged_userName);
+	echo '付款成功';
+}
+else if($act == 'point2_buy_quit'){
+	if(!$memberLogged){
+		echo '您没有登录，请登录后再操作！';
+		exit;
+	}
+	
+	$rss = $db->get_one("select * from `h_point2_sell` where id = '{$id}'");
+	if(!$rss){
+		echo '未找到您已经购买的元信息';
+		exit;
+	}
+	if($rss['h_buyUserName'] != $memberLogged_userName){
+		echo '抱歉，越权操作';
+		exit;
+	}
+	if($rss['h_state'] != '等待买家付款'){
+		echo '抱歉，本订单状态，无法放弃';
+		exit;
+	}
+	
+	//放弃
+	$sql = "update `h_point2_sell` set ";
+	$sql .= "h_isDelete = 1 ";
+	$sql .= ",h_state = '买家放弃' ";
+	$sql .= ",h_deleteTime = '" . date('Y-m-d H:i:s') . "' ";
+	$sql .= "where id = '{$id}'";
+	$db->query($sql);
+	
+	$num = $webInfo['h_point2Quit'];
+	
+	//扣钱
+	$sql = "update `h_member` set ";
+	$sql .= "h_point2 = h_point2 - {$num} ";
+	$sql .= "where h_userName = '" . $memberLogged_userName . "' ";
+	$db->query($sql);
+	
+	//记录扣钱
+	$sql = "insert into `h_log_point2` set ";
+	$sql .= "h_userName = '" . $memberLogged_userName . "', ";
+	$sql .= "h_price = '-" . $num . "', ";
+	$sql .= "h_type = '取消元购买', ";
+	$sql .= "h_about = '交易ID：" . $id . "', ";
+	$sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
+	$sql .= "h_actIP = '" . getUserIP() . "' ";
+	$db->query($sql);
+	
+	$num = $rss['h_money'];
+	
+	//还钱给卖家
+	$sql = "update `h_member` set ";
+	$sql .= "h_point2 = h_point2 + {$num} ";
+	$sql .= "where h_userName = '" . $rss['h_userName'] . "' ";
+	$db->query($sql);
+	
+	//记录还钱
+	$sql = "insert into `h_log_point2` set ";
+	$sql .= "h_userName = '" . $rss['h_userName'] . "', ";
+	$sql .= "h_price = '" . $num . "', ";
+	$sql .= "h_type = '取消元购买', ";
+	$sql .= "h_about = '买家" . $memberLogged_userName . "取消了您拍卖的元，交易ID：" . $id . "', ";
+	$sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
+	$sql .= "h_actIP = '" . getUserIP() . "' ";
+	$db->query($sql);
+	
+	//系统消息
+	$sql = "insert into `h_member_msg` set ";
+	$sql .= "h_userName = '[系统消息]', ";
+	$sql .= "h_toUserName = '" . $rss['h_userName'] . "', ";
+	$sql .= "h_info = '买家{$memberLogged_userName}取消了您拍卖的元，交易ID：{$id}', ";
+	$sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
+	$sql .= "h_actIP = '" . getUserIP() . "' ";
+	$db->query($sql);	
+	
+	echo '放弃成功';
+}
+else if($act == 'point2_buy'){
+	if(!$memberLogged){
+		echo '您没有登录，请登录后再操作！';
+		exit;
+	}
+	
+	$rss = $db->get_one("select * from `h_point2_sell` where h_state = '挂单中' and id = '{$id}'");
+	if(!$rss){
+		echo '未找到您要购买的元信息，可能已经被其他玩家抢购';
+		exit;
+	}
+	
+	if($memberLogged_userName == $rss['h_userName']){
+		echo '不可以购买自己的元';
+		exit;
+	}
+	
+	//抢购
+	$sql = "update `h_point2_sell` set ";
+	$sql .= "h_buyUserName = '" . $memberLogged_userName . "', ";
+	$sql .= "h_buyIsPay = 0, ";
+	$sql .= "h_state = '等待买家付款', ";
+	$sql .= "h_buyTime = '" . date('Y-m-d H:i:s') . "' ";
+	$sql .= "where id = '{$id}'";
+	$db->query($sql);
+	settle_farm_day($memberLogged_userName);
+	echo '抢购成功';
+}
+else if($act == 'point2_sell_post'){
+	if(!$memberLogged){
+		echo '您没有登录，请登录后再操作！';
+		exit;
+	}
+	
+	$num = intval($num);
+	if($num <= 0){
+		echo '元至少需要数量1';
+		exit;
+	}
+	
+	if(strlen($alipayUserName) <= 0){
+		echo '请输入收款支付宝账号';
+		exit;
+	}
+	if(strlen($alipayFullName) <= 0){
+		echo '请输入收款支付宝姓名';
+		exit;
+	}
+	if(strlen($weixin) <= 0){
+		echo '请输入微信号码';
+		exit;
+	}
+	if(strlen($mobile) <= 0){
+		echo '请输入手机号码';
+		exit;
+	}
+
+/*
+	if(strlen($pwdII) <= 0){
+		echo '请输入安全密码';
+		exit;
+	}
+	$pwdII = md5($pwdII);
+	*/
+
+	$rs = $db->get_one("select * from `h_member` where h_userName = '{$memberLogged_userName}'");
+	if(!$rs){
+		echo '未找到您的登录信息';
+		exit;
+	}
+	if($rs['h_point2'] < $num){
+		echo '您的元不足';
+		exit;
+	}
+	/*
+	if($rs['h_passWordII'] != $pwdII){
+		echo '安全密码错误';
+		exit;
+	}*/
+	
+	//扣钱
+	$sql = "update `h_member` set ";
+	$sql .= "h_point2 = h_point2 - {$num} ";
+	$sql .= "where h_userName = '" . $memberLogged_userName . "' ";
+	$db->query($sql);
+	
+	//记录扣钱
+	$sql = "insert into `h_log_point2` set ";
+	$sql .= "h_userName = '" . $memberLogged_userName . "', ";
+	$sql .= "h_price = '-" . $num . "', ";
+	$sql .= "h_type = '元拍卖', ";
+	$sql .= "h_about = '挂单拍卖元', ";
+	$sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
+	$sql .= "h_actIP = '" . getUserIP() . "' ";
+	$db->query($sql);
+	
+	//记录拍卖
+	$sql = "insert into `h_point2_sell` set ";
+	$sql .= "h_userName = '" . $memberLogged_userName . "', ";
+	$sql .= "h_money = '" . $num . "', ";
+	$sql .= "h_alipayUserName = '" . $alipayUserName . "', ";
+	$sql .= "h_alipayFullName = '" . $alipayFullName . "', ";
+	$sql .= "h_weixin = '" . $weixin . "', ";
+	$sql .= "h_tel = '" . $mobile . "', ";
+	$sql .= "h_state = '挂单中', ";
+	$sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "' ";
+	$db->query($sql);
+	
+	//系统消息
+	$sql = "insert into `h_member_msg` set ";
+	$sql .= "h_userName = '[系统消息]', ";
+	$sql .= "h_toUserName = '" . $memberLogged_userName . "', ";
+	$sql .= "h_info = '{$num}元挂单中', ";
+	$sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
+	$sql .= "h_actIP = '" . getUserIP() . "' ";
+	$db->query($sql);	
+	settle_farm_day($memberLogged_userName);
+	echo '挂单成功';
 }else if($act == 'pi_pwdII'){
 	if(!$memberLogged){
 		echo '您没有登录，请登录后再操作！';
@@ -846,6 +1070,95 @@ else if($act == 'point2_sell_quit'){
 	//进行物品金币的结算，以及提成发放
 	settle_farm_day($memberLogged_userName);
 	echo '恭喜您购买成功';
+	
+}else if($act == 'farm_shop_buys'){
+	if(!$memberLogged){
+		echo '您没有登录，请登录后再操作！';
+		exit;
+	}
+	
+	$goodsIdsArr = explode(',',$goodsIds);
+	$goodsNumsArr = explode(',',$goodsNums);
+	if(count($goodsIdsArr) != count($goodsNumsArr)){
+		echo '拆解数据出错1';
+		exit;
+	}
+	$goodsIN = array();
+	for($ci = 0;$ci < count($goodsIdsArr);$ci++){
+		$id = intval($goodsIdsArr[$ci]);
+		$num = intval($goodsNumsArr[$ci]);
+		if($id <= 0 || $num <= 0){
+			echo '拆解数据出错2';
+			exit;
+		}
+		$goodsIN[$id] = $num;
+	}
+	/*
+	if(strlen($pwdII) <= 0){
+		echo '请输入安全密码';
+		exit;
+	}
+	$pwdII = md5($pwdII);
+	*/
+
+	$rs = $db->get_one("select * from `h_member` where h_userName = '{$memberLogged_userName}'");
+	if(!$rs){
+		echo '未找到您的登录信息';
+		exit;
+	}
+	
+	$parentUserName = trim($rs['h_parentUserName']);
+	$first_buy = $rs['first_buy'] + 0;
+	/*
+	if($rs['h_point2'] < $num){
+		echo '您的元不足';
+		exit;
+	}
+	if($rs['h_passWordII'] != $pwdII){
+		echo '安全密码错误';
+		exit;
+	}
+	*/
+	
+	//循环检测和购买
+	$query = "select * from `h_farm_shop` where id in ({$goodsIds})";
+	$result = $db->query($query);
+	if($db->num_rows($result) <= 0){
+		echo '未找到任何商品';
+		exit;
+	}
+	$moneySum = 0;
+	while($rs_list = $db->fetch_array($result)){
+		//先遍历金额
+		$moneySum += intval($rs_list['h_money']) * $goodsIN[$rs_list['id']];
+		
+		
+		//判断总数量是否超出
+		$rs1 = $db->get_one("select sum(h_num) as sumNum from `h_member_farm` where h_userName = '{$memberLogged_userName}' and h_pid = '{$rs_list['id']}' and h_isEnd = 0");
+		if($rs1){
+			if((intval($rs1['sumNum']) + $goodsIN[$rs_list['id']]) > $rs_list['h_allMaxNum']){
+				echo $rs_list['h_title'] , '同时只能存在' , $rs_list['h_allMaxNum'] , '个，您当前最多只能购买' , ($rs_list['h_allMaxNum'] - intval($rs1['sumNum'])) , '个';
+				exit;
+			}
+		}
+		//判断今天购买是否超量
+		//$rs1 = $db->get_one("select sum(h_num) as sumNum from `h_member_farm` where h_userName = '{$memberLogged_userName}' and h_pid = '{$rs_list['id']}' and h_isEnd = 0 and timestampdiff(day,h_addTime,sysdate()) = 0");
+		$rs1 = $db->get_one("select sum(h_num) as sumNum from `h_member_farm` where h_userName = '{$memberLogged_userName}' and h_pid = '{$rs_list['id']}' and h_isEnd = 0 and datediff(h_addTime,sysdate() + interval 8 hour) = 0");
+		if($rs1){
+			if((intval($rs1['sumNum']) + $goodsIN[$rs_list['id']]) > $rs_list['h_dayBuyMaxNum']){
+				echo $rs_list['h_title'] , '每月最多只能购买' , $rs_list['h_dayBuyMaxNum'] , '个，您本月最多还能购买' , ($rs_list['h_dayBuyMaxNum'] - intval($rs1['sumNum'])) , '个';
+				exit;
+			}
+		}
+		//等级是否符合
+		if($rs_list['h_minMemberLevel'] > $rs['h_level']){
+			echo '您不符合' , $rs_list['h_title'] , '的购买条件';
+			exit;
+		}
+	}
+
+	echo 'ok';
+	
 	
 }else if($act == 'point2_transfer'){
 	if(!$memberLogged){
