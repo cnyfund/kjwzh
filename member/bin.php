@@ -844,7 +844,7 @@ else if($act == 'point2_sell_quit'){
 		}
 	}*/
 	//进行物品金币的结算，以及提成发放
-	settle_farm_day($memberLogged_userName);
+        //settle_farm_day($memberLogged_userName);
 	echo '恭喜您购买成功';
 	
 }else if($act == 'point2_transfer'){

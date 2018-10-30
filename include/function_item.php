@@ -399,7 +399,7 @@ function settle_farm_day($userName){
 				$sql .= "h_type = '出局返利', ";
 				$sql .= "h_about = '{$rs['h_title']} 出局返利', ";
 				$sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
-                                $sql .= "h_member_farm = " . $farmId . ", ";
+                                $sql .= "h_member_farm_id = " . $farmId . ", ";
                                 $sql .= "h_additonal_info = 'settle_farm_day()', ";
 				$sql .= "h_actIP = '" . getUserIP() . "' ";
 				$db->query($sql);
@@ -416,7 +416,7 @@ function settle_farm_day($userName){
                         	$sql .= "h_type = '计算每个购买的矿机每日利息', ";
                         	$sql .= "h_about = '{$rs['h_title']} 计算每个购买的矿机每日利息', ";
                         	$sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
-                        	$sql .= "h_member_farm = " . $farmId . ", ";
+                        	$sql .= "h_member_farm_id = " . $farmId . ", ";
                         	$sql .= "h_additonal_info = 'settle_farm_day()', ";
                         	$sql .= "h_actIP = '" . getUserIP() . "' ";
 				//累加，最后一次性发放
@@ -511,7 +511,7 @@ function bonus_farm_day($buyUserName,$bonusAll,$currUserName,$floorIndex = 1){
 	global $db;
 	global $webInfo;
 	
-	if($floorIndex > 8){
+	if($floorIndex > 3){
 		return;
 	}
 	
