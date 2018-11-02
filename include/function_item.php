@@ -351,7 +351,7 @@ function bonus_farm_buy($buyUserName,$buyMoney,$currUserName,$floorIndex = 1){
 //结算会员的分红
 function settle_farm_day($userName){
 	global $db;
-	
+        error_log("settle_farm_day(" . $userName . ")");	
 	$bonusAll = 0;
 	$now = date('Y-m-d H:i:s');
 	
@@ -360,11 +360,12 @@ function settle_farm_day($userName){
 	//遍历
 	while($rs = $db->fetch_array($query)){
 		//计算上次结算与今天的时间差（天数）
-		//如果上次未结算，默认为购买时便已结算（虚拟）
+		//如果上次未结算，默认为购买时便已结算（虚拟
 		if(is_null($rs['h_lastSettleTime'])){
 			$rs['h_lastSettleTime'] = $rs['h_addTime'];
 		}
-		$dateDiffDay = FDateDiff0($rs['h_lastSettleTime'],time()+3600,'d');
+                $currentTime = time();
+		$dateDiffDay = FDateDiff0($rs['h_lastSettleTime'], $currentTime+3600,'d');
 		
 		//剩余需要结算的天数
 		$ShengYuDay = $rs['h_life'] - $rs['h_settleLen'];//剩余生存天数
@@ -379,9 +380,12 @@ function settle_farm_day($userName){
  
 		// remember which farm purchase that this settlement is about
                 $farmId = $rs['id'];
+                error_log("Settle for " . $userName . ": farmId=>" . $farmId . " lastSettleTime=>" . $rs['h_lastSettleTime'] . " " . $rs['h_life'] . "/" . $rs['h_settleLen'] . " mustSettleDay=>" . $mustSettleDay);
 		if($mustSettleDay > 0){
+                        error_log("Settle for " . $userName . " has something to settle...");
 			//是否死亡
 			if(($mustSettleDay + $rs['h_settleLen']) >= $rs['h_life']){
+                                error_log("Settle for " . $userName . " 出局返利");
 				$isEnd = 1;
 				//出局返利
 				$rebate = $rs['h_num'] * $rs['h_money'];
@@ -400,10 +404,11 @@ function settle_farm_day($userName){
 				$sql .= "h_about = '{$rs['h_title']} 出局返利', ";
 				$sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
                                 $sql .= "h_member_farm_id = " . $farmId . ", ";
-                                $sql .= "h_additonal_info = 'settle_farm_day()', ";
+                                $sql .= "h_additional_info = 'settle_farm_day()', ";
 				$sql .= "h_actIP = '" . getUserIP() . "' ";
 				$db->query($sql);
 			}else{
+                                error_log("Settle for " . $userName . "计算购买的矿机" . $farmId . "的每日利息");
 				$isEnd = 0;
 			
 				//需要结算的元
@@ -417,7 +422,7 @@ function settle_farm_day($userName){
                         	$sql .= "h_about = '{$rs['h_title']} 计算每个购买的矿机每日利息', ";
                         	$sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
                         	$sql .= "h_member_farm_id = " . $farmId . ", ";
-                        	$sql .= "h_additonal_info = 'settle_farm_day()', ";
+                        	$sql .= "h_additional_info = 'settle_farm_day()', ";
                         	$sql .= "h_actIP = '" . getUserIP() . "' ";
 				//累加，最后一次性发放
 				$bonusAll += $mustSettleMoney;
