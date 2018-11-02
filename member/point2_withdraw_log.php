@@ -39,6 +39,7 @@ function list_(){
 	$rowset = new Pager($total_count,$list_num,$page);
 	$from_record = $rowset->_offset();
 	$query = "select * from `h_withdraw` where h_userName = '{$memberLogged_userName}' order by h_addTime desc,id desc LIMIT $from_record, $list_num";
+        $rs_list = array();
 	$result = $db->query($query);
 	while($list = $db->fetch_array($result))
 	{

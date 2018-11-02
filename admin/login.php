@@ -41,7 +41,7 @@ if($clause == "chklogin")
 	}
 	else
 	{
-		if($rs[h_isPass] == 0)
+		if($rs['h_isPass'] == 0)
 		{
 			hintAndBack('您的帐号为锁定状态，不允许登录!',1);
 		}
