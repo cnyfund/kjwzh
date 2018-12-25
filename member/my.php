@@ -231,17 +231,17 @@ li img{display:inherit;}
 	   <div class="hstbj"></div>
 </div>	   
 				  <div class="mian_qd">
-      <h3>生活</h3>
+      <h3>其他</h3>
       <ul>
 			  <li>
-            <a href="https://www.taobao.com/" onClick="ewm();">
-                <i class="iconfont"><img src="/member/mod/taobao.png" width="30" height="30"></i>
-                <p>淘宝</p>
+            <a href="/member/cnychongzhi.php" onClick="ewm();">
+                <i class="iconfont"><img src="/images/qbchongzhi.png" width="30" height="30"></i>
+                <p>钱包充值</p>
           </a>      </li>
 		          <li>
-            <a href="https://www.jd.com/" onClick="ewm();">
-                <i class="iconfont"><img src="/member/mod/jd.png" width="30" height="30" border="0"> </i>
-                <p>京东</p>
+            <a href="/member/cnyredeem.php" onClick="ewm();">
+                <i class="iconfont"><img src="/images/qbzhuanzhang.jpeg" width="30" height="30" border="0"> </i>
+                <p>钱包转账</p>
         </a>      </li>
         <li>
             <a href="http://www.12306.cn/mormhweb/" onClick="ewm();">
