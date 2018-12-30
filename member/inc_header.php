@@ -32,8 +32,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pager.php';
 <script type="text/javascript" src="/ui/js/jquery.dlmenu.js"></script>
 <link href="/res/css/home.css" rel="stylesheet" type="text/css" media="all" />
 <link href="/res/css/css.css" rel="stylesheet" type="text/css" media="all" />
-<!--<link rel="stylesheet" type="text/css" href="/res/css/common.css">
-<link rel="stylesheet" type="text/css" href="/res/css/style1.css">-->
+<link rel="stylesheet" type="text/css" href="/res/css/common.css">
+<link rel="stylesheet" type="text/css" href="/res/css/style1.css">
 <style>
 .con_rec li span {
     font-size: 12px;
