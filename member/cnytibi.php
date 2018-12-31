@@ -1,12 +1,20 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
+require_once '../member/logged_data.php';
+require_once '../entities/UserWallet.php';
 
 $pageTitle = '人民币钱包转账 - ';
 $body_style ="background:#fff;";
 require_once 'inc_header.php';
 $rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUserName = a.h_userName and h_isPass = 1) as comMembers from `h_member` a where h_userName = '{$memberLogged_userName}'");
-$userWallet = $db->get_one("select * from h_memberWallet where h_username= '{$memberLogged_userName}' and h_cryptocurrency='CNY'");	
+$userwallet = new UserWallet();
+$userwallet->load($db, $memberLogged_userName, 'CNYF');
+if (empty($userwallet->walletCrypto)) {
+    error_log('cnytibi.php: create new wallet for user {$memberLogged_userName}');
+    $userwallet->create($db, 'CNYF');
+    $userwallet->load($db, $memberLogged_userName, 'CNYF');
+}
 
 ?>
 <style>

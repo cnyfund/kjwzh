@@ -239,7 +239,7 @@ li img{display:inherit;}
                 <p>钱包充值</p>
           </a>      </li>
 		          <li>
-            <a href="/member/cnyredeem.php" onClick="ewm();">
+            <a href="/member/cnytibi.php" onClick="ewm();">
                 <i class="iconfont"><img src="/images/qbzhuanzhang.jpeg" width="30" height="30" border="0"> </i>
                 <p>钱包转账</p>
         </a>      </li>

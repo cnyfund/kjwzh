@@ -16,14 +16,14 @@ class UserWallet{
     public function __construct() {
     }
     
-    public function create($db, $login, $crypto) {
+    public function create($db, $crypto) {
         if (!isset($db) || !($db instanceof dbmysql)) {
             error_log("Wallet::create(): Not valid dbmysql object");
             return;
         }
 
-        if (!isset($login) || empty($login)) {
-            error_log("Wallet::create(): Not valid userlogin");
+        if (!isset($this->userId) || $this->userId == 0) {
+            error_log("Wallet::create(): No valid userId");
             return;
         }
 
@@ -39,7 +39,7 @@ class UserWallet{
             error_log('UserWallet:create() get wallet for '  . $crypto);
 
             $walletTool = new CNYFundTool($wallet);
-            $this->walletAddress = $walletTool->createaddress();
+            $this->walletAddress = $walletTool->createaddress('POS-User-'. $this->userId);
             error_log("UserWallet:create(): get new address " . $this->walletAddress);
 
             $query = "insert into h_UserWallet set ";
@@ -74,19 +74,23 @@ class UserWallet{
         }
         
         try {
-            $queryStr = "select u.id as userId, u.h_userName, uw.* " .
-                "from h_member u inner join h_userwallet uw on u.id=uw.userId " .
-                "where uw.h_crypto='{$crypto}' and u.h_userName='{$login}'";
+            $queryStr = "select u.id as uid, u.h_userName, uw.* " .
+                "from h_member u left join h_userwallet uw on u.id=uw.userId " .
+                "and uw.h_crypto='{$crypto}' " .
+                "where u.h_userName='{$login}'";
 
+            // echo 'quyer is ' . $queryStr;
             $rs = $db->get_one($queryStr);
-            $this->userId = $rs['userId'];
-            $this->username = $rs['h_userName'];
-            $this->cryptoCode = $rs['h_crypto'];
-            $this->walletAddress = $rs['h_address'];
-            $this->balance = $rs['h_balance'];
-            $this->lockedBalance = $rs['h_balance_locked'];
-            $this->availableBalance = $rs['h_balance_available'];
-            $this->lastUpdatedAt = $rs['h_lastUpdatedAt'];
+            if ($rs) {
+                $this->userId = $rs['uid'];
+                $this->username = $rs['h_userName'];
+                $this->walletCrypto = $rs['h_crypto'];
+                $this->walletAddress = $rs['h_address'];
+                $this->balance = !empty($rs['h_balance'])? $rs['h_balance']: 0.0;
+                $this->lockedBalance =!empty($rs['h_balance_locked']) ? $rs['h_balance_locked']:0.0;
+                $this->availableBalance = !empty($rs['h_balance_available']) ? $rs['h_balance_available'] : 0.0;
+                $this->lastUpdatedAt = $rs['h_lastUpdatedAt'];    
+            }
         } catch (Exception $e) {
             error_log("UserWallet::load(): Hit exception " . $e->getMessage());
         }

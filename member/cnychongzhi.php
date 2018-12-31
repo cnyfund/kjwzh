@@ -10,6 +10,11 @@ require_once 'inc_header.php';
 
 $userwallet = new UserWallet();
 $userwallet->load($db, $memberLogged_userName, 'CNYF');
+if (empty($userwallet->walletCrypto)) {
+    error_log('cnychpgzhi.php: create new wallet for user {$memberLogged_userName}');
+    $userwallet->create($db, 'CNYF');
+    $userwallet->load($db, $memberLogged_userName, 'CNYF');
+}
 
 ?>
 <div class="container">
@@ -24,9 +29,6 @@ $userwallet->load($db, $memberLogged_userName, 'CNYF');
 </div>
 </div>
 
-<!-- 弹出层部分end -->
-
-<!--MAN End-->
 <?php
 require_once 'inc_footer.php';
 ?>

@@ -19,8 +19,8 @@ class CNYFundTool {
         $wpass = $wallet->wpass;
     }
     
-    public function createaddress() {
-        $rs = $this->cnyfundtool->getnewaddress('POS');
+    public function createaddress($account) {
+        $rs = $this->cnyfundtool->getnewaddress($account);
         if (!$rs) {
             throw new Exception('create address failed' . $this->cnyfundtool->error . '-' . $rs);
         }
@@ -28,13 +28,10 @@ class CNYFundTool {
         return $rs;
     }
 
-    public function sendmoney($address, $amount, $senderUserId, $senderUsername='') {
+    public function sendmoney($address, $amount, $senderUserId, $senderUsername='', $comment) {
         if ($wpass.length > 0) {
             $this->cnyfundtool->walletpassphrase($wpass, 30);
         }
-
-        $comment = 'Redeem: User ' . $senderUserId . '(' . $senderUsername . 
-        ') send ' . $amount . ' to external address ' . $address;
         return $this->cnyfundtool->sendtoaddress($address, $amount, $comment);
     }
 

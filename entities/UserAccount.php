@@ -32,11 +32,11 @@ class UserAccount {
             $sql .= "h_regIP = '" . $this->regUserIP . "' ";
             $db->query($sql);
 
-            $rs = $db->get_one("select id from h_member where h_userName='" . $this->username . "'");
+            //$rs = $db->get_one("select id from h_member where h_userName='" . $this->username . "'");
 
-            $userwallet = new UserWallet();
-            $userwallet->userId = $rs['id'];
-            $userwallet->create($db, $this->username, $crypto);
+            //$userwallet = new UserWallet();
+            //$userwallet->userId = $rs['id'];
+            //$userwallet->create($db, $crypto);
     
         } catch (Exception $e) {
             error_log("UserAccount::create(): Hit exception " . $e->getMessage());            
