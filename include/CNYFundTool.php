@@ -28,7 +28,7 @@ class CNYFundTool {
         return $rs;
     }
 
-    public function sendmoney($address, $amount, $senderUserId, $senderUsername='', $comment) {
+    public function sendmoney($address, $amount, $comment) {
         if ($wpass.length > 0) {
             $this->cnyfundtool->walletpassphrase($wpass, 30);
         }

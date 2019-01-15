@@ -26,5 +26,20 @@ CREATE TABLE `h_UserWallet` (
     ON DELETE CASCADE
 ) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `h_UserWalletExternal`;
+CREATE TABLE `h_UserWalletExternal` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `h_crypto` varchar(8) NOT NULL,
+  `h_address` varchar(64) NOT NULL,
+  `h_alias` varchar(32) DEFAULT '',
+  `h_lastUpdatedAt` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (userId)
+    REFERENCES h_member(id)
+    ON DELETE CASCADE
+) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+
+ALTER TABLE h_member ADD UNIQUE (h_userName);
 insert into `h_Wallet` values ('CNYF', 'ru', 'rp', 18188, 'wp', now())
 

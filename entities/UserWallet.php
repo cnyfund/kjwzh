@@ -15,7 +15,50 @@ class UserWallet{
 
     public function __construct() {
     }
-    
+
+    public static function load_by_username($db, $login, $crypto) {
+        if (!isset($db) || !($db instanceof dbmysql)) {
+            error_log("Wallet::load(): Not valid dbmysql object");
+            return;
+        }
+
+        if (!isset($login) || empty($login)) {
+            error_log("Wallet::load(): Not valid userlogin");
+            return;
+        }
+
+        if (!isset($crypto) || empty($crypto)) {
+            error_log("Wallet::load(): Not valid crypto currency code");
+            return;
+        }
+        
+        try {
+            $queryStr = "select u.id as uid, u.h_userName, uw.* " .
+                "from h_member u left join h_userwallet uw on u.id=uw.userId " .
+                "and uw.h_crypto='{$crypto}' " .
+                "where u.h_userName='{$login}'";
+
+            // echo 'quyer is ' . $queryStr;
+            $rs = $db->get_one($queryStr);
+            if ($rs) {
+                $wallet = new UserWallet();
+                $wallet->userId = $rs['uid'];
+                $wallet->username = $rs['h_userName'];
+                $wallet->walletCrypto = $rs['h_crypto'];
+                $wallet->walletAddress = $rs['h_address'];
+                $wallet->balance = !empty($rs['h_balance'])? $rs['h_balance']: 0.0;
+                $wallet->lockedBalance =!empty($rs['h_balance_locked']) ? $rs['h_balance_locked']:0.0;
+                $wallet->availableBalance = !empty($rs['h_balance_available']) ? $rs['h_balance_available'] : 0.0;
+                $wallet->lastUpdatedAt = $rs['h_lastUpdatedAt'];
+                return $wallet;
+            }
+
+            return null;
+        } catch (Exception $e) {
+            error_log("UserWallet::load(): Hit exception " . $e->getMessage());
+        }
+    }
+
     public function create($db, $crypto) {
         if (!isset($db) || !($db instanceof dbmysql)) {
             error_log("Wallet::create(): Not valid dbmysql object");
