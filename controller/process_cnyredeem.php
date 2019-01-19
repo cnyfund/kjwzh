@@ -18,10 +18,10 @@ try {
         $userwallet = UserWallet::load_by_username($conn, $memberLogged_userName, 'CNYF');
         $userwallet_external = UserWalletExternal::load_by_username($conn, $memberLogged_userName, 'CNYF');
         $cnytool = new CNYFundTool($userwallet);
-        $operationComment = "POS UserId:". $userwallet->userId;
-        $operationComment .= ",redeem:" . $amount;
-        $operationComment .= ",to:" . $externalAddress;
+        $operationComment = CNYFundTool::create_redeem_comment($userwallet->userId, $amount, $externalAddress);
         $transId = $cnytool->sendMoney($externalAddress, $amount, $operationComment);
+        $user = UserAccount::load($conn, $memberLogged_userName);
+        $user->debt($conn, $amount, 0.01, UserAccount::WALLETREDEEM, $transId, '', getUserIP());
 
         if (is_null($userwallet_external)) {
             $userwallet_external = new UserWalletExternal();

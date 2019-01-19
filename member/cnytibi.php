@@ -123,7 +123,7 @@ function get_confirmation_text() {
         $("#confirm_redeem").click(function () {
             alert("get inside");
             $("#confirmationDialog").modal("hide");
-            $.post("/member/process_cnyredeem.php",
+            $.post("/controller/process_cnyredeem.php",
                     $("#form_cnyredeem").serialize()
                 ).done(function(resp) {
                     $("#success_msg").text("转账成功");

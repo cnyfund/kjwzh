@@ -19,6 +19,18 @@ class dbmysql {
 		$query->data_seek(0);
 	}
 
+	function begin_trans($flag = MYSQLI_TRANS_START_READ_ONLY) {
+		$this->link->begin_transaction($flag);
+	}
+
+	function rollback($flag = 0) {
+		$this->link->rollback($flag);
+	}
+
+	function commit($flag = 0) {
+		$this->link->commit($flag);
+	}
+
 	function select_db($dbname) {
 		return $this->link->select_db($dbname);
 	}

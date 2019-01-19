@@ -30,6 +30,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
   </div>
 </div>
 </div>
+
 <?php
 require_once 'inc_footer.php';
 ?>

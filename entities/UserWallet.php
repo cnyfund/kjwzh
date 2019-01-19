@@ -4,6 +4,8 @@ require_once '../entities/Wallet.php';
 require_once '../include/CNYFundTool.php';
 
 class UserWallet{
+    const MASTERACCOUNT = '';
+
     public $userId = 0;
     public $username='';
     public $walletCrypto ='';
@@ -32,31 +34,27 @@ class UserWallet{
             return;
         }
         
-        try {
-            $queryStr = "select u.id as uid, u.h_userName, uw.* " .
-                "from h_member u left join h_userwallet uw on u.id=uw.userId " .
-                "and uw.h_crypto='{$crypto}' " .
-                "where u.h_userName='{$login}'";
+        $queryStr = "select u.id as uid, u.h_userName, uw.* " .
+            "from h_member u left join h_userwallet uw on u.id=uw.userId " .
+            "and uw.h_crypto='{$crypto}' " .
+            "where u.h_userName='{$login}'";
 
-            // echo 'quyer is ' . $queryStr;
-            $rs = $db->get_one($queryStr);
-            if ($rs) {
-                $wallet = new UserWallet();
-                $wallet->userId = $rs['uid'];
-                $wallet->username = $rs['h_userName'];
-                $wallet->walletCrypto = $rs['h_crypto'];
-                $wallet->walletAddress = $rs['h_address'];
-                $wallet->balance = !empty($rs['h_balance'])? $rs['h_balance']: 0.0;
-                $wallet->lockedBalance =!empty($rs['h_balance_locked']) ? $rs['h_balance_locked']:0.0;
-                $wallet->availableBalance = !empty($rs['h_balance_available']) ? $rs['h_balance_available'] : 0.0;
-                $wallet->lastUpdatedAt = $rs['h_lastUpdatedAt'];
-                return $wallet;
-            }
-
-            return null;
-        } catch (Exception $e) {
-            error_log("UserWallet::load(): Hit exception " . $e->getMessage());
+        // echo 'quyer is ' . $queryStr;
+        $rs = $db->get_one($queryStr);
+        if ($rs) {
+            $wallet = new UserWallet();
+            $wallet->userId = $rs['uid'];
+            $wallet->username = $rs['h_userName'];
+            $wallet->walletCrypto = $rs['h_crypto'];
+            $wallet->walletAddress = $rs['h_address'];
+            $wallet->balance = !empty($rs['h_balance'])? $rs['h_balance']: 0.0;
+            $wallet->lockedBalance =!empty($rs['h_balance_locked']) ? $rs['h_balance_locked']:0.0;
+            $wallet->availableBalance = !empty($rs['h_balance_available']) ? $rs['h_balance_available'] : 0.0;
+            $wallet->lastUpdatedAt = $rs['h_lastUpdatedAt'];
+            return $wallet;
         }
+
+        return null;
     }
 
     public function create($db, $crypto) {
@@ -75,29 +73,26 @@ class UserWallet{
             return;
         }
 
-        try {
-            $wallet = new Wallet($db, $crypto);
-            $this->walletCrypto = $crypto;
+        $wallet = new Wallet($db, $crypto);
+        $this->walletCrypto = $crypto;
 
-            error_log('UserWallet:create() get wallet for '  . $crypto);
+        error_log('UserWallet:create() get wallet for '  . $crypto);
 
-            $walletTool = new CNYFundTool($wallet);
-            $this->walletAddress = $walletTool->createaddress('POS-User-'. $this->userId);
-            error_log("UserWallet:create(): get new address " . $this->walletAddress);
+        $walletTool = new CNYFundTool($wallet);
+        $user_wallet_account = CNYFundTool::get_wallet_account_by_user($this->userId);
+        $this->walletAddress = $walletTool->createaddress(UserWallet::MASTERACCOUNT);
+        error_log("UserWallet:create(): get new address " . $this->walletAddress);
 
-            $query = "insert into h_UserWallet set ";
-            $query .= "userId=" . $this->userId . ",";
-            $query .= "h_crypto='" . $this->walletCrypto. "',";
-            $query .= "h_address='" . $this->walletAddress . "',";
-            $query .= "h_balance=" . $this->balance . ",";
-            $query .= "h_balance_locked=" . $this->lockedBalance . ",";
-            $query .= "h_balance_available=" . $this->availableBalance . ",";
-            $query .= "h_lastUpdatedAt='" . date('Y-m-d H:i:s') . "'";
-    
-            $db->query($query);
-        } catch (Exception $e) {
-            error_log("UserWallet::create(): Hit exception " . $e->getMessage());
-        }
+        $query = "insert into h_UserWallet set ";
+        $query .= "userId=" . $this->userId . ",";
+        $query .= "h_crypto='" . $this->walletCrypto. "',";
+        $query .= "h_address='" . $this->walletAddress . "',";
+        $query .= "h_balance=" . $this->balance . ",";
+        $query .= "h_balance_locked=" . $this->lockedBalance . ",";
+        $query .= "h_balance_available=" . $this->availableBalance . ",";
+        $query .= "h_lastUpdatedAt='" . date('Y-m-d H:i:s') . "'";
+
+        $db->query($query);
     }
 
     public function load($db, $login, $crypto) {
@@ -116,26 +111,22 @@ class UserWallet{
             return;
         }
         
-        try {
-            $queryStr = "select u.id as uid, u.h_userName, uw.* " .
-                "from h_member u left join h_userwallet uw on u.id=uw.userId " .
-                "and uw.h_crypto='{$crypto}' " .
-                "where u.h_userName='{$login}'";
+        $queryStr = "select u.id as uid, u.h_userName, uw.* " .
+            "from h_member u left join h_userwallet uw on u.id=uw.userId " .
+            "and uw.h_crypto='{$crypto}' " .
+            "where u.h_userName='{$login}'";
 
-            // echo 'quyer is ' . $queryStr;
-            $rs = $db->get_one($queryStr);
-            if ($rs) {
-                $this->userId = $rs['uid'];
-                $this->username = $rs['h_userName'];
-                $this->walletCrypto = $rs['h_crypto'];
-                $this->walletAddress = $rs['h_address'];
-                $this->balance = !empty($rs['h_balance'])? $rs['h_balance']: 0.0;
-                $this->lockedBalance =!empty($rs['h_balance_locked']) ? $rs['h_balance_locked']:0.0;
-                $this->availableBalance = !empty($rs['h_balance_available']) ? $rs['h_balance_available'] : 0.0;
-                $this->lastUpdatedAt = $rs['h_lastUpdatedAt'];    
-            }
-        } catch (Exception $e) {
-            error_log("UserWallet::load(): Hit exception " . $e->getMessage());
+        // echo 'quyer is ' . $queryStr;
+        $rs = $db->get_one($queryStr);
+        if ($rs) {
+            $this->userId = $rs['uid'];
+            $this->username = $rs['h_userName'];
+            $this->walletCrypto = $rs['h_crypto'];
+            $this->walletAddress = $rs['h_address'];
+            $this->balance = !empty($rs['h_balance'])? $rs['h_balance']: 0.0;
+            $this->lockedBalance =!empty($rs['h_balance_locked']) ? $rs['h_balance_locked']:0.0;
+            $this->availableBalance = !empty($rs['h_balance_available']) ? $rs['h_balance_available'] : 0.0;
+            $this->lastUpdatedAt = $rs['h_lastUpdatedAt'];    
         }
     }
 }

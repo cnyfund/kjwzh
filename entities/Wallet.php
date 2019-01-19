@@ -2,6 +2,7 @@
 require_once '../include/mysql.php';
 
 class Wallet{
+    const CONFIRMATION_THRESHOLD = 3; 
     public $cryptoCode = '';
     public $rp = '';
     public $ru = '';
