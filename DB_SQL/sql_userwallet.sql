@@ -41,9 +41,9 @@ CREATE TABLE `h_UserWalletExternal` (
 ) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 
 ALTER TABLE h_member ADD UNIQUE (h_userName);
-ALTER TABLE h_recharge ADD COLUMN h_refIdType VARCHAR(32) DEFAULT 'out_trade_no'
-ALTER TABLE h_withdraw ADD COLUMN h_refIdType VARCHAR(32) DEFAULT 'out_trade_no'
+ALTER TABLE h_recharge ADD COLUMN h_refIdType VARCHAR(32) DEFAULT 'out_trade_no';
+ALTER TABLE h_withdraw ADD COLUMN h_refIdType VARCHAR(32) DEFAULT 'out_trade_no';
 
-ALTER TABLE h_member ADD COLUMN h_lastUpdatedt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-insert into `h_Wallet` values ('CNYF', 'ru', 'rp', 18188, 'wp', now())
+ALTER TABLE h_member ADD COLUMN h_lastUpdatedt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+insert into `h_Wallet` values ('CNYF', 'ru', 'rp', 18188, 'wp', now());
 
