@@ -3,6 +3,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once '../member/logged_data.php';
 require_once '../entities/UserWallet.php';
+require_once '../entities/UserWalletExternal.php';
 require_once '../include/simple_header.php';
 
 $rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUserName = a.h_userName and h_isPass = 1) as comMembers from `h_member` a where h_userName = '{$memberLogged_userName}'");
@@ -13,6 +14,9 @@ if (empty($userwallet->walletCrypto)) {
     $userwallet->create($db, 'CNYF');
     $userwallet->load($db, $memberLogged_userName, 'CNYF');
 }
+
+$userwalletexternal = UserWalletExternal::load_by_username($db, $memberLogged_userName, 'CNYF');
+$externaladdress = !is_null($userwalletexternal) ? $userwalletexternal->walletAddress : '';
 
 $pageTitle = '人民币钱包转账 - ' . $webInfo['h_webName'] . ' - ' . '会员中心';  ;
 $body_style ="background:#fff;";
@@ -61,7 +65,7 @@ function get_confirmation_text() {
         <div class="form-group">
         <label class="control-label col-sm-2" for="pwd">转账地址:</label>
         <div class="col-sm-10">          
-            <input type="text" class="form-control" id="address" placeholder="请输入您的外部钱包地址" name="address">
+            <input type="text" class="form-control" id="address" placeholder="请输入您的外部钱包地址" value="<?php echo $externaladdress ?>" name="address">
         </div>
         </div>
         <div class="form-group">        
@@ -121,7 +125,6 @@ function get_confirmation_text() {
             $("#wait").css("display", "none");
         });
         $("#confirm_redeem").click(function () {
-            alert("get inside");
             $("#confirmationDialog").modal("hide");
             $.post("/controller/process_cnyredeem.php",
                     $("#form_cnyredeem").serialize()
@@ -129,7 +132,7 @@ function get_confirmation_text() {
                     $("#success_msg").text("转账成功");
                     $("#success_msg").show();
                 }).fail(function(xhr, textstatus, errorThrow) {
-                    $("#error_msg").val("转账请求遇到错误:" + xhr.status + " " + errorThrow);
+                    $("#error_msg").text("转账请求遇到错误: " + xhr.status + " " + errorThrow);
                     $("#error_msg").show();
                 });
         });
@@ -137,6 +140,7 @@ function get_confirmation_text() {
         $("#btn_redeem").click(function(){
             $("#success_msg").hide();
             $("#error_msg").hide();
+            var balance = parseFloat($("#balance").val());
             var amountVal= parseFloat($("#amount").val());
             var amount=isNaN(amountVal)?0.0:amountVal;
             if (amount <= 0) {
@@ -151,6 +155,13 @@ function get_confirmation_text() {
                 $("#errorTitle").text("输入错误");
                 $("#errorBody").text("请输入转账用的外部地址");
                 $("#errorMessage").modal({backdrop:"static"});
+                return;                
+            }
+
+            if (amount - balance > 0) {
+                $("#errorTitle").text("输入错误");
+                $("#errorBody").text("提币金额超过您的余额");
+                $("#errorMessage").modal({backdrop: "static"});
                 return;                
             }
 

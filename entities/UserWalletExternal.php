@@ -14,7 +14,7 @@ class UserWalletExternal {
     public function __construct() {
     }
 
-    private static function load_by_username($db, $login, $crypto) {
+    public static function load_by_username($db, $login, $crypto) {
         if (!isset($db) || !($db instanceof dbmysql)) {
             error_log("UserWalletExternal::load(): Not valid dbmysql object");
             return;
@@ -30,12 +30,13 @@ class UserWalletExternal {
             return;
         }
 
-        $query = $queryStr = "select u.id as uid, u.h_userName, uw.* " .
-                "from h_member u left join h_userwalletexternal uw on u.id=uw.userId " .
+        $query = "select u.id as uid, u.h_userName, uw.* " .
+                "from h_member u inner join h_userwalletexternal uw on u.id=uw.userId " .
                 "and uw.h_crypto='{$crypto}' " .
                 "where u.h_userName='{$login}'";
         $rs = $db->get_one($query);
         if ($rs) {
+            error_log("Find userwalletexternal : " . $query);
             $userwallet = new UserWalletExternal();
             $userwallet->userId = $rs['uid'];
             $userwallet->alias = $rs['h_alias'];

@@ -35,7 +35,7 @@ class UserWallet{
         }
         
         $queryStr = "select u.id as uid, u.h_userName, uw.* " .
-            "from h_member u left join h_userwallet uw on u.id=uw.userId " .
+            "from h_member u inner join h_userwallet uw on u.id=uw.userId " .
             "and uw.h_crypto='{$crypto}' " .
             "where u.h_userName='{$login}'";
 
@@ -57,14 +57,14 @@ class UserWallet{
         return null;
     }
 
-    public function create($db, $crypto) {
+    public function create($db, $login, $crypto) {
         if (!isset($db) || !($db instanceof dbmysql)) {
             error_log("Wallet::create(): Not valid dbmysql object");
             return;
         }
 
-        if (!isset($this->userId) || $this->userId == 0) {
-            error_log("Wallet::create(): No valid userId");
+        if (!isset($login) || empty($login)) {
+            error_log("Wallet::create(): Not valid userlogin");
             return;
         }
 
@@ -82,6 +82,17 @@ class UserWallet{
         $user_wallet_account = CNYFundTool::get_wallet_account_by_user($this->userId);
         $this->walletAddress = $walletTool->createaddress(UserWallet::MASTERACCOUNT);
         error_log("UserWallet:create(): get new address " . $this->walletAddress);
+
+        $query = "select id, h_point2 from h_member where h_userName = '{$login}'";
+        $rs = $db->get_one($query);
+        if ($rs) {
+            $this->id = $rs['id'];
+            $this->username = $rs['h_userName'];
+            $this->balance = $rs['h_point2'];
+            $rs->close();
+        } else {
+            throw new Exception("UserWallet::create('{$login}','CNFY') could not find the user account");
+        }
 
         $query = "insert into h_UserWallet set ";
         $query .= "userId=" . $this->userId . ",";
@@ -111,7 +122,7 @@ class UserWallet{
             return;
         }
         
-        $queryStr = "select u.id as uid, u.h_userName, uw.* " .
+        $queryStr = "select u.id as uid, u.h_userName, u.h_point2, uw.* " .
             "from h_member u left join h_userwallet uw on u.id=uw.userId " .
             "and uw.h_crypto='{$crypto}' " .
             "where u.h_userName='{$login}'";
@@ -123,7 +134,7 @@ class UserWallet{
             $this->username = $rs['h_userName'];
             $this->walletCrypto = $rs['h_crypto'];
             $this->walletAddress = $rs['h_address'];
-            $this->balance = !empty($rs['h_balance'])? $rs['h_balance']: 0.0;
+            $this->balance = !empty($rs['h_balance'])? $rs['h_balance']: $rs['h_point2'];
             $this->lockedBalance =!empty($rs['h_balance_locked']) ? $rs['h_balance_locked']:0.0;
             $this->availableBalance = !empty($rs['h_balance_available']) ? $rs['h_balance_available'] : 0.0;
             $this->lastUpdatedAt = $rs['h_lastUpdatedAt'];    

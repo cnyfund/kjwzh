@@ -19,6 +19,19 @@ class UserAccount {
 
     }
 
+    private static function _read($rs) {
+        if ($rs) {
+            $user = new UserAccount();
+            $user->id = $rs['id'];
+            $user->username = $rs['h_userName'];
+            $user->parentname = $rs['h_parentUserName'];
+            $user->regUserIP = $rs['h_regIP'];
+            $user->lastUpdatedAt = $rs['h_lastUpdatedAt'];
+            return $user;
+        }
+
+        return null;
+    }
     public static function load_by_id($db, $userId) {
         if (!isset($db) || !($db instanceof dbmysql)) {
             error_log("UserAccount::load(): Not valid dbmysql object");
@@ -27,15 +40,7 @@ class UserAccount {
 
         $sql = "select * from h_member where id=" . $userId;
         $rs = $db->get_one($sql);
-        if ($rs) {
-            $this->id = $rs['id'];
-            $this->username = $rs['h_userName'];
-            $this->parentname = $rs['h_parentUserName'];
-            $this->regUserIP = $rs['h_regIP'];
-            $this->lastUpdatedAt = $rs['h_lastUpdatedAt'];
-        }
-
-        return $rs;
+        return UserAccount::_read($rs);
     }
 
     public static function load($db, $login) {
@@ -51,15 +56,7 @@ class UserAccount {
 
         $sql = "select * from h_member where h_userName='" . $login . "'";
         $rs = $db->get_one($sql);
-        if ($rs) {
-            $this->id = $rs['id'];
-            $this->username = $rs['h_userName'];
-            $this->parentname = $rs['h_parentUserName'];
-            $this->regUserIP = $rs['h_regIP'];
-            $this->lastUpdatedAt = $rs['h_lastUpdatedAt'];
-        }
-
-        return $rs;
+        return UserAccount::_read($rs);
     }
 
     public function credit($db, $amount, $trans_type, $refId='', $refId_type='out_trade_no', $userIP='') {
@@ -108,59 +105,65 @@ class UserAccount {
 
             return true;
         } catch (Exception $e) {
-            error_log("Failed to credit user ${$this->username}\'s account: " . $e.getMessage());
+            error_log("Failed to credit user {$this->username}\'s account: " . $e.getMessage());
             @$db->rollback();
 
             return false;
         }
     }
 
-    public function debt($amount, $fee=0.0, $trans_type, $refId='', $refId_type='out_trade_no', $userIP='') {
+    public function debt($db, $amount, $fee=0.0, $trans_type, $refId='', $refId_type='out_trade_no', $userIP='') {
         if (!isset($db) || !($db instanceof dbmysql)) {
-            error_log("UserAccount::credit(): Not valid dbmysql object");
+            error_log("UserAccount::debt(): Not valid dbmysql object");
             return false;
         }
         
         if (!isset($amount) || !is_numeric($amount)) {
-            error_log("UserAccount::credit(): Input amount is invalid numeric value");
+            error_log("UserAccount::debt(): Input amount is invalid numeric value");
             return false;
         }
 
         if (!isset($fee) || !is_numeric($fee)) {
-            error_log("UserAccount::credit(): Input fee is invalid numeric value");
+            error_log("UserAccount::debt(): Input fee is invalid numeric value");
             return false;
         }
 
         if (!isset($trans_type) || empty($trans_type)) {
-            error_log("UserAccount::credit(): Input transaction type is empty");
+            error_log("UserAccount::debt(): Input transaction type is empty");
             return false;            
         }
 
-        $db->begin_trans();
+        if (!$db->begin_trans()) {
+            error_log("Failed to begin trans:" . $db->error() );
+        }
         try {
             $sql = "update `h_member` set  h_point2 = h_point2 - {$amount}  ";
-            $sql .= "where id = '{$this->id}' ";
-            @$db->query($sql);
+            $sql .= "where id = {$this->id}";
+            $db->query($sql);
+
+            error_log("debt: execute " . $sql);
 
             //记录扣钱
             $sql = "insert into `h_log_point2` set ";
             $sql .= "h_userName = '" . $this->username . "', ";
             $sql .= "h_price = '-" . $amount. "', ";
-            $sql .= "h_type = '${$trans_type}', ";
-            $sql .= "h_about = '${$refId}', ";
+            $sql .= "h_type = '{$trans_type}', ";
+            $sql .= "h_about = '{$refId}', ";
             $sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
             $sql .= "h_actIP = '" . $userIP . "' ";
             $db->query($sql);
+            error_log("debt: execute " . $sql);
             
             if ($fee > 0) {
                 $sql = "insert into `h_log_point2` set ";
                 $sql .= "h_userName = '" . $this->username . "', ";
                 $sql .= "h_price = '-" . $fee. "', ";
                 $sql .= "h_type = '" . UserAccount::WALLETREDEEMFEE . "', ";
-                $sql .= "h_about = '${$refId}', ";
+                $sql .= "h_about = '{$refId}', ";
                 $sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
                 $sql .= "h_actIP = '" . $userIP . "' ";
                 $db->query($sql);
+                error_log("debt: execute " . $sql);
             }
 
             $sql = "insert into `h_withdraw` set ";
@@ -180,11 +183,16 @@ class UserAccount {
             $sql .= "h_actIP = '" . $userIP . "' ";
             $db->query($sql);
 
-            @$db->commit();
+            error_log("debt: execute " . $sql);
+
+            if (!$db->commit()) {
+                error_log("Failed to commit " . $db->error());                
+            }
+            error_log("debt: updated " . $db->affected_rows());
             return true;
 
         } catch (Exception $e) {
-            error_log("Failed to debt user ${$this->username}\'s account: " . $e.getMessage());
+            error_log("Failed to debt user {$this->username}\'s account: " . $e.getMessage());
             @$db->rollback();
             return false;
         }
@@ -221,11 +229,11 @@ class UserAccount {
         try{
             $sql = "update `h_withdraw` SET h_state = '{$status}' ";
             $sql .= "where out_trade_no ='{$refId}' ";
-            $sql .= "and h_refIdType='${$refId_type}'";
+            $sql .= "and h_refIdType='{$refId_type}'";
             @$db->query($sql);
 
             if ($status != '已打款') {
-                $rs->get_one("select * `h_withdraw` where out_trade_no = '{$refId}' and h_refIdType='${$refId_type}'");
+                $rs->get_one("select * `h_withdraw` where out_trade_no = '{$refId}' and h_refIdType='{$refId_type}'");
                 if ($rs) {
                     $total_fee = $rs['h_money'] + $rs['h_fee'];
                     error_log("UserAccount::confirm_withdraw(): need to revert {$rs['h_money']} with {$rs['h_fee']} for {$this->username} on refId: {$refId}");
@@ -250,7 +258,7 @@ class UserAccount {
             return true;
 
         }catch (Exception $e) {
-            error_log("Failed to confirm user ${$this->username}\'s transaction ${$refId} " . $e.getMessage());
+            error_log("Failed to confirm user {$this->username}\'s transaction {$refId} " . $e.getMessage());
             @$db->rollback();
             return false;            
         }

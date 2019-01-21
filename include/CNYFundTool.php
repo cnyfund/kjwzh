@@ -15,7 +15,8 @@ class CNYFundTool {
     public static function create_redeem_comment($userId, $amount, $externalAddress) {
         $operationComment = CNYFundTool::USERPREFIX . $userId;
         $operationComment .= ",redeem:" . $amount;
-        $operationComment .= ",to:" . $externalAddress;    
+        $operationComment .= ",to:" . $externalAddress;
+        return $operationComment;
     }
 
     public static function get_userId_from_comment($comment) {
@@ -39,9 +40,8 @@ class CNYFundTool {
             return;
         }
 
-        error_log("Construct tool have " . $wallet->ru . ", " . $wallet->rp . ", " . $wallet->port);
         $this->cnyfundtool = new jsonRPCClient('http://' . $wallet->ru . ':' . $wallet->rp . '@localhost:' . $wallet->port . "/");
-        $wpass = $wallet->wpass;
+        $this->wpass = $wallet->wpass;
     }
     
     public function createaddress($account) {
@@ -54,14 +54,17 @@ class CNYFundTool {
     }
 
     public function sendmoney($address, $amount, $comment) {
-        if ($wpass.length > 0) {
-            $this->cnyfundtool->walletpassphrase($wpass, 30);
+        error_log("sendmoney: wallet pass " . $this->wpass);
+        if (!empty($this->wpass)) {
+            error_log("sendmoney: open wallet ...");
+            $this->cnyfundtool->walletpassphrase($this->wpass, 30);
         }
+        error_log("sendmoney: send to " . $address . " " . $amount);
         return $this->cnyfundtool->sendtoaddress($address, $amount, $comment);
     }
 
     public function listtransactions($account='', $count=10000) {
-        return $this->cnyfundtool->listransactions($account, $count);
+        return $this->cnyfundtool->listtransactions($account, $count);
     }
 }
 ?>

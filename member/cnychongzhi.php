@@ -6,12 +6,10 @@ require_once '../entities/UserWallet.php';
 require_once '../include/simple_header.php';
 
 $body_style ="background-color:#fff;";
-$userwallet = new UserWallet();
-$userwallet->load($db, $memberLogged_userName, 'CNYF');
-if (empty($userwallet->walletCrypto)) {
+$userwallet = UserWallet::load_by_username($db, $memberLogged_userName, 'CNYF');
+if (is_null($userwallet)) {
     error_log('cnychpgzhi.php: create new wallet for user {$memberLogged_userName}');
-    $userwallet->create($db, 'CNYF');
-    $userwallet->load($db, $memberLogged_userName, 'CNYF');
+    $userwallet->create($db, $memberLogged_userName, 'CNYF');
 }
 
 $pageTitle = '人民币钱包充值 - ' . $webInfo['h_webName'] . ' - ' . '会员中心';  ;

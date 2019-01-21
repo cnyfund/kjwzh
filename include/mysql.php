@@ -19,15 +19,15 @@ class dbmysql {
 		$query->data_seek(0);
 	}
 
-	function begin_trans($flag = MYSQLI_TRANS_START_READ_ONLY) {
+	function begin_trans($flag = MYSQLI_TRANS_START_READ_WRITE) {
 		$this->link->begin_transaction($flag);
 	}
 
-	function rollback($flag = 0) {
+	function rollback($flag = MYSQLI_TRANS_START_READ_WRITE) {
 		$this->link->rollback($flag);
 	}
 
-	function commit($flag = 0) {
+	function commit($flag = MYSQLI_TRANS_START_READ_WRITE) {
 		$this->link->commit($flag);
 	}
 
@@ -95,7 +95,7 @@ class dbmysql {
 	   /*$func = $type == 'UNBUFFERED' && @function_exists('mysqli_unbuffered_query') ?
 			'mysqli_unbuffered_query' : 'mysqli_query';*/
 		if(!($query = $this->link->query($sql))) {
-                     echo "query failed " . $sql . " error no " . $this->errno() . " error " . $this->error();
+                     error_log( "query failed " . $sql . " error no " . $this->errno() . " error " . $this->error());
                      if(in_array($this->errno(), array(2006, 2013)) && substr($type, 0, 5) != 'RETRY') {
 				$this->close();
 				global $config_db;
@@ -120,7 +120,7 @@ class dbmysql {
 	}
 
 	function affected_rows() {
-		return $this->link->affected_rows();
+		return $this->link->affected_rows;
 	}
 
 	function error() {
