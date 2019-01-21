@@ -40,6 +40,8 @@ CREATE TABLE `h_UserWalletExternal` (
     ON DELETE CASCADE
 ) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 
+update h_log_point2 set h_addTime = '2018-08-19 00:00:00' where h_addTime='0000-00-00 00:00:00';
+
 ALTER TABLE h_member ADD UNIQUE (h_userName);
 ALTER TABLE h_recharge ADD COLUMN h_refIdType VARCHAR(32) DEFAULT 'out_trade_no';
 ALTER TABLE h_withdraw ADD COLUMN h_refIdType VARCHAR(32) DEFAULT 'out_trade_no';

@@ -30,7 +30,7 @@ class CNYFundTool {
 
         $lastpart_len = strlen(strstr($comment,','));
         $prefix_len = strlen(CNYFundTool::USERPREFIX);
-        $id_str = substr($comment, prefix_len, strlen($comment) - prefixlen - $lastpart_len);
+        $id_str = substr($comment, $prefix_len, strlen($comment) - $prefix_len - $lastpart_len);
         return intval($id_str);
     }
 

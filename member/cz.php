@@ -70,6 +70,7 @@ if($val['h_state']==2) {$ss='充值失败';}
 $pp='';
 if($val['h_bank']==1) {$pp='微信';}
 if($val['h_bank']==2) {$pp='支付宝';}
+if ($val['h_bank']==3) {$pp='充币';}
 			echo '  <li>
 				<span style="width:19.6%;">' , $val['id'] , '</span>
 				<span style="width:19.6%;">' , $val['h_money'] , '</span>

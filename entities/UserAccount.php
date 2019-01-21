@@ -32,7 +32,7 @@ class UserAccount {
 
         return null;
     }
-    public static function load_by_id($db, $userId) {
+    public static function load_by_userId($db, $userId) {
         if (!isset($db) || !($db instanceof dbmysql)) {
             error_log("UserAccount::load(): Not valid dbmysql object");
             return null;
@@ -79,29 +79,42 @@ class UserAccount {
         try {
             $sql = "update `h_member` set  h_point2 = h_point2 + {$amount}  ";
             $sql .= "where id = '{$this->id}' ";
-            @$db->query($sql);
+            $db->query($sql);
 
-            $sql = "insert into `h_log_point2` set ";
-            $sql .= "h_userName = '{$this->username}', ";
-            $sql .= "h_price = '{$amount}', ";
-            $sql .= "h_type = '{$trans_type}', ";
-            if ($refId_type == 'out_trade_no') {
-                $sql .= "h_about = '{$refId_type}:{$refId}', ";                
-            } else {
-                $sql .= "h_about = '{$refId}', ";
+            $ref_transId = ($refId_type == 'out_trade_no') ? "{$refId_type}:{$refId}" : "{$refId}";
+            $sql = "select * from h_log_point2 where h_about='{$ref_transId}'";
+            error_log("check whether there is existing record:" . $sql);
+            $rs = $db->get_one($sql);
+            if (!$rs) {
+                error_log("come to create deposit record");
+                $sql = "insert into `h_log_point2` set ";
+                $sql .= "h_userName = '{$this->username}', ";
+                $sql .= "h_price = '{$amount}', ";
+                $sql .= "h_type = '{$trans_type}', ";
+                if ($refId_type == 'out_trade_no') {
+                    $sql .= "h_about = '{$refId_type}:{$refId}', ";
+                } else {
+                    $sql .= "h_about = '{$refId}', ";
+                }
+                $sql .= "h_addTime =  '" . date('Y-m-d H:i:s') . "', ";
+                $sql .= "h_actIP = '{$userIP}' ";
+                $db->query($sql);
+                //充值记录
+                $pay_time = date('Y-m-d H:i:s');
+                $login = $this->username;
+				$sql = "insert into `h_recharge` set ";
+				$sql .= "h_userName = '{$login}', ";
+				$sql .= "h_money = '{$amount}', ";
+				$sql .= "h_bank = 3, ";
+ 				$sql .= "h_state = 1, h_isReturn=1, ";
+				$sql .= "h_addTime = '{$pay_time}', ";
+				$sql .= "out_trade_no = '{$refId}', ";
+				$sql .= "h_actIP = '{$userIP}' ";
+                $rc = $db->query($sql);
+                
             }
-            $sql .= "h_addTime =  '" . date('Y-m-d H:i:s') . "', ";
-            $sql .= "h_actIP = '{$userIP}' ";
-            @$db->query($sql);
-            //充值记录
-            $sql = "update `h_recharge` SET ";
-            $sql .= "h_state = 1,h_isReturn=1, ";
-            $sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
-            $sql .= "h_refIdType = '" . $refId_type . "', ";
-            $sql .= " where out_trade_no ='{$refId}'";
-            @$db->query($sql);
 
-            @$db->commit();
+            $db->commit();
 
             return true;
         } catch (Exception $e) {
@@ -166,11 +179,12 @@ class UserAccount {
                 error_log("debt: execute " . $sql);
             }
 
+            $withdraw_amount = $amount + $fee;
             $sql = "insert into `h_withdraw` set ";
             $sql .= "h_userName = '" . $this->username . "', ";
-            $sql .= "h_money = '" . $amount . "', ";
+            $sql .= "h_money = '" . $withdraw_amount . "', ";
             $sql .= "h_fee = '" . $fee . "', ";
-            //$sql .= "h_bank = '" . $h_fullName . "', ";
+            $sql .= "h_bank = '提币', ";
             //$sql .= "h_bankFullname = '" . $alipayFullName . "', ";
             //$sql .= "h_bankCardId = '" . $alipayUserName . "', ";
             
