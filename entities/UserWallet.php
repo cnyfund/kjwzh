@@ -40,6 +40,7 @@ class UserWallet{
             "where u.h_userName='{$login}'";
 
         // echo 'quyer is ' . $queryStr;
+        error_log("query userwallet:" . $queryStr);
         $rs = $db->get_one($queryStr);
         if ($rs) {
             $wallet = new UserWallet();
@@ -83,13 +84,13 @@ class UserWallet{
         $this->walletAddress = $walletTool->createaddress(UserWallet::MASTERACCOUNT);
         error_log("UserWallet:create(): get new address " . $this->walletAddress);
 
-        $query = "select id, h_point2 from h_member where h_userName = '{$login}'";
+        $query = "select id, h_userName, h_point2 from h_member where h_userName = '{$login}'";
         $rs = $db->get_one($query);
         if ($rs) {
-            $this->id = $rs['id'];
+            $this->userId = $rs['id'];
             $this->username = $rs['h_userName'];
             $this->balance = $rs['h_point2'];
-            $rs->close();
+            // do not close get_one return.
         } else {
             throw new Exception("UserWallet::create('{$login}','CNFY') could not find the user account");
         }

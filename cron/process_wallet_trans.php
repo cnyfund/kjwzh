@@ -47,6 +47,7 @@ $sql = "select * from `h_withdraw` where h_refIdType = '" . UserAccount::WALLETR
 $sql .= " or h_addTime >= NOW()  - INTERVAL 1 DAY";
 
 $redeem_pending = array();
+$redeem = array();
 $rs_redeem = $db->query($sql);
 if ($rs_redeem) {
     while ($row = $db->fetch_array($rs_redeem)) {
@@ -84,7 +85,7 @@ foreach($data as $trans) {
                         $sql = "update `h_withdraw` set ";
                         $sql .= "h_state='已打款' ";
                         $sql .= "where out_trade_no='" . $trans['txid'] . "' ";
-                        $sql .= "and h_staus='待审核'";
+                        $sql .= "and h_state='待审核'";
                         @$db->query($sql);
                         $updated = $db->affected_rows();
                         if ($updated != 1) {

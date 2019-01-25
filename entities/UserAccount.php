@@ -150,7 +150,7 @@ class UserAccount {
             error_log("Failed to begin trans:" . $db->error() );
         }
         try {
-            $sql = "update `h_member` set  h_point2 = h_point2 - {$amount}  ";
+            $sql = "update `h_member` set  h_point2 = h_point2 - {$amount} - {$fee}  ";
             $sql .= "where id = {$this->id}";
             $db->query($sql);
 

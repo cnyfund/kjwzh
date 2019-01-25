@@ -41,7 +41,7 @@ try {
             $userwallet_external->userId = $memberLogged_userId;
             $userwallet_external->walletCrypto = 'CNYF';
             $userwallet_external->walletAddress = $externalAddress;
-            $update = $userwallet_external->save($db);
+            $updated = $userwallet_external->save($db);
             if ($updated != 1) {
                 error_log("send money: create user external address only updated " . $updated . " row");
             }

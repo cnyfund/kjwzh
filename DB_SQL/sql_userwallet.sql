@@ -6,7 +6,7 @@ CREATE TABLE `h_Wallet` (
   `h_rp` varchar(256) NOT NULL,
   `h_port` int(11) DEFAULT 0 NOT NULL,
   `h_walletpassphrase` varchar(32) DEFAULT NULL,
-  `h_lastUpdatedAt` datetime NOT NULL DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `h_lastUpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`h_crypto`)
 ) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 
@@ -19,7 +19,7 @@ CREATE TABLE `h_UserWallet` (
   `h_balance` decimal(16,2) NOT NULL DEFAULT 0,
   `h_balance_locked` decimal(16,2) NOT NULL DEFAULT 0,
   `h_balance_available` decimal(16,2) NOT NULL DEFAULT 0,
-  `h_lastUpdatedAt` datetime NOT NULL DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `h_lastUpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   FOREIGN KEY (userId)
     REFERENCES h_member(id)
@@ -40,12 +40,14 @@ CREATE TABLE `h_UserWalletExternal` (
     ON DELETE CASCADE
 ) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 
-update h_log_point2 set h_addTime = '2018-08-19 00:00:00' where h_addTime='0000-00-00 00:00:00';
+update h_log_point2 set h_addTime = '2018-08-16 11:46:13' where id=11;
+update h_recharge set h_addTime = '2018-08-16 11:46:13' where id=1;
 
 ALTER TABLE h_member ADD UNIQUE (h_userName);
 ALTER TABLE h_recharge ADD COLUMN h_refIdType VARCHAR(32) DEFAULT 'out_trade_no';
 ALTER TABLE h_withdraw ADD COLUMN h_refIdType VARCHAR(32) DEFAULT 'out_trade_no';
 
 ALTER TABLE h_member ADD COLUMN h_lastUpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
-insert into `h_Wallet` values ('CNYF', 'ru', 'rp', 18188, 'wp', now());
+insert into `h_Wallet` values ('CNYF', 'ru', 'rp', 18189, 'wp', now());
 
+/* DONT FORGET to GET RIGHT RPC USER PWD AND PORT FOR THE CNY DOCKER */

@@ -16,18 +16,18 @@ require_once 'inc_header.php';
 	
 	echo $rs['sumP'];
 	?>
-        </strong>元</span></div>   
-    <div class="con_title">
-        <div class="box">
-			<span style="width:19.6%;">编号</span>
-			<span style="width:19.6%;">金额</span>
-			<span style="width:19.6%;">方式</span>
-			<span style="width:19.6%;">说明</span>    
-			<span style="width:19.6%;">时间</span>
-
-        </div>
-    </div>
-    	<ul class="con_rec">
+        </strong>元</span></div>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th class="info">编号</th>
+				<th class="info">金额</th>
+				<th class="info">方式</th>
+				<th class="info">说明</th>    
+				<th class="info">时间</th>
+			</tr>
+		</thead>
+		<tbody>
 <?php
 list_();
 function list_(){
@@ -71,26 +71,25 @@ $pp='';
 if($val['h_bank']==1) {$pp='微信';}
 if($val['h_bank']==2) {$pp='支付宝';}
 if ($val['h_bank']==3) {$pp='充币';}
-			echo '  <li>
-				<span style="width:19.6%;">' , $val['id'] , '</span>
-				<span style="width:19.6%;">' , $val['h_money'] , '</span>
-				<span style="width:19.6%;">' , ($pp) , '</span>
-				<span style="width:19.6%;">' , $ss , '<br />' , $val['h_reply'] , '</span>
-				<span style="width:19.6%;">' , $val['h_addTime'] , '</span>
-			  </li>';
+echo "           <tr>";
+echo "				<td>" . $val['id'] . "</td>";
+echo "				<td>" . $val['h_money'] . "</td>";
+echo "				<td>" . ($pp) . "</td>";
+echo "				<td>" . $ss . "<br/>" . $val['h_reply'] . "</td>";
+echo "				<td>" . $val['h_addTime'] . "</td>";
+echo "           </tr>";
 		}
 	}
 	else
 	{
-		echo '<li>暂无记录</li>';
+		echo "<tr><td colspan=\"5\">暂无记录</td></tr>";
 	}
 
 	if(count($rs_list) > 0) echo "<li>{$page_list}</li>";
 }
 ?>
- 
-
-</ul></div>
+		</tbody>
+	</table> 
 
 <?php
 require_once 'inc_footer.php';
