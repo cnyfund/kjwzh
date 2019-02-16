@@ -1478,6 +1478,7 @@ else if($act == 'point2_sell_quit'){
 	setcookie("m_fullname", $rs['h_fullName'],NULL,'/');
 	setcookie("m_level", $rs['h_level'],NULL,'/');
 	setcookie("m_isPass", $rs['h_isPass'],NULL,'/');
+	setcookie("m_userId", $rs['id'], NULL, '/');
 	
 	$sql = "update `h_member` set ";
 	$sql .= "h_lastTime = '" . date('Y-m-d H:i:s') . "', ";

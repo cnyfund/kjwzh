@@ -23,10 +23,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pager.php';
 
 <script type="text/javascript" src="/ui/js/jquery.min.js"></script>
 <script type="text/javascript" src="/ui/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/ui/js/bootstrap-confirmation.min.js"></script>
 <script type="text/javascript" src="/ui/layer/layer.js"></script>
 <script type="text/javascript" src="/ui/js/long.js"></script>
 <style>body{ font-size:14px;}</style>
-<script type="text/javascript" src="/ui/js/jquery.js"></script>
+<!--<script type="text/javascript" src="/ui/js/jquery.js"></script>-->
 <script type="text/javascript" src="/ui/js/modernizr.custom.js"></script>
 <script type="text/javascript" src="/ui/js/jquery.dlmenu.js"></script>
 <link href="/res/css/home.css" rel="stylesheet" type="text/css" media="all" />

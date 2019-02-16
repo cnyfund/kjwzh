@@ -8,19 +8,18 @@ require_once 'inc_header.php';
 ?>
 
 <div class="content1">
-    <div class="con_title">
-        <div class="box">
-			<span style="width:16.6%;">提现Id</span>
-			<span style="width:16.6%;">提现金额</span>
-			<span style="width:16.6%;">到账金额</span>
-			<span style="width:16.6%;">收款号</span>    
-			<span style="width:16.6%;">提现状态</span>
-			<span style="width:16.6%;">下单时间</span>
-
-        </div>
-    </div>
-    	<ul class="con_rec">
-
+    <table class="table table-striped">
+		<thead>
+			<tr>
+				<th class="info">提现Id</th>
+				<th class="info">提现金额</th>
+				<th class="info">到账金额</th>
+				<th class="info">收款号</th>    
+				<th class="info">提现状态</th>
+				<th class="info">下单时间</th>				
+			</tr>
+		</thead>
+		<tbody>
 <?php
 list_();
 function list_(){
@@ -58,20 +57,20 @@ function list_(){
 	{
 		foreach ($rs_list as $key=>$val)
 		{
-			echo ' <li>
-            	<span style="width:16.6%;"><a href="/member/txorder.php?oid=',$val['id'],'">' , $val['id'] , '</a></span>
-				<span style="width:16.6%;">' , $val['h_money'] , '</span>
-				<span style="width:16.6%;">' , ($val['h_money'] - $val['h_fee']) , '</span>
-				<span style="width:16.6%;">' , $val['h_bank'] , '（' , $val['h_bankFullname'] , '）' , '</span>
-				<span style="width:16.6%;">' , $val['h_state'] , '<br />' , $val['h_reply'] , '</span>
-				<span style="width:16.6%;">' , $val['h_addTime'] , '</span>
+			echo "           <tr>";
+			echo "				<td><a href=\"/member/txorder.php?oid='{$val['id']}'\">{$val['id']}</a></td>";
+			echo "				<td>" . $val['h_money'] . "</td>";
+			echo "				<td>" . ($val['h_money'] - $val['h_fee']) . "</td>";
+			echo "				<td>{$val['h_bank']}（{$val['h_bankFullname']}）</td>";
+			echo "				<td>{$val['h_state']} <br />{$val['h_reply']}</td>";
+			echo "				<td>{$val['h_addTime']}</td>";			
+			echo "           </tr>";
 
-            </li>';
 		}
 	}
 	else
 	{
-		echo '<li><span style="width:100%;">暂无记录</span></li>';
+		echo "<tr><td colspan=\"5\">暂无记录</td></tr>";
 	}
 
 	if(count($rs_list) > 0) echo "<li>
@@ -79,6 +78,8 @@ function list_(){
                 </li>";
 }
 ?>
-        </ul>
+		</tbody>
+	</table> 
+
 </div>
 <?php require_once 'inc_footer.php'; ?>
