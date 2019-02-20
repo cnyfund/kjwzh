@@ -75,44 +75,51 @@ class UserAccount {
             return false;            
         }
 
+        $ref_transId = ($refId_type == 'out_trade_no') ? "{$refId_type}:{$refId}" : "{$refId}";
+        $sql = "select * from h_log_point2 where h_about='{$ref_transId}'";
+        error_log("check whether there is existing record:" . $sql);
+        $rs = $db->get_one($sql);
+        if ($rs) {
+            error_log("credit: Found the transaction {$ref_transId} in h_log_point2.  Do nothing");
+            return true;
+        }
+
         $db->begin_trans();
         try {
             $sql = "update `h_member` set  h_point2 = h_point2 + {$amount}  ";
             $sql .= "where id = '{$this->id}' ";
             $db->query($sql);
 
-            $ref_transId = ($refId_type == 'out_trade_no') ? "{$refId_type}:{$refId}" : "{$refId}";
-            $sql = "select * from h_log_point2 where h_about='{$ref_transId}'";
-            error_log("check whether there is existing record:" . $sql);
-            $rs = $db->get_one($sql);
-            if (!$rs) {
-                error_log("come to create deposit record");
-                $sql = "insert into `h_log_point2` set ";
-                $sql .= "h_userName = '{$this->username}', ";
-                $sql .= "h_price = '{$amount}', ";
-                $sql .= "h_type = '{$trans_type}', ";
-                if ($refId_type == 'out_trade_no') {
-                    $sql .= "h_about = '{$refId_type}:{$refId}', ";
-                } else {
-                    $sql .= "h_about = '{$refId}', ";
-                }
-                $sql .= "h_addTime =  '" . date('Y-m-d H:i:s') . "', ";
-                $sql .= "h_actIP = '{$userIP}' ";
-                $db->query($sql);
-                //充值记录
-                $pay_time = date('Y-m-d H:i:s');
-                $login = $this->username;
-				$sql = "insert into `h_recharge` set ";
-				$sql .= "h_userName = '{$login}', ";
-				$sql .= "h_money = '{$amount}', ";
-				$sql .= "h_bank = 3, ";
- 				$sql .= "h_state = 1, h_isReturn=1, ";
-				$sql .= "h_addTime = '{$pay_time}', ";
-				$sql .= "out_trade_no = '{$refId}', ";
-				$sql .= "h_actIP = '{$userIP}' ";
-                $rc = $db->query($sql);
-                
+            error_log("credit: execute " . $sql);
+
+            error_log("come to create deposit record");
+            $sql = "insert into `h_log_point2` set ";
+            $sql .= "h_userName = '{$this->username}', ";
+            $sql .= "h_price = '{$amount}', ";
+            $sql .= "h_type = '{$trans_type}', ";
+            if ($refId_type == 'out_trade_no') {
+                $sql .= "h_about = '{$refId_type}:{$refId}', ";
+            } else {
+                $sql .= "h_about = '{$refId}', ";
             }
+            $sql .= "h_addTime =  '" . date('Y-m-d H:i:s') . "', ";
+            $sql .= "h_actIP = '{$userIP}' ";
+            $db->query($sql);
+            error_log("credit: execute " . $sql);
+            //充值记录
+            $pay_time = date('Y-m-d H:i:s');
+            $login = $this->username;
+            $sql = "insert into `h_recharge` set ";
+            $sql .= "h_userName = '{$login}', ";
+            $sql .= "h_money = '{$amount}', ";
+            $sql .= "h_bank = 3, ";
+            $sql .= "h_state = 1, h_isReturn=1, ";
+            $sql .= "h_addTime = '{$pay_time}', ";
+            $sql .= "out_trade_no = '{$refId}', ";
+            $sql .= "h_refIdType = '{$refId_type}',";
+            $sql .= "h_actIP = '{$userIP}' ";
+            $rc = $db->query($sql);
+            error_log("credit: execute " . $sql);
 
             $db->commit();
 

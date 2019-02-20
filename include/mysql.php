@@ -86,7 +86,7 @@ class dbmysql {
 		$query = $this->query($sql, $type);
 		$rs = $this->fetch_array($query);
 		$this->free_result($query);
-		return $rs ;
+                return $rs ;
 	}
 	
 

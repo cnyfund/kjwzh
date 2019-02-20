@@ -14,7 +14,7 @@ $walletTool = new CNYFundTool($wallet);
 error_log("process_wallet_trans: create CNYFundTool");
 
 // list all user's wallet, remember their address and userId
-$sql = "select u.id, u.h_userName, w.h_address from h_userwallet w ";
+$sql = "select u.id, u.h_userName, w.h_address from h_UserWallet w ";
 $sql .= " inner join h_member u on u.id=w.userId";
 
 error_log("query wallet to user " . $sql);
@@ -71,7 +71,7 @@ foreach($data as $trans) {
                 if (array_key_exists($trans['address'], $wallet_to_user)) {
                     error_log("find address " . $trans['address'] . " match to " . $wallet_to_user[$trans['address']]);
                     $user = UserAccount::load($db, $wallet_to_user[$trans['address']]);
-                    $user->credit($db, $trans['amount'], UserAccount::WALLETDEPOSIT, $trans['txid'], '');
+                    $user->credit($db, $trans['amount'], UserAccount::WALLETDEPOSIT, $trans['txid'], UserAccount::WALLETDEPOSIT);
                 }
             }
         } else if ($trans['category'] == 'send') {

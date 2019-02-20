@@ -20,7 +20,7 @@ class Wallet{
             return;
         }
 
-        $rs = $db->get_one("select * from h_wallet where h_crypto='{$crypto}'");
+        $rs = $db->get_one("select * from h_Wallet where h_crypto='{$crypto}'");
         $this->cryptoCode = $rs['h_crypto'];
         $this->rp = $rs['h_rp'];
         $this->ru = $rs['h_ru'];

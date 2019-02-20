@@ -31,7 +31,7 @@ class UserWalletExternal {
         }
 
         $query = "select u.id as uid, u.h_userName, uw.* " .
-                "from h_member u inner join h_userwalletexternal uw on u.id=uw.userId " .
+                "from h_member u inner join h_UserWalletExternal uw on u.id=uw.userId " .
                 "and uw.h_crypto='{$crypto}' " .
                 "where u.h_userName='{$login}'";
         $rs = $db->get_one($query);
@@ -73,7 +73,7 @@ class UserWalletExternal {
         try {
             $queryStr = "";
             if (!is_null($this->lastUpdatedAt)) {
-                $queryStr .= "update from h_userwalletexternal set ";
+                $queryStr .= "update from h_UserWalletExternal set ";
                 $queryStr .= "h_address = '" . $externalAddr . "', ";
                 $queryStr .= "h_alias='" . $alias . "'";
                 $queryStr .= " where user_id=" . $this->userId;
@@ -115,7 +115,7 @@ class UserWalletExternal {
         }
         try {
             $queryStr = "select u.id as uid, u.h_userName, uw.* " .
-                "from h_member u left join h_userwalletexternal uw on u.id=uw.userId " .
+                "from h_member u left join h_UserWalletExternal uw on u.id=uw.userId " .
                 "and uw.h_crypto='{$crypto}' " .
                 "where u.h_userName='{$login}'";
 

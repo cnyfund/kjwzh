@@ -35,7 +35,7 @@ class UserWallet{
         }
         
         $queryStr = "select u.id as uid, u.h_userName, uw.* " .
-            "from h_member u inner join h_userwallet uw on u.id=uw.userId " .
+            "from h_member u inner join h_UserWallet uw on u.id=uw.userId " .
             "and uw.h_crypto='{$crypto}' " .
             "where u.h_userName='{$login}'";
 
@@ -124,7 +124,7 @@ class UserWallet{
         }
         
         $queryStr = "select u.id as uid, u.h_userName, u.h_point2, uw.* " .
-            "from h_member u left join h_userwallet uw on u.id=uw.userId " .
+            "from h_member u left join h_UserWallet uw on u.id=uw.userId " .
             "and uw.h_crypto='{$crypto}' " .
             "where u.h_userName='{$login}'";
 

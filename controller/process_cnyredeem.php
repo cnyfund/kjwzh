@@ -32,7 +32,7 @@ try {
         $transId = $cnytool->sendMoney($externalAddress, $amount, $operationComment);
         error_log("send money get : " . $transId);
         $user = UserAccount::load($db, $memberLogged_userName);
-        $user->debt($db, $amount, 0.01, UserAccount::WALLETREDEEM, $transId, '', getUserIP());
+        $user->debt($db, $amount, 0.01, UserAccount::WALLETREDEEM, $transId, UserAccount::WALLETREDEEM, getUserIP());
         error_log("send money : debt user " . $user->username . " " . $amount . " fee 0.01 " . "trans Id: " . $transId);
 
         if (is_null($userwallet_external)) {
