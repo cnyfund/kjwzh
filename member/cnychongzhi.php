@@ -23,7 +23,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
     <div class="panel panel-info">
       <div class="panel-heading">钱包充值</div>
       <div class="panel-body">如果您希望将虚拟人民币充入您在本网站的钱包，请使用本站给您特设地址:<br>
-      <strong><?php echo "{$userwallet->walletAddress}"; ?></strong>
+      <input type="text" class="form-control" id="address" value="<?php echo "{$userwallet->walletAddress}"; ?>" name="address">
       </div>
     </div>
   </div>
