@@ -244,9 +244,9 @@ li img{display:inherit;}
                 <p>钱包转账</p>
         </a>      </li>
         <li>
-            <a href="http://www.12306.cn/mormhweb/" onClick="ewm();">
+            <a href="https://github.com/axfunds/CnyFund/releases/download/Win32/cnyfund-qt.exe">
                 <i class="iconfont"><img src="/member/mod/hcp.png" width="30" height="30" border="0"> </i>
-                <p>车票</p>
+                <p>钱包下载</p>
         </a>      </li>
 		  <li>
             <a href="http://flights.ctrip.com/?allianceid=4897&sid=155935&ouid=000401app-&utm_medium=&utm_campaign=&utm_source=&isctrip=" onClick="ewm();">
