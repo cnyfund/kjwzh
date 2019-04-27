@@ -17,14 +17,14 @@ error_log("process_wallet_trans: create CNYFundTool");
 $sql = "select u.id, u.h_userName, w.h_address from h_UserWallet w ";
 $sql .= " inner join h_member u on u.id=w.userId";
 
-error_log("query wallet to user " . $sql);
+//error_log("query wallet to user " . $sql);
 $username_to_id = array();
 $wallet_to_user = array();
 $rs_wallet = $db->query($sql);
 if ($rs_wallet) {
     while ($row = $db->fetch_array($rs_wallet)) {
         $wallet_to_user[$row['h_address']] = $row['h_userName'];
-        error_log("wallet " . $row['h_address'] . "=>" . $row['h_userName']);
+        //error_log("wallet " . $row['h_address'] . "=>" . $row['h_userName']);
         $username_to_id[$row['h_userName']] = $row['id'];
     }
 
@@ -65,11 +65,10 @@ $data = $walletTool->listtransactions(UserWallet::MASTERACCOUNT, 1000);
 foreach($data as $trans) {
     if ($trans["confirmations"] >= Wallet::CONFIRMATION_THRESHOLD) {
         if ($trans['category'] == 'receive') {
-            error_log("found receive transaction " . $trans['txid']);
+            //error_log("found receive transaction " . $trans['txid']);
             if (!array_key_exists($trans['txid'], $deposits)) {
-                error_log("this is unrecorded receive transactions. target address " . $trans['address']);
                 if (array_key_exists($trans['address'], $wallet_to_user)) {
-                    error_log("find address " . $trans['address'] . " match to " . $wallet_to_user[$trans['address']]);
+                    error_log("this is unrecorded receive transactions. target address " . $trans['address'] . " match to " . $wallet_to_user[$trans['address']]);
                     $user = UserAccount::load($db, $wallet_to_user[$trans['address']]);
                     $user->credit($db, $trans['amount'], UserAccount::WALLETDEPOSIT, $trans['txid'], UserAccount::WALLETDEPOSIT);
                 }
@@ -92,7 +91,7 @@ foreach($data as $trans) {
                             error_log("confirm wallet withdraw: Didn't find transaction id " . $trans['txid']);
                         }    
                     } else {
-                        error_log("redeem " . $trans['txid'] . " had been proceeded");
+                        //error_log("redeem " . $trans['txid'] . " had been proceeded");
                     }
                 }
                 

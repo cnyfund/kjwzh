@@ -54,7 +54,6 @@ class CNYFundTool {
     }
 
     public function sendmoney($address, $amount, $comment) {
-        error_log("sendmoney: wallet pass " . $this->wpass);
         if (!empty($this->wpass)) {
             error_log("sendmoney: open wallet ...");
             $this->cnyfundtool->walletpassphrase($this->wpass, 30);

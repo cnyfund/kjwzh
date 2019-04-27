@@ -48,7 +48,7 @@ try {
         } else if (strcasecmp($userwallet_external->walletAddress, $externalAddress) != 0) {
             error_log("send money: update user external wallet with address " . $externalAddress . " and original is " . $userwallet_external->walletAddress);
             $userwallet_external->walletAddress = $externalAddress;
-            $update = $userwallet_external->save($db);
+            $updated = $userwallet_external->save($db);
             if ($updated != 1) {
                 error_log("send money: update existing user external address only updated " . $updated . " row");
             }
