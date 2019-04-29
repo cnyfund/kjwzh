@@ -636,12 +636,13 @@ else if($act == 'point2_sell_quit'){
 	//更新
 	$sql = "update `h_member` set ";
 	$sql .= "h_fullName = '" . $fullname . "' ";
-	$sql .= ",h_alipayUserName = '" . $alipayUserName . "' ";
+	$sql .= ",h_weixin = '" . $weixin . "' ";
+	/*$sql .= ",h_alipayUserName = '" . $alipayUserName . "' ";
 	$sql .= ",h_alipayFullName = '" . $alipayFullName . "' ";
 	$sql .= ",h_addrAddress = '" . $addrAddress . "' ";
 	$sql .= ",h_addrPostcode = '" . $addrPostcode . "' ";
 	$sql .= ",h_addrFullName = '" . $addrFullName . "' ";
-	$sql .= ",h_addrTel = '" . $addrTel . "' ";
+	$sql .= ",h_addrTel = '" . $addrTel . "' ";*/
 	$sql .= "where h_userName = '" . $memberLogged_userName . "' ";
 	$db->query($sql);
 			

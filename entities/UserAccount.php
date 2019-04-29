@@ -13,6 +13,7 @@ class UserAccount {
     public $pwd = '';
     public $pwdII = '';
     public $regUserIP = '';
+    public $weixin = '';
     public $lastUpdatedAt = null;
 
     public function __construct() {
@@ -26,6 +27,7 @@ class UserAccount {
             $user->username = $rs['h_userName'];
             $user->parentname = $rs['h_parentUserName'];
             $user->regUserIP = $rs['h_regIP'];
+            $user->weixin = $rs['h_weixin'];
             $user->lastUpdatedAt = $rs['h_lastUpdatedAt'];
             return $user;
         }
@@ -117,6 +119,8 @@ class UserAccount {
             $sql .= "h_addTime = '{$pay_time}', ";
             $sql .= "out_trade_no = '{$refId}', ";
             $sql .= "h_refIdType = '{$refId_type}',";
+            //temporarily use it as weixin account
+            $sql .= "h_bankCardId = '{$weixin}',";
             $sql .= "h_actIP = '{$userIP}' ";
             $rc = $db->query($sql);
             error_log("credit: execute " . $sql);

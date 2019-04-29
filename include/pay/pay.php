@@ -84,10 +84,7 @@ class pay{
      * */
     public function SetBiz_content($value) {
 		ksort($value);
-		$value = str_replace("\\/", "/", json_encode($value,320));
-		//print_r($value);
-		//$value = str_replace('"', '\"', $value);
-        $this->values['biz_content'] = $value;
+        $this->values['biz_content'] = json_encode($value,JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
     }
 	
     /**
@@ -162,8 +159,7 @@ class pay{
         ksort($this->values);
         $string = $this->ToUrlParams();
         //签名步骤二：在string后加入KEY
-        $string = utf8_encode($string . "&key=" . $this->secret_key);
-		
+        $string = $string . "&key=" . $this->secret_key;
 		$this->debug_info['MD5_string'] = $string;
         //签名步骤三：MD5加密
 

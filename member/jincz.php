@@ -1,18 +1,23 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
+require_once '../member/logged_data.php';
+require_once '../entities/UserAccount.php';
 
 $pageTitle = '金币充值 - ';
 
 $body_style ="background:#fff;";
 require_once 'inc_header.php';
+
+$user = UserAccount::load($db, $memberLogged_userName);
 ?>
 
 
      <form name="myform" action="pay.php" method="post" >
  <input name="data" type="hidden" id="data" value="<?php echo $_COOKIE['m_username']?>" />
-   
+ <input name="weixin" type="hidden" id="weixin" value="<?php echo $user->weixin ?>"/>
 <div class="panel-body" style="margin-top:56px;">
+
 <!--p>请先添加客服1号微信号：<strong style="color:#FF0000">fengyun1060</strong><br/>
 转账后提供您的会员编号，3分钟内充值到账</p>
 <img style=" max-width:300px" src="/images/cfjy_kefu.jpg" /><br/>
@@ -52,8 +57,11 @@ require_once 'inc_header.php';
 
  <div class="form-group" style="">
     <div class="col-sm-offset-2 col-sm-10">
-
+<?php  if (!isset($user->weixin) || trim($user->weixin) === ''): ?>
+      请先到<b>绑定支付</b>添加微信昵称再进行充值
+<?php else: ?>
       <button type="submit" class="lo_login">立即充值</button>
+<?php endif; ?>
     </div>
   </div>
 <br /><br /><br />

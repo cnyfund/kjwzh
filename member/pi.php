@@ -10,15 +10,15 @@ require_once 'inc_header.php';
 <div class="login_lo" style="margin-top:56px;">
 	<div class="box">
     	<div class="lo_1 lo_2">
-        	<span>开户机构</span>
-            <input type="text" id="x1" size="60" maxlength="60" placeholder="开户机构" style="color:#333" value="<?php echo $current_user_info['h_fullName']?$current_user_info['h_fullName']:'汇付宝';?>" >
+        	<span>微信昵称</span>
+            <input type="text" id="x1" size="60" maxlength="60" placeholder="微信昵称" style="color:#333" value="<?php echo $current_user_info['h_fullName']?$current_user_info['h_fullName']:'汇付宝';?>" >
         </div>
-		<div class="lo_1 lo_2">
+		<!--<div class="lo_1 lo_2">
         	<span>收款账号</span>
             <input type="text" id="x2" size="60" maxlength="60" placeholder="您的收款账号"  style="color:#333" value="<?php echo $current_user_info['h_alipayUserName'];?>" >
-        </div>
+        </div>-->
 		<div class="lo_1 lo_2">
-        	<span>姓名</span>
+        	<span>收款姓名</span>
             <input type="text" id="x3" size="60" maxlength="60" style="color:#333"  placeholder="您的收款姓名" value="<?php echo $current_user_info['h_alipayFullName'];?>" >
         </div>
              
@@ -79,7 +79,8 @@ require_once 'inc_header.php';
 			}			
 		
 		tishi2();
-		$.get("/member/bin.php?act=pi&fullname="+encodeURI(x1)+"&alipayUserName="+encodeURI(x2)+"&alipayFullName="+encodeURI(x3)+"&addrAddress="+encodeURI(x4)+"&addrPostcode="+encodeURI(x5)+"&addrFullName="+encodeURI(x6)+"&addrTel="+encodeURI(x7),function(e){
+		//$.get("/member/bin.php?act=pi&fullname="+encodeURI(x1)+"&alipayUserName="+encodeURI(x2)+"&alipayFullName="+encodeURI(x3)+"&addrAddress="+encodeURI(x4)+"&addrPostcode="+encodeURI(x5)+"&addrFullName="+encodeURI(x6)+"&addrTel="+encodeURI(x7),function(e){
+		$.get("/member/bin.php?act=pi&fullname="+encodeURI(x3)+"&weixin="+encodeURI(x1),function(e){
 			tishi2close();
 			if(e!=""){
 				layer.msg(unescape(e));
