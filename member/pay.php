@@ -19,7 +19,7 @@ if ($weixin ==="") {
 $total_fee = $ccc*100;
 
 $pay = new pay();
-$out_trade_no = date('YmdHis').rand(10000,99999);
+$out_trade_no = date('YmdHis').rand(100000,999999);
 $subject = 'chongzhi';
 $config['notify_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/notify.php';
 #$config['notify_url'] = 'http://localhost:8000/notify.php';
