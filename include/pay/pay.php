@@ -33,7 +33,6 @@ class pay{
 		$this->SetValue('method',FCBPayConfig::PAYAPPLYMETHOD);
 		$biz_content['api_account_type'] = 'Account';
 		$biz_content['payment_provider'] = 'heepay';
-		$biz_content['out_trade_no'] = "{$biz_content['out_trade_no']}";
 		if(!isset($biz_content['expire_minute'])) $biz_content['expire_minute']= 30;
 		if(!isset($biz_content['client_ip'])) $biz_content['client_ip']= $this->get_client_ip();
 		
@@ -84,7 +83,7 @@ class pay{
      * */
     public function SetBiz_content($value) {
 		ksort($value);
-        $this->values['biz_content'] = json_encode($value,JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+        $this->values['biz_content'] = json_encode($value,JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
     }
 	
     /**

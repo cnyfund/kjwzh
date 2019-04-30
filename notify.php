@@ -15,26 +15,32 @@ $log = array(
 );
 
 $data = json_decode($raw_input,true);
-$out_trade_no = isset($data['out_trade_no'])?$data['out_trade_no']:FALSE;
-$exit_str= $exit_str . "try to find out_trade_no" . $out_trade_no;
-IF($out_trade_no==FALSE) exit($exit_str);
+$out_trade_no = isset($data['out_trade_no'])?$data['out_trade_no']:'';
+error_log("notify.php: try to find out_trade_no " . $out_trade_no);
+if ($out_trade_no === '') exit($exit_str);
 
+try {
+    $sql = "insert into `log` set ";
+    $sql .= "logtime = '" . date('Y-m-d H:i:s') . "',";
+    $sql .= "data = '" . json_encode($log, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK) . "' ";
+    error_log("notify.php: about to insert to log" . $sql);
+    $db->query($sql);
 
-		$sql = "insert into `log` set ";
-		$sql .= "logtime = '" . date('Y-m-d H:i:s') . "',";
-		$sql .= "data = '" . json_encode($log,320) . "' ";
-		$exit_str = $exit_str .  "about to insert to log" . $sql;
-		$db->query($sql);
-
+}catch (Exception $e) {
+    error_log("notify.php:  hit exception " . $e->getMessage());
+    http_response_code(500);
+    echo("Error");
+}
 
 //{"POST":[],"GET":[],"REQUEST_URI":"/notify.php","HTTP_USER_AGENT":"python-requests/2.18.4","HTTP_RAW_POST_DATA":"{"out_trade_no": "20180813094351916146", "sign": "36ABA3461FA8135CB5BB1BB348A23002", "trx_bill_no": "API_TX_20180813094354_297943", "api_key": "1K3IO1TXWPOOTE45ASAX1CDYLE3CLKBQ", "payment_provider": "heepay", "received_time": "20180813014406", "trade_status": "Success", "real_fee": 1, "subject": "chongzhi", "from_account": "13910978598", "attach": "username=13800138000", "version": "1.0", "total_amount": 1}","IP":"54.203.195.52"}	
 
 $sql = "select * from `order` where out_trade_no ='{$out_trade_no}'  LIMIT 1";
+error_log("notify.php: get order " . $out_trade_no);
 $rs = @$db->get_one($sql);
 
 if(!$rs) exit('not find the order ' . $out_trade_no);
 //if($rs['total_fee'] != $data['real_fee']/100) exit('total_fee FAILED');
-$exit_str= $exit_str . "about update order status";
+
 $trade_status = strtolower($data['trade_status']);
 $pay_time = date('Y-m-d H:i:s');
 		$sql = "update `order` set ";
@@ -42,6 +48,7 @@ $pay_time = date('Y-m-d H:i:s');
 		$sql .= "trx_bill_no = '{$data['trx_bill_no']}',";
 		$sql .= "status = '{$trade_status}' ";
 		$sql .= "where out_trade_no = '" .$rs['out_trade_no']."' ";
+		error_log("notify.php: about to update status " . $sql);
 		@$db->query($sql);
 
 		if($trade_status=='paidsuccess' || $trade_status=='success'){
@@ -57,9 +64,11 @@ $pay_time = date('Y-m-d H:i:s');
 				$sql .= "h_about = 'out_trade_no:{$out_trade_no}', ";
 				$sql .= "h_addTime = '{$pay_time}', ";
 				$sql .= "h_actIP = '{$rs['ip']}' ";
+				error_log("notify.php: about to create purchase log point2 to log" . $sql);
 				@$db->query($sql);
 				//充值记录
 				$query = "update `h_recharge` SET h_state = 1,h_isReturn=1,h_addTime = '{$pay_time}' where out_trade_no ='{$rs['out_trade_no']}'";
+				error_log("notify.php: about to update recharge " . $sql);
 				@$db->query($query);
 				
 				//充值记录
@@ -78,6 +87,7 @@ $pay_time = date('Y-m-d H:i:s');
 			}elseif($rs['type']=='withdraw'){
 				//提现
 				$query = "update `h_withdraw` SET h_state = '已打款' where out_trade_no ='{$rs['out_trade_no']}'";
+
 				@$db->query($query);
 			}
 		}elseif($trade_status=='badreceiveaccount'){
@@ -104,3 +114,4 @@ $pay_time = date('Y-m-d H:i:s');
 			}
 		}
 echo('ok');
+?>
