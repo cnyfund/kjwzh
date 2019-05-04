@@ -124,7 +124,23 @@ function get_confirmation_text() {
         $(document).ajaxComplete(function(){
             $("#wait").css("display", "none");
         });
+
+        var click_redeemed = false;
+        var click_confirmed = false;
+        $("#confirmationDialog").on('show.bs.modal', function(){
+            click_redeemed = true;
+        });
+        $("#confirmationDialog").on('hidden.bs.modal', function(){
+            click_redeemed = false;
+            click_confirmed = false;
+        });
+        
         $("#confirm_redeem").click(function () {
+            if (click_confirmed) {
+                return;
+            }
+
+            click_confirmed = true;
             $("#confirmationDialog").modal("hide");
             $.post("/controller/process_cnyredeem.php",
                     $("#form_cnyredeem").serialize()
@@ -138,6 +154,10 @@ function get_confirmation_text() {
         });
 
         $("#btn_redeem").click(function(){
+            if (click_redeemed) {
+                return;
+            }
+
             $("#success_msg").hide();
             $("#error_msg").hide();
             var balance = parseFloat($("#balance").val());
