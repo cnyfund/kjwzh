@@ -54,9 +54,10 @@ function saveeditinfo()
 	global $db,$id,$userName,$passWord,$nickName,$isPass;
 	global $h_mobile,$h_level,$h_parentUserName;
 	global $passWord2;
-	global $h_alipayUserName,$h_alipayFullName,$h_addrAddress,$h_addrPostcode,$h_addrFullName;
+	global $h_alipayUserName,$h_alipayFullName, $h_weixin;
+	global $h_addrAddress,$h_addrPostcode,$h_addrFullName;
 	global $h_qq,$h_a1,$h_q1,$h_a2,$h_q2,$h_a3,$h_q3;
-	global $h_isLock;
+	global $h_canRedeem, $h_isLock;
 	
 	//if($userName == ''){HintAndBack("帐号不能为空！",1);}
 	if($nickName == ''){HintAndBack("姓名不能为空！",1);}
@@ -78,11 +79,12 @@ function saveeditinfo()
 			  h_addrTel = '$h_mobile',
 			  h_level = '$h_level',
 			  h_alipayUserName = '$h_alipayUserName',
-			  h_alipayFullName = '$h_alipayFullName',
+				h_alipayFullName = '$h_alipayFullName',
+				h_weixin = '$h_weixin',
 			  h_addrAddress = '$h_addrAddress',
 			  h_addrPostcode = '$h_addrPostcode',
 			  h_addrFullName = '$h_addrFullName',
-    		  h_parentUserName = '$h_parentUserName',
+    		h_parentUserName = '$h_parentUserName',
 			  h_qq = '$h_qq',
 			  h_a1 = '$h_a1',
 			  h_q1 = '$h_q1',
@@ -90,7 +92,8 @@ function saveeditinfo()
 			  h_q2 = '$h_q2',
 			  h_a3 = '$h_a3',
 			  h_q3 = '$h_q3',
-			  h_isLock = '$h_isLock',
+				h_isLock = '$h_isLock',
+				h_canRedeem = '$h_canRedeem',
 			  h_isPass = '$isPass'
 			  where id = $id";
 
@@ -118,24 +121,31 @@ function editinfo()
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td width="20%" align="center">会员帐号</td>
-    <td><?php echo $rs[h_userName]; ?></td>
+    <td><?php echo $rs['h_userName']; ?></td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">上家编号</td>
-    <td><input name="h_parentUserName" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs[h_parentUserName]; ?>" /></td>
+    <td><input name="h_parentUserName" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs['h_parentUserName']; ?>" /></td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">激活状态</td>
     <td><select name="isPass">
-      <option value="0" <?php if($rs[h_isPass] == 0) echo 'selected'; ?>>锁定，未激活</option>
-	  <option value="1" <?php if($rs[h_isPass] == 1) echo 'selected'; ?>>正常，已激活</option>
+      <option value="0" <?php if($rs['h_isPass'] == 0) echo 'selected'; ?>>锁定，未激活</option>
+	  <option value="1" <?php if($rs['h_isPass'] == 1) echo 'selected'; ?>>正常，已激活</option>
     </select></td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">登录状态</td>
     <td><select name="h_isLock">
-      <option value="0" <?php if($rs[h_isLock] == 0) echo 'selected'; ?>>正常，能登录</option>
-	  <option value="1" <?php if($rs[h_isLock] == 1) echo 'selected'; ?>>锁定，不能登录</option>
+      <option value="0" <?php if($rs['h_isLock'] == 0) echo 'selected'; ?>>正常，能登录</option>
+	  <option value="1" <?php if($rs['h_isLock'] == 1) echo 'selected'; ?>>锁定，不能登录</option>
+    </select></td>
+  </tr>
+  <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
+    <td align="center">提现授权</td>
+    <td><select name="h_canRedeem">
+      <option value="0" <?php if($rs['h_canRedeem'] == 0) echo 'selected'; ?>>不能提现</option>
+	  <option value="1" <?php if($rs['h_canRedeem'] == 1) echo 'selected'; ?>>可以提现</option>
     </select></td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
@@ -146,16 +156,16 @@ function editinfo()
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">激活币</td>
-    <td><?php echo $rs[h_point1]; ?></td>
+    <td><?php echo $rs['h_point1']; ?></td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">元</td>
-    <td><?php echo $rs[h_point2]; ?></td>
+    <td><?php echo $rs['h_point2']; ?></td>
   </tr>
   
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">积分</td>
-    <td><?php echo $rs[h_jifen]; ?></td>
+    <td><?php echo $rs['h_jifen']; ?></td>
   </tr>
   
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
@@ -170,79 +180,83 @@ function editinfo()
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">真实姓名</td>
-    <td><input name="nickName" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs[h_fullName]; ?>" /> </td>
+    <td><input name="nickName" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs['h_fullName']; ?>" /> </td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">支付宝账号</td>
-    <td><input name="h_alipayUserName" type="text" class="inputclass1" maxlength="250" value="<?php echo $rs[h_alipayUserName]; ?>" /> </td>
+    <td><input name="h_alipayUserName" type="text" class="inputclass1" maxlength="250" value="<?php echo $rs['h_alipayUserName']; ?>" /> </td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">支付宝姓名</td>
-    <td><input name="h_alipayFullName" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs[h_alipayFullName]; ?>" /> </td>
+    <td><input name="h_alipayFullName" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs['h_alipayFullName']; ?>" /> </td>
+  </tr>
+  <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
+    <td align="center">微信昵称</td>
+    <td><input name="h_weixin" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs['h_weixin']; ?>" /> </td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">收货地址</td>
-    <td><input name="h_addrAddress" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs[h_addrAddress]; ?>" /> </td>
+    <td><input name="h_addrAddress" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs['h_addrAddress']; ?>" /> </td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">邮编</td>
-    <td><input name="h_addrPostcode" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs[h_addrPostcode]; ?>" /> </td>
+    <td><input name="h_addrPostcode" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs['h_addrPostcode']; ?>" /> </td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">收货人</td>
-    <td><input name="h_addrFullName" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs[h_addrFullName]; ?>" /> </td>
+    <td><input name="h_addrFullName" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs['h_addrFullName']; ?>" /> </td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">收货人手机</td>
-    <td><input name="h_mobile" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs[h_addrTel]; ?>" /> </td>
+    <td><input name="h_mobile" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs['h_addrTel']; ?>" /> </td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">QQ号</td>
-    <td><input name="h_qq" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs[h_qq]; ?>" /> </td>
+    <td><input name="h_qq" type="text" class="inputclass1" maxlength="25" value="<?php echo $rs['h_qq']; ?>" /> </td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">密保问题1</td>
-    <td><input name="h_a1" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs[h_a1]; ?>" /> </td>
+    <td><input name="h_a1" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs['h_a1']; ?>" /> </td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">答案1</td>
-    <td><input name="h_q1" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs[h_q1]; ?>" /> </td>
+    <td><input name="h_q1" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs['h_q1']; ?>" /> </td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">密保问题2</td>
-    <td><input name="h_a2" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs[h_a2]; ?>" /> </td>
+    <td><input name="h_a2" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs['h_a2']; ?>" /> </td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">答案2</td>
-    <td><input name="h_q2" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs[h_q2]; ?>" /> </td>
+    <td><input name="h_q2" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs['h_q2']; ?>" /> </td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">密保问题3</td>
-    <td><input name="h_a3" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs[h_a3]; ?>" /> </td>
+    <td><input name="h_a3" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs['h_a3']; ?>" /> </td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">答案3</td>
-    <td><input name="h_q3" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs[h_q3]; ?>" /> </td>
+    <td><input name="h_q3" type="text" class="inputclass2" maxlength="250" value="<?php echo $rs['h_q3']; ?>" /> </td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">注册时间</td>
-    <td><?php echo $rs[h_regTime]; ?></td>
+    <td><?php echo $rs['h_regTime']; ?></td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">注册IP</td>
-    <td><?php echo $rs[h_regIP]; ?></td>
+    <td><?php echo $rs['h_regIP']; ?></td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">登录次数</td>
-    <td><?php echo $rs[h_logins]; ?></td>
+    <td><?php echo $rs['h_logins']; ?></td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">最后登录</td>
-    <td><?php echo $rs[h_lastTime]; ?></td>
+    <td><?php echo $rs['h_lastTime']; ?></td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center">最后IP</td>
-    <td><?php echo $rs[h_lastIP]; ?></td>
+    <td><?php echo $rs['h_lastIP']; ?></td>
   </tr>
   <tr class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';">
     <td align="center" colspan="2"><input type="submit" name="Submit" value=" 确定修改 " class="bttn">&nbsp;&nbsp;<input name="button" type="button" value=" 返回 " class="bttn" onClick="javascript:history.go(-1);"></td>

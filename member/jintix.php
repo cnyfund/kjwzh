@@ -18,6 +18,7 @@ $rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUse
  <script src="/res/layui/layui.js"></script>
 <div class="login_lo" style="margin-top:56px;">
 	<div class="box">
+	    <span>提现功能正在修复中。对因此产生的不便，深表歉意。</span>
     	<div class="lo_1 lo_2">
         	<span>您的余额</span>
             <input type="text" placeholder="您的余额" id="x1" value="<?php echo $rs['h_point2'];?>" size="60" maxlength="60" style="color:#333" readonly>
@@ -51,7 +52,7 @@ ADD COLUMN `qrcode`  varchar(255) NULL AFTER `h_jifen`;
 			<div class="layui-upload-list" id="file_box"></div>
 		 </div>
         
-        <a href="javascript:;" class="lo_login goumai_go">申请提现</a>
+        <!--<a href="javascript:;" class="lo_login goumai_go">申请提现</a>-->
     </div>
 </div>
 
