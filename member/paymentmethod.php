@@ -4,28 +4,93 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once '../member/logged_data.php';
 require_once '../include/simple_header.php';
 
-$rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUserName = a.h_userName and h_isPass = 1) as comMembers from `h_member` a where h_userName = '{$memberLogged_userName}'");
+if(!$memberLogged){
+	header("Location: " . "/member/login.php");
+	exit;
+}
+	
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $errors= array();
+    $fullname = $_POST['h_fullName'];
+    $weixin = $_POST['h_weixin'];
+    if (isset($_FILES['weixin_qrcode'])) {
+        $file_name = $_FILES['weixin_qrcode']['name'];
+        $file_size =$_FILES['weixin_qrcode']['size'];
+        $file_tmp =$_FILES['weixin_qrcode']['tmp_name'];
+        $file_type=$_FILES['weixin_qrcode']['type'];
+        $file_ext=strtolower(end(explode('.', $_FILES['weixin_qrcode']['name'])));
+        
+        $extensions= array("jpeg","jpg","png");
+        
+        if (in_array($file_ext, $extensions)=== false) {
+            $errors[] = "{$memberLogged_userName} upload weixin qrcode: {$extensions} not allowed, please choose a JPEG or PNG file.";
+        }
+        
+        if ($file_size > 2097152) {
+            $errors[]= "{$memberLogged_userName} upload weixin qrcode: File size must be excately 2 MB";
+        }
+    
+        if (empty($errors)==true) {
+            move_uploaded_file($file_tmp, "images/upload/weixin/".$img_filename);
+            $weixin_qrcode = $memberLogged_userName . "_qrcode" . $file_ext;
+        } else {
+            foreach (errors as $err) {
+                error_log(err);
+            }
+        }
+    }
+    
+    if(empty($errors)==true){
+        $sql = "update from h_memeber set ";
+        $sql = $sql . "h_weixin = '{$weixin}',";
+        $sql = $sql . "h_fullName = '{$fullName}'";
+        if (isset($weixin_qrcode)) {
+            $sql = $sql . ", h_weixin_qrcode = '{$weixin_qrcode}'";
+        }
+
+        $sql = $sql . " where h_userName= '{$memberLogged_userName}'";
+
+        $db->query($sql);
+    }
+
+} else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+	$rs = $db->query("select h_userName, h_weixin, h_fullName, h_weixin_qrcode from h_member where h_userName='{$memberLogged_userName}'");
+	if (!rs) {
+		header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found", true, 404);
+	}
+
+	$username = $rs['h_userName'];
+	$fullname = $rs['h_fullName'];
+	$weixin = $rs['h_weixin_qrcode'];
+	$weixin_qrcode = $rs['h_weixin_qrcode'];
+	$rs->free();
+}
+
 $pageTitle = '支付方式 - ' . $webInfo['h_webName'] . ' - ' . '会员中心';  ;
 generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 ?>
 <div class="container">
-    <form class="form-horizontal" id="form_weixin" >
+    <form class="form-horizontal" id="form_weixin" enctype="multipart/form-data" action="/memeber/paymentmethod.php" method="POST">
+    
     <div class="row">
         <div class="form-group">
            <div class="col-sm-2"></div><div class="col-sm-6"><h3>付款方式</h3></div>
         </div>
         <div class="alert alert-success col-sm-*" role="alert" id='success_msg'></div>
         <div class="alert alert-danger col-sm-*" role="alert" id='error_msg'></div>
+        <?php if (empty($rs["h_weixin_qrcode"])) {?>
+        <div class="alert alert-warning col-sm-*" role="alert" id='warning_msg'>请注意，您还没有上传收款二维码，所以您还暂时不能提现。</div>
+        <?php }?>
         <div class="form-group">
             <label class="control-label col-sm-2">微信昵称:</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" id="h_weixin" name="h_weixin" value="<?php echo $rs['h_weixin'];?>">
+                <input type="text" class="form-control" id="h_weixin" name="h_weixin" value="<?php echo $weixin;?>">
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="pwd">收款人姓名:</label>
             <div class="col-sm-6">          
-                <input type="text" class="form-control" id="fullname" name="h_fullName" value="<?php echo $rs['h_fullName'];?>">
+                <input type="text" class="form-control" id="fullname" name="h_fullName" value="<?php echo $fullname;?>">
             </div>
         </div>
         <div class="form-group">
@@ -33,13 +98,13 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             <div class="controls col-sm-6">
                 <input type="file" id="id_weixin_qrcode" class="filestyle" name="weixin_qrcode" />
             </div>
-            <?php if ($rs && $rs['h_weixin_qrcode']) { ?>
-                <a href="# "><img src="/upload/weixin/<?php echo $rs['h_weixin_qrcode'];?> " width="64 " height="64 "></a>
+            <?php if ( isset($weixin_qrcode) && $weixin_qrcode.length > 0) { ?>
+                <img src="/images/upload/weixin/<?php echo $weixin_qrcode;?> " width="64 " height="64 ">
             <?php }?>
         </div>
         <div class="form-group">        
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="button" class="btn btn-large btn-primary" id="btn_redeem">确认</button>
+                <button type="button" class="btn btn-large btn-primary" id="btn_save">确认</button>
             </div>
         </div>
     </div>
@@ -68,7 +133,20 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 <script>
     $(document).ready(function(){
         $("#success_msg").hide();
+        <?php if(empty($errors)==true){ ?>
         $("#error_msg").hide();
+        <?php } else {
+            ?>
+        $("#error_msg").text("<?php
+            echo "<ul class=\"list-group\">\n";
+            foreach (errors as $err) {
+                echo "  <li class=\"list-group-item list-group-item-danger\">{$err}</li>\n";
+            }
+            echo "</ul>\n"; ?>");
+        $("error_msg").show();<?php
+        }?>
+
+        #("#warning_msg").hide();
         $(document).ajaxStart(function(){
             $("#wait").css("display", "block");
         });
@@ -76,68 +154,29 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             $("#wait").css("display", "none");
         });
 
-        var click_redeemed = false;
-        var click_confirmed = false;
-        $("#confirmationDialog").on('show.bs.modal', function(){
-            click_redeemed = true;
-        });
-        $("#confirmationDialog").on('hidden.bs.modal', function(){
-            click_redeemed = false;
-            click_confirmed = false;
-        });
+        var click_save = false;
         
-        $("#confirm_redeem").click(function () {
-            if (click_confirmed) {
+        $("#btn_save").click(function () {
+            if (click_save) {
                 return;
             }
 
-            click_confirmed = true;
+            var weixin = $("#h_weixin").val().trim();
+            if (weixin.length == 0) {
+                $("#errorTitle").text("输入错误");
+                $("#errorBody").text("请输入微信昵称");
+                $("#errorMessage").modal({backdrop: "static"});
+                return;
+            }
+
+            var id_weixin_qrcode = $("#id_weixin_qrcode").val().trim();
+            if (id_weixin_qrcode.length == 0) {
+                $("#warning_msg").text("nin");
+                $("#wanring_msg").show();
+            }
+            click_save = true;
             $("#confirmationDialog").modal("hide");
-            $.post("/controller/process_cnyredeem.php",
-                    $("#form_cnyredeem").serialize()
-                ).done(function(resp) {
-                    $("#success_msg").text("转账成功");
-                    $("#success_msg").show();
-                }).fail(function(xhr, textstatus, errorThrow) {
-                    $("#error_msg").text("转账请求遇到错误: " + xhr.status + " " + errorThrow);
-                    $("#error_msg").show();
-                });
-        });
-
-        $("#btn_redeem").click(function(){
-            if (click_redeemed) {
-                return;
-            }
-
-            $("#success_msg").hide();
-            $("#error_msg").hide();
-            var balance = parseFloat($("#balance").val());
-            var amountVal= parseFloat($("#amount").val());
-            var amount=isNaN(amountVal)?0.0:amountVal;
-            if (amount <= 0) {
-                $("#errorTitle").text("输入错误");
-                $("#errorBody").text("请输入转账金额");
-                $("#errorMessage").modal({backdrop: "static"});
-                return;
-            }
-
-            var address = $("#address").val().trim();
-            if (address.length < 34) {
-                $("#errorTitle").text("输入错误");
-                $("#errorBody").text("请输入转账用的外部地址");
-                $("#errorMessage").modal({backdrop:"static"});
-                return;                
-            }
-
-            if (amount - balance > 0) {
-                $("#errorTitle").text("输入错误");
-                $("#errorBody").text("提币金额超过您的余额");
-                $("#errorMessage").modal({backdrop: "static"});
-                return;                
-            }
-
-            $("#confirmation_content").text("您将转人民币" + $("#amount").val() + "到外部钱包 " + $("#address").val() + "，请按确认键转账");
-            $("#confirmationDialog").modal({ backdrop: "static"});
+            $("#form_weixin").submit();
         });
     });
 
