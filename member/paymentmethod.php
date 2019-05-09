@@ -9,35 +9,51 @@ if(!$memberLogged){
 	exit;
 }
 	
+$rs = $db->get_one("select h_userName, h_weixin, h_fullName, h_weixin_qrcode from h_member where h_userName='{$memberLogged_userName}'");
+if (!$rs) {
+    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found", true, 404);
+}
+
+$username = $rs['h_userName'];
+$fullname = $rs['h_fullName'];
+$weixin = $rs['h_weixin'];
+$weixin_qrcode = $rs['h_weixin_qrcode'];
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors= array();
     $fullname = $_POST['h_fullName'];
     $weixin = $_POST['h_weixin'];
     if (isset($_FILES['weixin_qrcode'])) {
         $file_name = $_FILES['weixin_qrcode']['name'];
-        $file_size =$_FILES['weixin_qrcode']['size'];
-        $file_tmp =$_FILES['weixin_qrcode']['tmp_name'];
-        $file_type=$_FILES['weixin_qrcode']['type'];
-        $str_array  = explode('.', $file_name);
-        $str_suffix = end($str_array);
-        $file_ext=strtolower($str_suffix);
+        if (!empty($file_name)) {
+            error_log("Come to save upload file {$file_name}");
+            $file_size =$_FILES['weixin_qrcode']['size'];
+            $file_tmp =$_FILES['weixin_qrcode']['tmp_name'];
+            $file_type=$_FILES['weixin_qrcode']['type'];
+            $str_array  = explode('.', $file_name);
+            $str_suffix = end($str_array);
+            $file_ext=strtolower($str_suffix);
+            
+            $extensions= array("jpeg","jpg","png");
+            
+            if (in_array($file_ext, $extensions)=== false) {
+                $errors[] = "{$memberLogged_userName} upload weixin qrcode: {$file_ext} not allowed, please choose a JPEG or PNG file.";
+            }
+            
+            if ($file_size > 2097152) {
+                $errors[]= "{$memberLogged_userName} upload weixin qrcode: File size must be less than  2 MB";
+            }
         
-        $extensions= array("jpeg","jpg","png");
-        
-        if (in_array($file_ext, $extensions)=== false) {
-            $errors[] = "{$memberLogged_userName} upload weixin qrcode: {$extensions} not allowed, please choose a JPEG or PNG file.";
-        }
-        
-        if ($file_size > 2097152) {
-            $errors[]= "{$memberLogged_userName} upload weixin qrcode: File size must be less than  2 MB";
-        }
-    
-        if (empty($errors)==true) {
-            $weixin_qrcode = $memberLogged_userName . "_qrcode" . "." . $file_ext;
-            move_uploaded_file($file_tmp, $_SERVER['DOCUMENT_ROOT'] . "/images/upload/weixin/".$weixin_qrcode);
-        } else {
-            foreach ($errors as $err) {
-                error_log(err);
+            if (empty($errors)==true) {
+                error_log("come to move the file");
+                $weixin_qrcode = $memberLogged_userName . "_qrcode" . "." . $file_ext;
+                $new_filepath = $_SERVER['DOCUMENT_ROOT'] . "/images/upload/weixin/".$weixin_qrcode;
+                move_uploaded_file($file_tmp, $new_filepath);
+                $new_file_time = filemtime($new_filepath);
+            } else {
+                foreach ($errors as $err) {
+                    error_log($err);
+                }
             }
         }
     }
@@ -55,21 +71,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $db->query($sql);
     }
 
-} else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-	$rs = $db->get_one("select h_userName, h_weixin, h_fullName, h_weixin_qrcode from h_member where h_userName='{$memberLogged_userName}'");
-	if (!$rs) {
-		header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found", true, 404);
-	}
-
-	$username = $rs['h_userName'];
-	$fullname = $rs['h_fullName'];
-	$weixin = $rs['h_weixin'];
-	$weixin_qrcode = $rs['h_weixin_qrcode'];
 }
 
 $pageTitle = '支付方式 - ' . $webInfo['h_webName'] . ' - ' . '会员中心';  ;
 generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 ?>
+<style>
+.error_with_icon
+{
+    background-image: url('/images/error_icon.png');
+    background-repeat: no-repeat;
+    background-size: 28px 28px;
+    padding-top: 5px;
+    padding-left: 40px;  /* width of the image plus a little extra padding */
+    height: 100px;
+    display: block;  /* may not need this, but I've found I do */
+}
+</style>
 <div class="container">
     <form class="form-horizontal" id="form_weixin" enctype="multipart/form-data" action="/member/paymentmethod.php" method="POST">
     
@@ -83,15 +101,15 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <div class="alert alert-warning col-sm-*" role="alert" id='warning_msg'>请注意，您还没有上传收款二维码，所以您还暂时不能提现。</div>
         <?php }?>
         <div class="form-group">
-            <label class="control-label col-sm-2">微信昵称:</label>
+            <label class="control-label col-sm-2">微信昵称:</label><span class="asteriskField">*</span>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="h_weixin" name="h_weixin" value="<?php echo $weixin;?>">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-2" for="pwd">收款人姓名:</label>
+            <label class="control-label col-sm-2" for="pwd">收款人姓名:</label><span class="asteriskField">*</span>
             <div class="col-sm-6">          
-                <input type="text" class="form-control" id="fullname" name="h_fullName" value="<?php echo $fullname;?>">
+                <input type="text" class="form-control" id="h_fullName" name="h_fullName" value="<?php echo $fullname;?>">
             </div>
         </div>
         <div class="form-group">
@@ -100,11 +118,15 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                 <input type="file" id="id_weixin_qrcode" class="filestyle" name="weixin_qrcode" />
             </div>
         </div>
-        <?php if (isset($weixin_qrcode) && !empty($weixin_qrcode)) { ?>
+        <?php if (isset($weixin_qrcode) && !empty($weixin_qrcode)) { 
+            
+        $new_filepath = $_SERVER['DOCUMENT_ROOT'] . "/images/upload/weixin/".$weixin_qrcode;
+        $new_file_time = filemtime($new_filepath);        
+        ?>
         <div class="form-group">
             <label class="control-label col-sm-2" for="uploaded_qrcode">上传图像:</label>
             <div class="controls col-sm-6">
-                <img id="uploaded_qrcode" src="/images/upload/weixin/<?php echo $weixin_qrcode;?> " width="64 " height="64 ">
+                <img id="uploaded_qrcode" src="/images/upload/weixin/<?php echo $weixin_qrcode . "?" . $new_file_time;?>" width="64 " height="64 ">
             </div>
         </div>
         <?php }?>
@@ -117,7 +139,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
     </form>
     <!-- Message Modal -->
     <div class="modal" id="errorMessage" role="dialog">
-        <div class="modal-dialog modal-xs">
+        <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header alert alert danger">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -171,6 +193,14 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             if (weixin.length == 0) {
                 $("#errorTitle").text("输入错误");
                 $("#errorBody").text("请输入微信昵称");
+                $("#errorMessage").modal({backdrop: "static"});
+                return;
+            }
+
+            var fullname = $("#h_fullName").val().trim();
+            if (fullname.length == 0) {
+                $("#errorTitle").text("输入错误");
+                $("#errorBody").text("请输入收款人姓名");
                 $("#errorMessage").modal({backdrop: "static"});
                 return;
             }
