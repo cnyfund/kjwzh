@@ -18,7 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $file_size =$_FILES['weixin_qrcode']['size'];
         $file_tmp =$_FILES['weixin_qrcode']['tmp_name'];
         $file_type=$_FILES['weixin_qrcode']['type'];
-        $file_ext=strtolower(end(explode('.', $_FILES['weixin_qrcode']['name'])));
+        $str_array  = explode('.', $file_name);
+        $str_suffix = end($str_array);
+        $file_ext=strtolower($str_suffix);
         
         $extensions= array("jpeg","jpg","png");
         
@@ -27,23 +29,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
         if ($file_size > 2097152) {
-            $errors[]= "{$memberLogged_userName} upload weixin qrcode: File size must be excately 2 MB";
+            $errors[]= "{$memberLogged_userName} upload weixin qrcode: File size must be less than  2 MB";
         }
     
         if (empty($errors)==true) {
-            move_uploaded_file($file_tmp, "images/upload/weixin/".$img_filename);
-            $weixin_qrcode = $memberLogged_userName . "_qrcode" . $file_ext;
+            $weixin_qrcode = $memberLogged_userName . "_qrcode" . "." . $file_ext;
+            move_uploaded_file($file_tmp, $_SERVER['DOCUMENT_ROOT'] . "/images/upload/weixin/".$weixin_qrcode);
         } else {
-            foreach (errors as $err) {
+            foreach ($errors as $err) {
                 error_log(err);
             }
         }
     }
     
     if(empty($errors)==true){
-        $sql = "update from h_memeber set ";
+        $sql = "update h_member set ";
         $sql = $sql . "h_weixin = '{$weixin}',";
-        $sql = $sql . "h_fullName = '{$fullName}'";
+        $sql = $sql . "h_fullName = '{$fullname}'";
         if (isset($weixin_qrcode)) {
             $sql = $sql . ", h_weixin_qrcode = '{$weixin_qrcode}'";
         }
@@ -54,23 +56,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-	$rs = $db->query("select h_userName, h_weixin, h_fullName, h_weixin_qrcode from h_member where h_userName='{$memberLogged_userName}'");
-	if (!rs) {
+	$rs = $db->get_one("select h_userName, h_weixin, h_fullName, h_weixin_qrcode from h_member where h_userName='{$memberLogged_userName}'");
+	if (!$rs) {
 		header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found", true, 404);
 	}
 
 	$username = $rs['h_userName'];
 	$fullname = $rs['h_fullName'];
-	$weixin = $rs['h_weixin_qrcode'];
+	$weixin = $rs['h_weixin'];
 	$weixin_qrcode = $rs['h_weixin_qrcode'];
-	$rs->free();
 }
 
 $pageTitle = '支付方式 - ' . $webInfo['h_webName'] . ' - ' . '会员中心';  ;
 generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 ?>
 <div class="container">
-    <form class="form-horizontal" id="form_weixin" enctype="multipart/form-data" action="/memeber/paymentmethod.php" method="POST">
+    <form class="form-horizontal" id="form_weixin" enctype="multipart/form-data" action="/member/paymentmethod.php" method="POST">
     
     <div class="row">
         <div class="form-group">
@@ -94,14 +95,19 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-2" for="pwd">收款二维码:</label>
+            <label class="control-label col-sm-2" for="id_weixin_qrcode">收款二维码:</label>
             <div class="controls col-sm-6">
                 <input type="file" id="id_weixin_qrcode" class="filestyle" name="weixin_qrcode" />
             </div>
-            <?php if ( isset($weixin_qrcode) && $weixin_qrcode.length > 0) { ?>
-                <img src="/images/upload/weixin/<?php echo $weixin_qrcode;?> " width="64 " height="64 ">
-            <?php }?>
         </div>
+        <?php if (isset($weixin_qrcode) && !empty($weixin_qrcode)) { ?>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="uploaded_qrcode">上传图像:</label>
+            <div class="controls col-sm-6">
+                <img id="uploaded_qrcode" src="/images/upload/weixin/<?php echo $weixin_qrcode;?> " width="64 " height="64 ">
+            </div>
+        </div>
+        <?php }?>
         <div class="form-group">        
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="button" class="btn btn-large btn-primary" id="btn_save">确认</button>
@@ -146,7 +152,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         $("error_msg").show();<?php
         }?>
 
-        #("#warning_msg").hide();
+        $("#warning_msg").hide();
         $(document).ajaxStart(function(){
             $("#wait").css("display", "block");
         });
