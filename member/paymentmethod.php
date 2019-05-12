@@ -70,8 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $db->query($sql);
     }
-
 }
+
+$body_style ="background:#fff; margin-top:56px;";
 
 $pageTitle = '支付方式 - ' . $webInfo['h_webName'] . ' - ' . '会员中心';  ;
 generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
@@ -88,10 +89,10 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
     display: block;  /* may not need this, but I've found I do */
 }
 </style>
+<body style="<?php echo $body_style;?>">
 <div class="container">
-    <form class="form-horizontal" id="form_weixin" enctype="multipart/form-data" action="/member/paymentmethod.php" method="POST">
-    
     <div class="row">
+    <form class="form-horizontal" id="form_weixin" enctype="multipart/form-data" action="/member/paymentmethod.php" method="POST">
         <div class="form-group">
            <div class="col-sm-2"></div><div class="col-sm-6"><h3>付款方式</h3></div>
         </div>
@@ -183,7 +184,6 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         });
 
         var click_save = false;
-        
         $("#btn_save").click(function () {
             if (click_save) {
                 return;
