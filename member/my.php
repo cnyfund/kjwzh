@@ -171,7 +171,7 @@ li img{display:inherit;}
 	</ul>
 	<ul>
         <li>
-            <a href="/member/pi.php" onClick="ewm();" class="bordertop">
+            <a href="/member/paymentmethod.php" onClick="ewm();" class="bordertop">
                 <i class="iconfont"><img src="/member/mod/bk.png" width="30" height="30"></i>
                 <p>绑定支付</p>
           </a>      </li>
