@@ -14,6 +14,7 @@ class UserAccount {
     public $pwdII = '';
     public $regUserIP = '';
     public $weixin = '';
+    public $balance = 0.0;
     public $lastUpdatedAt = null;
 
     public function __construct() {
@@ -27,6 +28,7 @@ class UserAccount {
             $user->username = $rs['h_userName'];
             $user->parentname = $rs['h_parentUserName'];
             $user->regUserIP = $rs['h_regIP'];
+            $user->balance = $rs['h_point2'];
             $user->weixin = $rs['h_weixin'];
             $user->lastUpdatedAt = $rs['h_lastUpdatedAt'];
             return $user;

@@ -1,5 +1,4 @@
 <!--底部导航栏-->
-<div style="width: 100%;margin-bottom: 60px;"></div>
 <div class="footerdhl_f">
 	<!--<a href="goods.php">
     	<b class="movek_f"><img src="/res/picture/zhuye.png"/></b>

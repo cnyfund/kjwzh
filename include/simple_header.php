@@ -1,7 +1,7 @@
 <?php
 
 function generateHeader($pageTitle, $keyword, $pageDescription) {
-    ?>
+?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -15,6 +15,7 @@ function generateHeader($pageTitle, $keyword, $pageDescription) {
 <script type="text/javascript" src="/ui/js/jquery.min.js"></script>
 <script type="text/javascript" src="/ui/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/ui/js/bootstrap-confirmation.min.js"></script>
+<script type="text/javascript" src="/ui/js/bootstrap-filestyle.min.js"></script>
 <script type="text/javascript" src="/ui/js/long.js"></script>
 <script type="text/javascript" src="/ui/js/modernizr.custom.js"></script>
 

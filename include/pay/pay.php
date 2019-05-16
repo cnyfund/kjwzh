@@ -247,12 +247,11 @@ class pay{
             }
         }
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-        echo "about to send curl command to " . $url;
+        error_log("about to send curl command to " . $url);
         $res = curl_exec($curl);
         //返回结果
-        echo "get curl command back" . $res;
+        error_log("get curl command back " . $res);
         if ($res) {
-
             curl_close($curl);
             $arr = json_decode($res, TRUE);
 			return $arr;
@@ -261,7 +260,7 @@ class pay{
             //以下为返回结果验签，如果报验签错误，请查看返回数据，打印$res
             //echo $res;
            // if ($rep->CheckSign()) {
-                return $res;
+            //    return $res;
             //} else {
             //    return "返回数据验签失败";
            // }
