@@ -1,8 +1,9 @@
-<?php
+<?php //Utf-8 encoded
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pay/pay.php';
 
+header("content-type:text/html;charset=UTF-8");
 $exit_str = '';
 $raw_input = file_get_contents('php://input');
 $log = array(
@@ -16,7 +17,7 @@ $log = array(
 
 $data = json_decode($raw_input,true);
 $out_trade_no = isset($data['out_trade_no'])?$data['out_trade_no']:'';
-error_log("notify.php: try to find out_trade_no " . $out_trade_no);
+error_log("notify.php: try to find out_trade_no " . $out_trade_no . " trade status " . $data['trade_status']);
 if ($out_trade_no === '') exit($exit_str);
 
 try {
@@ -38,7 +39,7 @@ $sql = "select * from `order` where out_trade_no ='{$out_trade_no}'  LIMIT 1";
 error_log("notify.php: get order " . $out_trade_no);
 $rs = @$db->get_one($sql);
 
-if(!$rs) exit('not find the order ' . $out_trade_no);
+if(!$rs) exit(utf8_encode('not find the order ' . $out_trade_no));
 //if($rs['total_fee'] != $data['real_fee']/100) exit('total_fee FAILED');
 
 $trade_status = strtolower($data['trade_status']);
@@ -90,8 +91,12 @@ $pay_time = date('Y-m-d H:i:s');
 
 				@$db->query($query);
 			}
-		}elseif($trade_status=='badreceiveaccount'){
-			if($rs['type']=='withdraw'){
+		}elseif ($trade_status=='badreceiveaccount' || $trade_status == 'UserAbandon') {
+			if ($rs['type'] == 'recharge') {
+				$sql = "update `h_recharge` Set h_state=2 where out_trade_no='{$rs['out_trade_no']}'";
+				@$db->query($sql);
+				error_log("notify.php: cancel recharge record for order {$rs['out_trade_no']} with `{$sql}`");
+			} elseif ($rs['type']=='withdraw'){
 				//提现失败
 				$query = "update `h_withdraw` SET h_state = '审核失败',h_isReturn = '1' where out_trade_no ='{$rs['out_trade_no']}'";
 				@$db->query($query);
@@ -113,5 +118,5 @@ $pay_time = date('Y-m-d H:i:s');
 				@$db->query($sql);
 			}
 		}
-echo('ok');
+echo(utf8_encode('ok'));
 ?>

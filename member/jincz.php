@@ -41,17 +41,6 @@ function purchase($db, &$error_msg, &$payment_url) {
     $config['total_fee'] = $total_fee;
     $config['attach'] = 'weixin=' . $weixin;
 
-    //记录充值记录
-    $sql = "insert into `order` set ";
-    $sql .= "username = '" . $_COOKIE['m_username'] . "', ";
-    $sql .= "out_trade_no = '{$out_trade_no}', ";
-    $sql .= "subject = '{$subject}', ";
-    $sql .= "total_fee = " . $amount . ", ";
-    $sql .= "submit_time = '" . date('Y-m-d H:i:s') . "', ";
-    $sql .= "ip = '" . getUserIP() . "' ";
-    error_log($sql);
-    $db->query($sql);
-
     $data  = $pay->applypurchase($config);
 
     error_log(isset($data)? 'return data is ' . $data['return_code']: 'not returned from applypurchase');
@@ -59,10 +48,35 @@ function purchase($db, &$error_msg, &$payment_url) {
         error_log('return code say failed');
         $error_msg = '充值错误: ' . $data['return_msg'];
     }elseif ($data['return_code']=='SUCCESS') {
-      error_log('return code say succeeded');
-      $payment_url = $data['payment_url'];
+        $payment_url = $data['payment_url'];
         if (empty($payment_url)) {
             $error_msg = '充值错误: 系统没有提供付款连接';
+        } else {
+            error_log('chongzhi: Call to applypurchase return code say succeeded, create purchase record');
+            //记录充值记录
+            $sql = "insert into `order` set ";
+            $sql .= "username = '" . $memberLogged_userName . "', ";
+            $sql .= "out_trade_no = '{$out_trade_no}', ";
+            $sql .= "subject = '{$subject}', ";
+            $sql .= "total_fee = " . $amount . ", ";
+            $sql .= "submit_time = '" . date('Y-m-d H:i:s') . "', ";
+            $sql .= "ip = '" . getUserIP() . "' ";
+            error_log($sql);
+            $db->query($sql);
+
+            $pay_time = date('Y-m-d H:i:s');
+            $sql = "insert into `h_recharge` set ";
+            $sql .= "h_userName = '{$memberLogged_userName}', ";
+            $sql .= "h_money = '{$amount}', ";
+            //	$sql .= "h_fee = '" . ($num * $webInfo['h_withdrawFee']) . "', ";
+            $sql .= "h_bank = 0, ";
+            $sql .= "h_bankFullname = 'out_trade_no:{$out_trade_no}', ";
+            $sql .= "h_state = 0, h_isReturn=0, ";
+            $sql .= "h_addTime = '{$pay_time}', ";
+            $sql .= "out_trade_no = '{$out_trade_no}', ";
+            $sql .= "h_actIP = '" . getUserIP() . "' ";
+            $rc = $db->query($sql);
+            error_log($sql);
         }
     }else {
       error_log('return code say unknow');
