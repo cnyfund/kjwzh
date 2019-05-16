@@ -33,8 +33,8 @@ class FCBPayConfig {
     const APIKEY = 'UN57QVEE9RIS858PJ5GUAP2Y7WUS2VUO';
     const SECRETKEY = '93a3a0f5c46c7111a4d880583ab06a19';
     const DEVSITE = 'https://35.165.113.89';
-    #const PRODSITE = 'https://www.uuvc.com';
-    const PRODSITE = 'http://localhost:8000';
+    const PRODSITE = 'https://www.uuvc.com';
+    #const PRODSITE = 'http://localhost:8000';
     const DEVACCOUNTID = '';
     const DEVOPENID = '';
     const NOTIFYURL = 'http://';

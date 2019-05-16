@@ -2,19 +2,13 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pay/pay.php';
+
 require_once '../member/logged_data.php';
 require_once '../include/simple_header.php';
 
 require_once '../entities/UserAccount.php';
 
-$pageTitle = '金币充值 - ';
-
-$body_style ="background:#fff; margin-top:56px;";
-
-$user = UserAccount::load($db, $memberLogged_userName);
-
-error_log("coming to chongzhi");
-function purchase($db, &$error_msg, &$payment_url) {
+function purchase($db, &$error_msg, &$payment_url, $user) {
     $amount = isset($_REQUEST['amount'])?$_REQUEST['amount']:0;
     if ($amount == 0) {
         error_log("amount is 0");
@@ -33,65 +27,78 @@ function purchase($db, &$error_msg, &$payment_url) {
     $pay = new pay();
     $out_trade_no = date('YmdHis').rand(100000,999999);
     $subject = 'chongzhi';
-    #$config['notify_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/notify.php';
-    $config['notify_url'] = 'http://localhost:8000/notify.php';
+    $config['notify_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/notify.php';
+    #$config['notify_url'] = 'http://localhost:8080/notify.php';
     $config['return_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/return.php';
     $config['out_trade_no'] = $out_trade_no;
     $config['subject'] = $subject;
     $config['total_fee'] = $total_fee;
     $config['attach'] = 'weixin=' . $weixin;
 
-    $data  = $pay->applypurchase($config);
-
-    error_log(isset($data)? 'return data is ' . $data['return_code']: 'not returned from applypurchase');
-    if ($data['return_code']=='FAIL') {
-        error_log('return code say failed');
-        $error_msg = '充值错误: ' . $data['return_msg'];
-    }elseif ($data['return_code']=='SUCCESS') {
-        $payment_url = $data['payment_url'];
-        if (empty($payment_url)) {
-            $error_msg = '充值错误: 系统没有提供付款连接';
-        } else {
-            error_log('chongzhi: Call to applypurchase return code say succeeded, create purchase record');
-            //记录充值记录
-            $sql = "insert into `order` set ";
-            $sql .= "username = '" . $memberLogged_userName . "', ";
-            $sql .= "out_trade_no = '{$out_trade_no}', ";
-            $sql .= "subject = '{$subject}', ";
-            $sql .= "total_fee = " . $amount . ", ";
-            $sql .= "submit_time = '" . date('Y-m-d H:i:s') . "', ";
-            $sql .= "ip = '" . getUserIP() . "' ";
-            error_log($sql);
-            $db->query($sql);
-
-            $pay_time = date('Y-m-d H:i:s');
-            $sql = "insert into `h_recharge` set ";
-            $sql .= "h_userName = '{$memberLogged_userName}', ";
-            $sql .= "h_money = '{$amount}', ";
-            //	$sql .= "h_fee = '" . ($num * $webInfo['h_withdrawFee']) . "', ";
-            $sql .= "h_bank = 0, ";
-            $sql .= "h_bankFullname = 'out_trade_no:{$out_trade_no}', ";
-            $sql .= "h_state = 0, h_isReturn=0, ";
-            $sql .= "h_addTime = '{$pay_time}', ";
-            $sql .= "out_trade_no = '{$out_trade_no}', ";
-            $sql .= "h_actIP = '" . getUserIP() . "' ";
-            $rc = $db->query($sql);
-            error_log($sql);
+    try {
+        $data  = $pay->applypurchase($config);
+        error_log(isset($data)? 'return data is ' . $data['return_code']: 'not returned from applypurchase');
+        if ($data['return_code']=='FAIL') {
+            error_log('return code say failed');
+            $error_msg = '充值错误: ' . $data['return_msg'];
+        }elseif ($data['return_code']=='SUCCESS') {
+            $payment_url = $data['payment_url'];
+            if (empty($payment_url)) {
+                $error_msg = '充值错误: 系统没有提供付款连接';
+            } else {
+                error_log('chongzhi: Call to applypurchase return code say succeeded, create purchase record');
+                //记录充值记录
+                $sql = "insert into `order` set ";
+                $sql .= "username = '" . $user->username . "', ";
+                $sql .= "out_trade_no = '{$out_trade_no}', ";
+                $sql .= "subject = '{$subject}', ";
+                $sql .= "total_fee = " . $amount . ", ";
+                $sql .= "submit_time = '" . date('Y-m-d H:i:s') . "', ";
+                $sql .= "ip = '" . getUserIP() . "' ";
+                error_log($sql);
+                $db->query($sql);
+    
+                $pay_time = date('Y-m-d H:i:s');
+                $sql = "insert into `h_recharge` set ";
+                $sql .= "h_userName = '{$user->username}', ";
+                $sql .= "h_money = '{$amount}', ";
+                //	$sql .= "h_fee = '" . ($num * $webInfo['h_withdrawFee']) . "', ";
+                $sql .= "h_bank = 0, ";
+                $sql .= "h_bankFullname = 'out_trade_no:{$out_trade_no}', ";
+                $sql .= "h_state = 0, h_isReturn=0, ";
+                $sql .= "h_addTime = '{$pay_time}', ";
+                $sql .= "out_trade_no = '{$out_trade_no}', ";
+                $sql .= "h_actIP = '" . getUserIP() . "' ";
+                $rc = $db->query($sql);
+                error_log($sql);
+            }
+        }else {
+          error_log('return code say unknow');
+          error_log("System return unknown response " . $data['return_code']);
+          error_log(VAR_DUMP($data));
+          $error_msg = '充值错误: 系统返回不正确的结果: ' . $data['return_code'];
         }
-    }else {
-      error_log('return code say unknow');
-      error_log("System return unknown response " . $data['return_code']);
-      error_log(VAR_DUMP($data));
-      $error_msg = '充值错误: 系统返回不正确的结果: ' . $data['return_code'];
+    }catch (PayExcetion $pe) {
+        $err_message = '充值错误:' . $pe->getMessage() . ".  请稍后再试.";
+        error_log("chongzhi: hit exception " . $pe->getMessage());
     }
+
 }
+
+$pageTitle = '金币充值 - ';
+
+$body_style ="background:#fff; margin-top:56px;";
+
+$user = UserAccount::load($db, $memberLogged_userName);
+
+error_log("coming to chongzhi");
 
 $errMsg = '';
 $paymentUrl = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     error_log("Call purchase");
-    purchase($db, $errMsg, $paymentUrl);
+    purchase($db, $errMsg, $paymentUrl, $user);
     error_log("Done purchase: " . $errMsg . ' paymenturl:' . $paymentUrl);
     if (empty($errMsg)) {
       header('Location:' . $paymentUrl);

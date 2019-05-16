@@ -91,7 +91,7 @@ $pay_time = date('Y-m-d H:i:s');
 
 				@$db->query($query);
 			}
-		}elseif ($trade_status=='badreceiveaccount' || $trade_status == 'UserAbandon') {
+		}elseif ($trade_status=='badreceiveaccount' || $trade_status == 'userabandon') {
 			if ($rs['type'] == 'recharge') {
 				$sql = "update `h_recharge` Set h_state=2 where out_trade_no='{$rs['out_trade_no']}'";
 				@$db->query($sql);
