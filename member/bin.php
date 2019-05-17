@@ -340,14 +340,19 @@ $pay = new pay();
 
 $total_fee = $num - $num * $webInfo['h_withdrawFee'];
 $subject = 'withdraw:'.$memberLogged_userName;
-$config['notify_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/notify.php';
-$config['return_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/return.php';
+if (FCBPayConfig::INTESTMODE) {
+	$config['notify_url'] = 'http://localhost:8000/notify.php';
+	$config['return_url'] = 'http://localhost:8000/return.php';	
+}else {
+	$config['notify_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/notify.php';
+	$config['return_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/return.php';
+}
 
 $config['out_trade_no'] = $out_trade_no;
 $config['subject'] = $subject;
 
 $config['total_fee'] = $total_fee*100;
-$config['attach'] = 'username='.$memberLogged_userName;
+$config['attach'] = 'weixin=' . $rs['h_weixin'] . ';username='.$memberLogged_userName;
 $config['payment_account'] = "{$alipayUserName}";
 
 		//记录提现记录
@@ -365,15 +370,18 @@ $config['payment_account'] = "{$alipayUserName}";
 
 	$data  = $pay->applyredeem($config);
 	
-	if($data['result_code']!='SUCCESS'){
+	if ($data['result_code']=='SUCCESS'){
 		$log['data'] = $data;
 		$log['debug_info'] = $pay->get_debug_info();
 		$sql = "insert into `log` set ";
 		$sql .= "logtime = '" . date('Y-m-d H:i:s') . "',";
 		$sql .= "type = 'withdraw api test',";
 		$sql .= "data = '" . json_encode($data,320) . "' ";
-		//echo $sql;
 		$db->query($sql);
+
+		$sql = "update `order` SET trx_bill_no='{$data['trx_bill_no']}' where out_trade_no ='{$out_trade_no}'";
+		$db->query($sql);
+
 	}
 	echo '申请提现成功';
 }
