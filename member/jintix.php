@@ -1,12 +1,19 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pay/pay.php';
+
+require_once '../member/logged_data.php';
+require_once '../entities/UserAccount.php';
 
 $pageTitle = '我要提现 - ';
 $body_style ="background:#fff;";
 require_once 'inc_header.php';
+
+$user = UserAccount::load($db, $memberLogged_userName);
 $rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUserName = a.h_userName and h_isPass = 1) as comMembers from `h_member` a where h_userName = '{$memberLogged_userName}'");
-	
+
+
 ?>
 <style>
 .lo_1 span {
@@ -18,7 +25,12 @@ $rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUse
  <script src="/res/layui/layui.js"></script>
 <div class="login_lo" style="margin-top:56px;">
 	<div class="box">
-	    <span>提现功能正在修复中。对因此产生的不便，深表歉意。</span>
+	    <?php if (!(isset($user->weixin_qrcode) && !empty($user->weixin_qrcode))):?> 
+	    <span>请到绑定支付上传微信收款二维码，再来进行提现。请注意目前阶段一次提现限额为100元。大额提现请通过多次提现完成。</span>
+			<?php elseif (!$user->canRedeem) : ?>
+			<span> 请联系QQ：2735113810 开通提现。请注意目前阶段一次提现限额为100元。大额提现请通过多次提现完成。</span>
+      <?php endif ?>
+
     	<div class="lo_1 lo_2">
         	<span>您的余额</span>
             <input type="text" placeholder="您的余额" id="x1" value="<?php echo $rs['h_point2'];?>" size="60" maxlength="60" style="color:#333" readonly>
@@ -33,11 +45,11 @@ $rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUse
         </div>
 		<div class="lo_1 lo_2">
         	<span>收款姓名</span>
-            <input type="text" placeholder="收款账号姓名" id="x4" value="<?php echo $rs['h_alipayFullName'];?>" size="60" maxlength="60" style="color:#333" readonly>
+            <input type="text" placeholder="收款账号姓名" id="x4" value="<?php echo $rs['h_fullName'];?>" size="60" maxlength="60" style="color:#333" readonly>
         </div>
 		<div class="lo_1 lo_2">
-        	<span>开户机构</span>
-            <input type="text" placeholder="开户机构" id="x5" value="<?php echo !empty($rs['h_fullName'])?$rs['h_fullName']:'汇付宝';?>" size="60" maxlength="60" style="color:#333" readonly>
+        	<span>微信昵称</span>
+            <input type="text" placeholder="开户机构" id="x5" value="<?php echo !empty($rs['h_weixin'])?$rs['h_weixin']:'汇付宝';?>" size="60" maxlength="60" style="color:#333" readonly>
         </div>
 		<!--div class="lo_1 lo_2">
         	<span>收款二维码</span>
@@ -51,8 +63,7 @@ ADD COLUMN `qrcode`  varchar(255) NULL AFTER `h_jifen`;
 		<div class="lo_2">
 			<div class="layui-upload-list" id="file_box"></div>
 		 </div>
-        
-        <!--<a href="javascript:;" class="lo_login goumai_go">申请提现</a>-->
+        <a href="javascript:;" class="lo_login goumai_go">申请提现</a>
     </div>
 </div>
 
@@ -113,12 +124,16 @@ layui.use('upload', function(){
 			tishi4("请输入填写提现金额",'#x2');
 			return false;
 			}
-
+		if ($("#x2").val() ><?php echo FCBPayConfig::MAXREDEEM ?>) {
+			  tishi4("目前阶段系统一次提现最多100元。大额提现您可以通过多次实现。");
+				return false;
+		 }
 		if(!checkNum($("#x2").val()) || $("#x2").val()<<?php echo $webInfo['h_withdrawMinMoney']; ?>){
 			tishi4("提现金额<?php echo $webInfo['h_withdrawMinMoney']; ?>元起,请输入<?php echo $webInfo['h_withdrawMinMoney']; ?>以上的整数",'#x2');
 			return false;
 			}
-		
+
+
 		if($("#x3").val()==""){
 			tishi4("请输入您收款用的账号",'#x3');
 			return false;

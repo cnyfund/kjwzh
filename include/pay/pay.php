@@ -24,12 +24,12 @@ class pay{
 	
 	/* 申请充值 */
 	public function applypurchase($biz_content=array()){
-		if($this->IsTest){
+		if (FCBPayConfig::INTESTMODE){
 			$api =  FCBPayConfig::DEVSITE . '/api/v1/applypurchase/';
 		}else{
 			$api =  FCBPayConfig::PRODSITE . '/api/v1/applypurchase/';
 		}
-		
+        
 		$this->SetValue('method',FCBPayConfig::PAYAPPLYMETHOD);
 		$biz_content['api_account_type'] = 'Account';
 		$biz_content['payment_provider'] = 'heepay';
@@ -52,7 +52,7 @@ class pay{
 	
 	/* 提现 */
 	public function applyredeem($biz_content=array()){
-		if($this->IsTest){
+		if (FCBPayConfig::INTESTMODE){
 			$api = FCBPayConfig::DEVSITE . '/api/v1/applyredeem/';
 		}else{
 			$api = FCBPayConfig::PRODSITE . '/api/v1/applyredeem/';
