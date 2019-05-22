@@ -341,18 +341,25 @@ $pay = new pay();
 $total_fee = $num - $num * $webInfo['h_withdrawFee'];
 $subject = 'withdraw:'.$memberLogged_userName;
 if (FCBPayConfig::INTESTMODE) {
-	$config['notify_url'] = 'http://localhost:8000/notify.php';
-	$config['return_url'] = 'http://localhost:8000/return.php';	
+	$config['notify_url'] = FCBPayConfig::THISSITEDEV . '/notify.php';
+	$config['return_url'] = FCBPayConfig::THISSITEDEV . '/return.php';	
 }else {
-	$config['notify_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/notify.php';
-	$config['return_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/return.php';
+	$config['notify_url'] = FCBPayConfig::THISSITEPROD . '/notify.php';
+	$config['return_url'] = FCBPayConfig::THISSITEPROD . '/return.php';
 }
 
 $config['out_trade_no'] = $out_trade_no;
 $config['subject'] = $subject;
 
+$qrcode_url = '';
+if (FCBPayConfig::INTESTMODE) {
+    $qrcode_url = FCBPayConfig::THISSITEDEV . '/member/getpaymentqrcode.php?out_trade_no=' . $out_trade_no;
+} else {
+    $qrcode_url = FCBPayConfig::THISSITEPROD . '/member/getpaymentqrcode.php?out_trade_no=' . $out_trade_no;
+}
+
 $config['total_fee'] = $total_fee*100;
-$config['attach'] = 'weixin=' . $rs['h_weixin'] . ';username='.$memberLogged_userName;
+$config['attach'] = 'weixin=' . $rs['h_weixin'] . ';username='.$memberLogged_userName . ';' . $qrcode_url;
 $config['payment_account'] = "{$alipayUserName}";
 
 		//记录提现记录

@@ -14,7 +14,9 @@ class UserAccount {
     public $pwdII = '';
     public $regUserIP = '';
     public $weixin = '';
+    public $weixin_qrcode = '';
     public $balance = 0.0;
+    public $canRedeem = 0;
     public $lastUpdatedAt = null;
 
     public function __construct() {
@@ -30,6 +32,8 @@ class UserAccount {
             $user->regUserIP = $rs['h_regIP'];
             $user->balance = $rs['h_point2'];
             $user->weixin = $rs['h_weixin'];
+            $user->canRedeem = $rs['h_canRedeem'];
+            $user->weixin_qrcode = $rs['h_weixin_qrcode'];
             $user->lastUpdatedAt = $rs['h_lastUpdatedAt'];
             return $user;
         }

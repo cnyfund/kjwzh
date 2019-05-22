@@ -26,9 +26,9 @@ $rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUse
 <div class="login_lo" style="margin-top:56px;">
 	<div class="box">
 	    <?php if (!(isset($user->weixin_qrcode) && !empty($user->weixin_qrcode))):?> 
-	    <span>请到绑定支付上传微信收款二维码，再来进行提现。</span>
+	    <span>请到绑定支付上传微信收款二维码，再来进行提现。请注意目前阶段一次提现限额为100元。大额提现请通过多次提现完成。</span>
 			<?php elseif (!$user->canRedeem) : ?>
-			<span> 请联系QQ：2735113810 开通提现。</span>
+			<span> 请联系QQ：2735113810 开通提现。请注意目前阶段一次提现限额为100元。大额提现请通过多次提现完成。</span>
       <?php endif ?>
 
     	<div class="lo_1 lo_2">
@@ -126,12 +126,16 @@ layui.use('upload', function(){
 			tishi4("请输入填写提现金额",'#x2');
 			return false;
 			}
-
+		if ($("#x2").val() ><?php echo FCBPayConfig::MAXREDEEM ?>) {
+			  tishi4("目前阶段系统一次提现最多100元。大额提现您可以通过多次实现。");
+				return false;
+		 }
 		if(!checkNum($("#x2").val()) || $("#x2").val()<<?php echo $webInfo['h_withdrawMinMoney']; ?>){
 			tishi4("提现金额<?php echo $webInfo['h_withdrawMinMoney']; ?>元起,请输入<?php echo $webInfo['h_withdrawMinMoney']; ?>以上的整数",'#x2');
 			return false;
 			}
-		
+
+
 		if($("#x3").val()==""){
 			tishi4("请输入您收款用的账号",'#x3');
 			return false;
