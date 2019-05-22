@@ -63,9 +63,7 @@ ADD COLUMN `qrcode`  varchar(255) NULL AFTER `h_jifen`;
 		<div class="lo_2">
 			<div class="layui-upload-list" id="file_box"></div>
 		 </div>
-        <?php if (FCBPayConfig::INTESTMODE): ?>
         <a href="javascript:;" class="lo_login goumai_go">申请提现</a>
-				<?php endif ?>
     </div>
 </div>
 

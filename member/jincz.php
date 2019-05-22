@@ -28,12 +28,12 @@ function purchase($db, &$error_msg, &$payment_url, $user) {
     $out_trade_no = date('YmdHis').rand(100000,999999);
     $subject = 'chongzhi';
     if (FCBPayConfig::INTESTMODE) {
-        $config['notify_url'] = 'http://localhost:8080/notify.php';
-    } else {
-        $config['notify_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/notify.php';
+        $config['notify_url'] = FCBPayConfig::THISSITEDEV . '/notify.php';
+        $config['return_url'] = FCBPayConfig::THISSITEDEV . '/return.php';	
+    }else {
+        $config['notify_url'] = FCBPayConfig::THISSITEPROD . '/notify.php';
+        $config['return_url'] = FCBPayConfig::THISSITEPROD . '/return.php';
     }
-
-    $config['return_url'] = 'https://'.$_SERVER['HTTP_HOST'].'/return.php';
     $config['out_trade_no'] = $out_trade_no;
     $config['subject'] = $subject;
     $config['total_fee'] = $total_fee;
