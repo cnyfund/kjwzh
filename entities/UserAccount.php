@@ -14,7 +14,7 @@ class UserAccount {
     public $pwdII = '';
     public $regUserIP = '';
     public $weixin = '';
-    public $weixin_qrcode = '';
+    public $weixin_qrcode = null;
     public $balance = 0.0;
     public $canRedeem = 0;
     public $lastUpdatedAt = null;

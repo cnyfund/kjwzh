@@ -82,7 +82,7 @@ function purchase($db, &$error_msg, &$payment_url, $user) {
           error_log(VAR_DUMP($data));
           $error_msg = '充值错误: 系统返回不正确的结果: ' . $data['return_code'];
         }
-    }catch (PayExcetion $pe) {
+    }catch (PayException $pe) {
         $err_message = '充值错误:' . $pe->getMessage() . ".  请稍后再试.";
         error_log("chongzhi: hit exception " . $pe->getMessage());
     }

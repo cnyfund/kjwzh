@@ -13,6 +13,9 @@ require_once 'inc_header.php';
 $user = UserAccount::load($db, $memberLogged_userName);
 $rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUserName = a.h_userName and h_isPass = 1) as comMembers from `h_member` a where h_userName = '{$memberLogged_userName}'");
 
+$filename = $_SERVER['DOCUMENT_ROOT'] . "/images/upload/weixin/" . $user->weixin_qrcode;
+$ready = isset($user->weixin_qrcode) && strlen($user->weixin_qrcode)>0 && file_exists($filename);
+error_log("redeem: looking for file " . $filename);
 
 ?>
 <style>
@@ -25,7 +28,7 @@ $rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUse
  <script src="/res/layui/layui.js"></script>
 <div class="login_lo" style="margin-top:56px;">
 	<div class="box">
-	    <?php if (!(isset($user->weixin_qrcode) && !empty($user->weixin_qrcode))):?> 
+	    <?php if (!$ready):?> 
 	    <span>请到绑定支付上传微信收款二维码，再来进行提现。请注意目前阶段一次提现限额为100元。大额提现请通过多次提现完成。</span>
 			<?php elseif (!$user->canRedeem) : ?>
 			<span> 请联系QQ：2735113810 开通提现。请注意目前阶段一次提现限额为100元。大额提现请通过多次提现完成。</span>
@@ -60,11 +63,13 @@ ADD COLUMN `qrcode`  varchar(255) NULL AFTER `h_jifen`;
 
  */?>
         </div-->
+		<?php if ($ready) : ?>
 		<div class="lo_2">
 			<div class="layui-upload-list" id="file_box"></div>
 		 </div>
         <a href="javascript:;" class="lo_login goumai_go">申请提现</a>
     </div>
+	  <?php endif ?>
 </div>
 
 <script>
@@ -168,12 +173,14 @@ layui.use('upload', function(){
 				if($("#x4-cos").text().substr(0,6)=="申请提现成功" || e=='申请提现成功'){
 					layer.msg("申请提现成功",{end:function(){location.reload();}});
 					}
-                 if($("#x4-cos").text().substr(0,6)=="密码错误" || e=='密码错误'){
-					layer.msg("您输入的密码不正确，请重新输入！",{end:function(){location.reload();}});
+          if ($("#x4-cos").text().substr(0,6)=="密码错误" || e=='密码错误'){
+					   layer.msg("您输入的密码不正确，请重新输入！",{end:function(){location.reload();}});
+					}else {
+						layer.msg(e, {end:function(){location.reload();}});	
 					}
-                        }else {
-                            layer.msg("提现返回空字符串");
-                        }	
+      }else {
+            layer.msg("提现返回空字符串");
+      }	
 		 },'html');
 	}	
 		
