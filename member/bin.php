@@ -6,6 +6,7 @@ ini_set('display_errors',1);
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/member/logged_data.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pay/pay.php';
 
 if($act == 'pa'){
 	if(!$memberLogged){
@@ -255,7 +256,7 @@ else if($act == 'point2_withdraw'){
 		exit;
 	}
 
-	if(strlen($alipayUserName) <= 0){
+	/*if(strlen($alipayUserName) <= 0){
 		echo '请输入收款账号';
 		exit;
 	}
@@ -267,7 +268,7 @@ else if($act == 'point2_withdraw'){
 	if(strlen($alipayFullName) <= 0){
 		echo '请输入收款姓名';
 		exit;
-	}
+	}*/
     /*if(strlen($h_passWordII) <= 0){
           //echo '请输入安全密码';
           //exit;
@@ -297,6 +298,8 @@ else if($act == 'point2_withdraw'){
 		echo '安全密码错误';
 		exit;
 	}*/
+
+	error_log("redeem: pass basic checking");
 	
 	//扣钱
 	$sql = "update `h_member` set ";
@@ -335,62 +338,73 @@ else if($act == 'point2_withdraw'){
 	$sql .= "h_actIP = '" . getUserIP() . "' ";
 	$db->query($sql);
 	
-require_once $_SERVER['DOCUMENT_ROOT']."/include/pay/pay.php";
-$pay = new pay();
+	error_log("redeem: create db withdraw records");
 
-$total_fee = $num - $num * $webInfo['h_withdrawFee'];
-$subject = 'withdraw:'.$memberLogged_userName;
-if (FCBPayConfig::INTESTMODE) {
-	$config['notify_url'] = FCBPayConfig::THISSITEDEV . '/notify.php';
-	$config['return_url'] = FCBPayConfig::THISSITEDEV . '/return.php';	
-}else {
-	$config['notify_url'] = FCBPayConfig::THISSITEPROD . '/notify.php';
-	$config['return_url'] = FCBPayConfig::THISSITEPROD . '/return.php';
-}
+	$total_fee = $num - $num * $webInfo['h_withdrawFee'];
+	$subject = 'withdraw:'.$memberLogged_userName;
+	if (FCBPayConfig::INTESTMODE) {
+		$config['notify_url'] = FCBPayConfig::THISSITEDEV . '/notify.php';
+		$config['return_url'] = FCBPayConfig::THISSITEDEV . '/return.php';	
+	}else {
+		$config['notify_url'] = FCBPayConfig::THISSITEPROD . '/notify.php';
+		$config['return_url'] = FCBPayConfig::THISSITEPROD . '/return.php';
+	}
 
-$config['out_trade_no'] = $out_trade_no;
-$config['subject'] = $subject;
+	$config['out_trade_no'] = $out_trade_no;
+	$config['subject'] = $subject;
 
-$qrcode_url = '';
-if (FCBPayConfig::INTESTMODE) {
-    $qrcode_url = FCBPayConfig::THISSITEDEV . '/member/getpaymentqrcode.php?out_trade_no=' . $out_trade_no;
-} else {
-    $qrcode_url = FCBPayConfig::THISSITEPROD . '/member/getpaymentqrcode.php?out_trade_no=' . $out_trade_no;
-}
+	$qrcode_url = '';
+	if (FCBPayConfig::INTESTMODE) {
+		$qrcode_url = FCBPayConfig::THISSITEDEV . '/member/getpaymentqrcode.php?out_trade_no=' . $out_trade_no;
+	} else {
+		$qrcode_url = FCBPayConfig::THISSITEPROD . '/member/getpaymentqrcode.php?out_trade_no=' . $out_trade_no;
+	}
 
-$config['total_fee'] = $total_fee*100;
-$config['attach'] = 'weixin=' . $rs['h_weixin'] . ';username='.$memberLogged_userName . ';' . $qrcode_url;
-$config['payment_account'] = "{$alipayUserName}";
+	$config['total_fee'] = $total_fee*100;
+	$config['attach'] = 'weixin=' . $rs['h_weixin'] . ';username='.$memberLogged_userName . ';' . $qrcode_url;
+	$config['payment_account'] = "{$alipayUserName}";
 
-		//记录提现记录
-		$sql = "insert into `order` set ";
-		$sql .= "username = '" . $memberLogged_userName . "', ";
-		$sql .= "out_trade_no = '{$out_trade_no}', ";
-		$sql .= "subject = '{$subject}', ";
-		$sql .= "total_fee = " . $total_fee . ", ";
-		$sql .= "type = 'withdraw', ";
-		$sql .= "submit_time = '" . date('Y-m-d H:i:s') . "', ";
-		$sql .= "ip = '" . getUserIP() . "' ";
-		//echo $sql;
-		$db->query($sql);
-		
-
-	$data  = $pay->applyredeem($config);
+	error_log("redeem: finish create api cal request");
+	//记录提现记录
+	$sql = "insert into `order` set ";
+	$sql .= "username = '" . $memberLogged_userName . "', ";
+	$sql .= "out_trade_no = '{$out_trade_no}', ";
+	$sql .= "subject = '{$subject}', ";
+	$sql .= "total_fee = " . $total_fee . ", ";
+	$sql .= "type = 'withdraw', ";
+	$sql .= "submit_time = '" . date('Y-m-d H:i:s') . "', ";
+	$sql .= "ip = '" . getUserIP() . "' ";
+	//echo $sql;
+	$db->query($sql);
 	
-	if ($data['result_code']=='SUCCESS'){
-		$log['data'] = $data;
-		$log['debug_info'] = $pay->get_debug_info();
-		$sql = "insert into `log` set ";
-		$sql .= "logtime = '" . date('Y-m-d H:i:s') . "',";
-		$sql .= "type = 'withdraw api test',";
-		$sql .= "data = '" . json_encode($data,320) . "' ";
-		$db->query($sql);
-
-		$sql = "update `order` SET trx_bill_no='{$data['trx_bill_no']}' where out_trade_no ='{$out_trade_no}'";
-		$db->query($sql);
+	error_log("redeem: about to call redeem api");
+	try {
+		$pay = new pay();
+		$data  = $pay->applyredeem($config);
+	
+		if ($data['result_code']=='SUCCESS'){
+			error_log("redeem: call to redeem api succeeded");
+			$log['data'] = $data;
+			$log['debug_info'] = $pay->get_debug_info();
+			$sql = "insert into `log` set ";
+			$sql .= "logtime = '" . date('Y-m-d H:i:s') . "',";
+			$sql .= "type = 'withdraw api test',";
+			$sql .= "data = '" . json_encode($data,320) . "' ";
+			$db->query($sql);
+	
+			$sql = "update `order` SET trx_bill_no='{$data['trx_bill_no']}' where out_trade_no ='{$out_trade_no}'";
+			$db->query($sql);
+			echo '申请提现成功';
+	
+		} else {
+			echo '申请提现失败';
+		}
+	
+	} catch (PayException $pe) {
+        $err_message = '提现错误:' . $pe->getMessage() . ".  请稍后再试.";
+        error_log("redeem: hit exception " . $pe->getMessage());
 
 	}
-	echo '申请提现成功';
 }
 
 
