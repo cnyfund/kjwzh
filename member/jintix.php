@@ -30,8 +30,6 @@ error_log("redeem: looking for file " . $filename);
 	<div class="box">
 	    <?php if (!$ready):?> 
 	    <span>请到绑定支付上传微信收款二维码，再来进行提现</span>
-			<?php elseif (!$user->canRedeem) : ?>
-			<span> 请联系QQ：2735113810 开通提现。</span>
 			<?php else :?>
 			<span> 每次限额5000元，12小时内到账 </span>
       <?php endif ?>
