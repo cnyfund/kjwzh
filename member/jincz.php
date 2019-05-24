@@ -130,6 +130,8 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <form name="id_purchase_form" class="form-horizontal" action="/member/jincz.php" method="post" >
         <input name="data" type="hidden" id="data" value="<?php echo $_COOKIE['m_username']?>" />
         <input name="weixin" type="hidden" id="weixin" value="<?php echo $user->weixin ?>"/>
+        <h3>充值</h3>
+        <div class="alert alert-info col-sm-*">每次限额5000元，12小时内到账</div>
         <div class="alert alert-success col-sm-*" role="alert" id='success_msg'></div>
         <div class="alert alert-danger col-sm-*" role="alert" id='error_msg'></div>
         <div class="form-group">
@@ -191,6 +193,13 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                 $("#errorBody").text("请输入充值金额");
                 $("#errorMessage").modal({backdrop: "static"});
                 return;
+            }
+
+            if (amount > <?php echo FCBPayConfig::MAXPURCHASE ?>) {
+                $("#errorTitle").text("输入错误");
+                $("#errorBody").text("充值金额不能超过<?php echo FCBPayConfig::MAXPURCHASE ?>");
+                $("#errorMessage").modal({backdrop: "static"});
+                return;                
             }
             $("#id_purchase_form").submit();
         });

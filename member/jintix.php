@@ -29,9 +29,11 @@ error_log("redeem: looking for file " . $filename);
 <div class="login_lo" style="margin-top:56px;">
 	<div class="box">
 	    <?php if (!$ready):?> 
-	    <span>请到绑定支付上传微信收款二维码，再来进行提现。请注意目前阶段一次提现限额为100元。大额提现请通过多次提现完成。</span>
+	    <span>请到绑定支付上传微信收款二维码，再来进行提现</span>
 			<?php elseif (!$user->canRedeem) : ?>
-			<span> 请联系QQ：2735113810 开通提现。请注意目前阶段一次提现限额为100元。大额提现请通过多次提现完成。</span>
+			<span> 请联系QQ：2735113810 开通提现。</span>
+			<?php else :?>
+			<span> 每次限额5000元，12小时内到账 </span>
       <?php endif ?>
 
     	<div class="lo_1 lo_2">
@@ -41,14 +43,6 @@ error_log("redeem: looking for file " . $filename);
 		<div class="lo_1 lo_2">
         	<span>提现金额</span>
             <input type="text" placeholder="未包含相应的平台提现费" id="x2" value="" size="60" maxlength="60" style="color:#333" >
-        </div>
-		<div class="lo_1 lo_2">
-        	<span>收款账号</span>
-            <input type="text" placeholder="收款<?php echo !empty($rs['h_fullName'])?$rs['h_fullName']:'汇付宝';?>账号" id="x3" value="<?php echo $rs['h_alipayUserName'];?>" size="60" maxlength="60" style="color:#333" readonly>
-        </div>
-		<div class="lo_1 lo_2">
-        	<span>收款姓名</span>
-            <input type="text" placeholder="收款账号姓名" id="x4" value="<?php echo $rs['h_fullName'];?>" size="60" maxlength="60" style="color:#333" readonly>
         </div>
 		<div class="lo_1 lo_2">
         	<span>微信昵称</span>
