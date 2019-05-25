@@ -122,7 +122,7 @@ layui.use('upload', function(){
 			return false;
 			}
 		if ($("#x2").val() ><?php echo FCBPayConfig::MAXREDEEM ?>) {
-			  tishi4("目前阶段系统一次提现最多100元。大额提现您可以通过多次实现。");
+			  tishi4("目前阶段系统一次提现最多<?php echo FCBPayConfig::MAXREDEEM ?>元。大额提现您可以通过多次实现。");
 				return false;
 		 }
 		if(!checkNum($("#x2").val()) || $("#x2").val()<<?php echo $webInfo['h_withdrawMinMoney']; ?>){
@@ -131,17 +131,9 @@ layui.use('upload', function(){
 			}
 
 
-		if($("#x3").val()==""){
-			tishi4("请输入您收款用的账号",'#x3');
-			return false;
-			}
-		if($("#x4").val()==""){
-			tishi4("请输入您收款用的账号姓名",'#x4');
-			return false;
-			}		
 		
 		if($("#x5").val()==""){
-			tishi4("请输入开户机构",'#x5');
+			tishi4("请输入微信昵称",'#x5');
 			return false;
 		}
 		layer.msg("共计提现"+$("#x2").val()+"元,确认无误请点击申请提现",{time: 20000, btn: ['确定提现', '我点错了'],btn1: function(index){
