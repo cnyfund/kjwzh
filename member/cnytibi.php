@@ -148,7 +148,7 @@ function get_confirmation_text() {
                     $("#success_msg").text("转账成功");
                     $("#success_msg").show();
                 }).fail(function(xhr, textstatus, errorThrow) {
-                    $("#error_msg").text("转账请求遇到错误: " + xhr.status + " " + errorThrow);
+                    $("#error_msg").text("转账请求遇到错误: " + xhr.responseText + "(" + xhr.status + " " + errorThrow + ")");
                     $("#error_msg").show();
                 });
         });
