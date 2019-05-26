@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     purchase($db, $errMsg, $paymentUrl, $user);
     error_log("Done purchase: " . $errMsg . ' paymenturl:' . $paymentUrl);
     if (empty($errMsg)) {
-      header('Location:' . $paymentUrl);
+      header('Location:' . "/member/purchase_qrcode.php?amount=" . $_REQUEST['amount'] . "&payment_qrcode_url=" . urlencode($paymentUrl));
     }
 }
 

@@ -49,31 +49,34 @@ function get_confirmation_text() {
     <div class="alert alert-danger col-xs-* col-sm-*" role="alert" id='error_msg'>
     </div>
     </div>
+    <div class="row">
+    <div class="alert alert-info  col-xs-* col-sm-*">系统禁止内部地址互转</div> 
     <form class="form-horizontal" id="form_cnyredeem" >
         <div class="form-group">
-        <label class="control-label col-sm-2">您的余额:</label>
-        <div class="col-sm-10">
+        <label class="control-label col-sm-1">您的余额:</label>
+        <div class="col-sm-11">
             <input type="text" class="form-control" id="balance" value="<?php echo $rs['h_point2'];?>" readonly>
         </div>
         </div>
         <div class="form-group">
-        <label class="control-label col-sm-2" for="pwd">转账金额:</label>
-        <div class="col-sm-10">          
+        <label class="control-label col-sm-1" for="pwd">转账金额:</label>
+        <div class="col-sm-11">          
             <input type="text" class="form-control" id="amount" placeholder="注意有0.01元转账费用" name="amount">
         </div>
         </div>
         <div class="form-group">
-        <label class="control-label col-sm-2" for="pwd">转账地址:</label>
-        <div class="col-sm-10">          
+        <label class="control-label col-sm-1" for="pwd">转账地址:</label>
+        <div class="col-sm-11">          
             <input type="text" class="form-control" id="address" placeholder="请输入您的外部钱包地址" value="<?php echo $externaladdress ?>" name="address">
         </div>
         </div>
         <div class="form-group">        
-            <div class="col-sm-offset-2 col-sm-10">
+            <div class="col-sm-offset-1 col-sm-11">
                 <button type="button" class="btn btn-large btn-primary" id="btn_redeem">转帐</button>
             </div>
         </div>
     </form>
+    </div>
     <!-- Message Modal -->
     <div class="modal" id="confirmationDialog" role="dialog">
         <div class="modal-dialog">
@@ -148,7 +151,7 @@ function get_confirmation_text() {
                     $("#success_msg").text("转账成功");
                     $("#success_msg").show();
                 }).fail(function(xhr, textstatus, errorThrow) {
-                    $("#error_msg").text("转账请求遇到错误: " + xhr.status + " " + errorThrow);
+                    $("#error_msg").text("转账请求遇到错误: " + xhr.responseText + "(" + xhr.status + " " + errorThrow + ")");
                     $("#error_msg").show();
                 });
         });

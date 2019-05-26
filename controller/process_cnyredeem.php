@@ -7,6 +7,13 @@ require_once '../entities/UserWallet.php';
 require_once '../entities/UserWalletExternal.php';
 require_once '../entities/UserAccount.php';
 
+function isAddressExternal($db, $addr, $login) {
+    $sql = "select w.*, m.h_userName from `h_UserWallet` w inner join `h_member` m on w.userId=m.id";
+    $sql = $sql . " where w.h_address='" . $addr . "' and m.h_userName!='" . $login . "'";
+    error_log("isAddressExternal(" . $addr . "," . $login . "): query " . $sql);
+    $rs = $db->get_one($sql);
+    return !$rs;
+}
 try {
     $amount = (float)$_POST['amount'];
     $externalAddress = $_POST['address'];
@@ -16,7 +23,12 @@ try {
     } else if ($amount<=0) {
         http_response_code(400);
         echo "请输入转账金额";
+    } else if (!isAddressExternal($db, $externalAddress, $memberLogged_userName)) {
+        http_response_code(400);
+        echo "你输入的地址是内部钱包地址";
+
     } else {
+        error_log("come here thinking address has no issue");
 
         // load user wallet and create it if it does not exist
         $userwallet = UserWallet::load_by_username($db, $memberLogged_userName, 'CNYF');
