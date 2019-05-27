@@ -13,7 +13,7 @@ if (is_null($userwallet)) {
     $userwallet->create($db, $memberLogged_userName, 'CNYF');
 }
 
-$pageTitle = '人民币钱包充值 - ' . $webInfo['h_webName'] . ' - ' . '会员中心';  ;
+$pageTitle = '钱包充币 - ' . $webInfo['h_webName'] . ' - ' . '会员中心';  ;
 generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 ?>
 <body style="<?php echo $body_style; ?>" >
@@ -21,7 +21,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
     <div class="panel panel-info">
-      <div class="panel-heading">钱包充值</div>
+      <div class="panel-heading">钱包充币</div>
       <div class="panel-body">如果您希望将虚拟人民币充入您在本网站的钱包，请使用本站给您特设地址:<br>
       <input type="text" class="form-control" id="address" value="<?php echo "{$userwallet->walletAddress}"; ?>" name="address" readonly>
       </div>

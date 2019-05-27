@@ -18,7 +18,7 @@ if (empty($userwallet->walletCrypto)) {
 $userwalletexternal = UserWalletExternal::load_by_username($db, $memberLogged_userName, 'CNYF');
 $externaladdress = !is_null($userwalletexternal) ? $userwalletexternal->walletAddress : '';
 
-$pageTitle = '人民币钱包转账 - ' . $webInfo['h_webName'] . ' - ' . '会员中心';  ;
+$pageTitle = '钱包提币 - ' . $webInfo['h_webName'] . ' - ' . '会员中心';  ;
 $body_style ="background:#fff;";
 generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 ?>
@@ -42,7 +42,7 @@ function get_confirmation_text() {
 }
 </script>
 <div class="container" style="<?php echo $body_style; ?>">
-    <h3>钱包转账</h3>
+    <h3>钱包提币</h3>
     <div class="row">
     <div class="alert alert-success col-xs-* col-sm-*" role="alert" id='success_msg' >
     </div>
