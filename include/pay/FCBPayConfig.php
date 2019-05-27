@@ -57,5 +57,6 @@ class FCBPayConfig {
     const SIGNTYPE = 'MD5';
     const MAXPURCHASE = 5000;
     const MAXREDEEM = 5000;
+    const REDEEMTARGETCNYFADDRESS = 'CePqp1uYqM3nsNZqaUdQJWe8awdRsKEhGK';
     const INTESTMODE = FALSE;
 }

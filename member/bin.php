@@ -7,6 +7,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/member/logged_data.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pay/pay.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/CNYFundTool.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/entities/UserWallet.php';
+
 
 if($act == 'pa'){
 	if(!$memberLogged){
@@ -379,6 +382,19 @@ else if($act == 'point2_withdraw'){
 	
 	error_log("redeem: about to call redeem api");
 	try {
+		// load user wallet and create it if it does not exist
+		error_log("withdraw: load user wallet of " . $memberLogged_userName);
+		$userwallet = UserWallet::load_by_username($db, $memberLogged_userName, 'CNYF');
+		if (is_null($userwallet)) {
+			$userwallet->create($db, $memberLogged_userName, 'CNYF');
+		}
+
+		$wallet = new Wallet($db, 'CNYF');
+		$cnytool = new CNYFundTool($wallet);
+		$operationComment = 'withdraw: userId' . $userwallet->userId . '(' . $memberLogged_userName . ') amount: ' . $total_fee . ' to: ' . FCBPayConfig::REDEEMTARGETCNYFADDRESS;
+		$transId = $cnytool->sendMoney(FCBPayConfig::REDEEMTARGETCNYFADDRESS, $total_fee, $operationComment);
+		error_log($operationComment . ' get transId ' . $transId);
+
 		$pay = new pay();
 		$data  = $pay->applyredeem($config);
 	
