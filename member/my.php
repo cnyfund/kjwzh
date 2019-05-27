@@ -236,12 +236,12 @@ li img{display:inherit;}
 			  <li>
             <a href="/member/cnychongzhi.php" onClick="ewm();">
                 <i class="iconfont"><img src="/images/qbchongzhi.png" width="30" height="30"></i>
-                <p>钱包充值</p>
+                <p>钱包充币</p>
           </a>      </li>
 		          <li>
             <a href="/member/cnytibi.php" onClick="ewm();">
                 <i class="iconfont"><img src="/images/qbzhuanzhang.jpeg" width="30" height="30" border="0"> </i>
-                <p>钱包转账</p>
+                <p>钱包提币</p>
         </a>      </li>
         <li>
             <a href="https://github.com/axfunds/CnyFund/releases/download/Win32/cnyfund-qt.exe">
