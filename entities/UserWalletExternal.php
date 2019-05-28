@@ -73,11 +73,11 @@ class UserWalletExternal {
         try {
             $queryStr = "";
             if (!is_null($this->lastUpdatedAt)) {
-                $queryStr .= "update from h_UserWalletExternal set ";
+                $queryStr .= "update `h_UserWalletExternal` set ";
                 $queryStr .= "h_address = '" . $this->walletAddress . "', ";
                 $queryStr .= "h_alias='" . $this->alias . "'";
-                $queryStr .= " where user_id=" . $this->userId;
-                $queryStr .= " and lastUpdatedAt='" . date('Y-m-d H:i:s') . "'";
+                $queryStr .= " where userId=" . $this->userId;
+                $queryStr .= " and h_lastUpdatedAt='" . date('Y-m-d H:i:s') . "'";
             } else {
                 $queryStr = "insert into h_UserWalletExternal set ";
                 $queryStr .= "userId=" . $this->userId . ",";
