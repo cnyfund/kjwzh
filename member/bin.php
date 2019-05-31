@@ -392,14 +392,16 @@ else if($act == 'point2_withdraw'){
 		$wallet = new Wallet($db, 'CNYF');
 		$cnytool = new CNYFundTool($wallet);
 		$operationComment = 'withdraw: userId' . $userwallet->userId . '(' . $memberLogged_userName . ') amount: ' . $total_fee . ' to: ' . FCBPayConfig::REDEEMTARGETCNYFADDRESS;
-		$transId = $cnytool->sendMoney(FCBPayConfig::REDEEMTARGETCNYFADDRESS, $total_fee, $operationComment);
-		error_log($operationComment . ' get transId ' . $transId);
 
 		$pay = new pay();
 		$data  = $pay->applyredeem($config);
 	
 		if ($data['result_code']=='SUCCESS'){
 			error_log("redeem: call to redeem api succeeded");
+
+			$transId = $cnytool->sendMoney(FCBPayConfig::REDEEMTARGETCNYFADDRESS, $total_fee, $operationComment);
+			error_log($operationComment . ' get transId ' . $transId);
+				
 			$log['data'] = $data;
 			$log['debug_info'] = $pay->get_debug_info();
 			$sql = "insert into `log` set ";
