@@ -149,6 +149,10 @@ function get_confirmation_text() {
                     $("#form_cnyredeem").serialize()
                 ).done(function(resp) {
                     $("#success_msg").text("转账成功");
+                    var balance = parseFloat($("#balance").val());
+                    var amountVal= parseFloat($("#amount").val());
+                    balance = balance - amountVal - 0.01;
+                    $("#balance").val(balance.toFixed(2).toString());
                     $("#success_msg").show();
                 }).fail(function(xhr, textstatus, errorThrow) {
                     $("#error_msg").text("转账请求遇到错误: " + xhr.responseText + "(" + xhr.status + " " + errorThrow + ")");
@@ -181,9 +185,9 @@ function get_confirmation_text() {
                 return;                
             }
 
-            if (amount - balance > 0) {
+            if (amount - balance -0.01 > 0) {
                 $("#errorTitle").text("输入错误");
-                $("#errorBody").text("提币金额超过您的余额");
+                $("#errorBody").text("提币金额超过您的余额（包括1分手续费）");
                 $("#errorMessage").modal({backdrop: "static"});
                 return;                
             }

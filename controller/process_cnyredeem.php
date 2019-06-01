@@ -16,8 +16,12 @@ function isAddressExternal($db, $addr, $login) {
 }
 try {
     $amount = (float)$_POST['amount'];
+    $user = UserAccount::load($db, $memberLogged_userName);
     $externalAddress = $_POST['address'];
-    if (empty($externalAddress)){
+    if ($user->balance - $amount < 0) {
+        http_response_code(400);
+        echo "提币会使您的账号透支";
+    } else if (empty($externalAddress)){
         http_response_code(400);
         echo "请输入转账用的外部地址";
     } else if ($amount<=0) {
