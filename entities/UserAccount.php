@@ -163,6 +163,10 @@ class UserAccount {
             return false;            
         }
 
+        if ($this->balance - $amount - $fee < 0) {
+            error_log("Debt " . $amount . " and fee " . $fee . " could get account into negative");
+            return false; 
+        }
         if (!$db->begin_trans()) {
             error_log("Failed to begin trans:" . $db->error() );
         }
