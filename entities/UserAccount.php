@@ -234,6 +234,98 @@ class UserAccount {
         
     }
 
+    public function debt2($db, $amount, $fee=0.0, $trans_type, $refId='', $refId_type='out_trade_no', $userIP='') {
+        if (!isset($db) || !($db instanceof dbmysql)) {
+            error_log("UserAccount::debt2(): Not valid dbmysql object");
+            return false;
+        }
+        
+        if (!isset($amount) || !is_numeric($amount)) {
+            error_log("UserAccount::debt2(): Input amount is invalid numeric value");
+            return false;
+        }
+
+        if (!isset($fee) || !is_numeric($fee)) {
+            error_log("UserAccount::debt2(): Input fee is invalid numeric value");
+            return false;
+        }
+
+        if (!isset($trans_type) || empty($trans_type)) {
+            error_log("UserAccount::debt2(): Input transaction type is empty");
+            return false;            
+        }
+
+        /*if ($this->balance - $amount - $fee < 0) {
+            error_log("Debt " . $amount . " and fee " . $fee . " could get account into negative");
+            return false; 
+        }*/
+        if (!$db->begin_trans()) {
+            error_log("Failed to begin trans2:" . $db->error() );
+        }
+        try {
+            $sql = "update `h_member` set  h_point2 = h_point2 - {$amount} - {$fee}  ";
+            $sql .= "where id = {$this->id}";
+            $db->query($sql);
+
+            error_log("debt2: execute " . $sql);
+
+            //记录扣钱
+            $sql = "insert into `h_log_point2` set ";
+            $sql .= "h_userName = '" . $this->username . "', ";
+            $sql .= "h_price = '-" . $amount. "', ";
+            $sql .= "h_type = '{$trans_type}', ";
+            $sql .= "h_about = '{$refId}', ";
+            $sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
+            $sql .= "h_actIP = '" . $userIP . "' ";
+            $db->query($sql);
+            error_log("debt2: execute " . $sql);
+            
+            if ($fee > 0) {
+                $sql = "insert into `h_log_point2` set ";
+                $sql .= "h_userName = '" . $this->username . "', ";
+                $sql .= "h_price = '-" . $fee. "', ";
+                $sql .= "h_type = '" . UserAccount::WALLETREDEEMFEE . "', ";
+                $sql .= "h_about = '{$refId}', ";
+                $sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
+                $sql .= "h_actIP = '" . $userIP . "' ";
+                $db->query($sql);
+                error_log("debt2: execute " . $sql);
+            }
+
+            $withdraw_amount = $amount + $fee;
+            $sql = "insert into `h_withdraw` set ";
+            $sql .= "h_userName = '" . $this->username . "', ";
+            $sql .= "h_money = '" . $withdraw_amount . "', ";
+            $sql .= "h_fee = '" . $fee . "', ";
+            $sql .= "h_bank = '提币', ";
+            //$sql .= "h_bankFullname = '" . $alipayFullName . "', ";
+            //$sql .= "h_bankCardId = '" . $alipayUserName . "', ";
+            
+            //$sql .= "qrcode = '" . $qrcode . "', ";
+            $sql .= "h_state = '待审核', ";
+            $sql .= "h_addTime = '" . date('Y-m-d H:i:s') . "', ";
+            //$sql .= "h_imgs = '" . $qrcode . "', ";
+            $sql .= "out_trade_no = '" . $refId . "', ";
+            $sql .= "h_refIdType = '" . $refId_type . "', ";       
+            $sql .= "h_actIP = '" . $userIP . "' ";
+            $db->query($sql);
+
+            error_log("debt2: execute " . $sql);
+
+            if (!$db->commit()) {
+                error_log("Failed to commit " . $db->error());                
+            }
+            error_log("debt2: updated " . $db->affected_rows());
+            return true;
+
+        } catch (Exception $e) {
+            error_log("Failed to debt2 user {$this->username}\'s account: " . $e.getMessage());
+            @$db->rollback();
+            return false;
+        }
+        
+    }
+
     public function confirm_withdraw($db, $trans_type, $refId, $refId_type, $status, $status_info='') {
         if (!isset($db) || !($db instanceof dbmysql)) {
             error_log("UserAccount::confirm_withdraw(): Not valid dbmysql object");

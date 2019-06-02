@@ -6,6 +6,10 @@ require_once '../entities/UserWallet.php';
 require_once '../entities/UserWalletExternal.php';
 require_once '../include/simple_header.php';
 
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 $rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUserName = a.h_userName and h_isPass = 1) as comMembers from `h_member` a where h_userName = '{$memberLogged_userName}'");
 $userwallet = new UserWallet();
 $userwallet->load($db, $memberLogged_userName, 'CNYF');
@@ -72,7 +76,9 @@ function get_confirmation_text() {
         </div>
         <div class="form-group">        
             <div class="col-sm-offset-1 col-sm-11">
+            <?php if ($memberLogged_userName == '15811302702') :?>
                 <button type="button" class="btn btn-large btn-primary" id="btn_redeem">转帐</button>
+            <?php endif ?>
             </div>
         </div>
     </form>

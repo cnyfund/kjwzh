@@ -77,8 +77,9 @@ foreach($data as $trans) {
             if (!empty($trans['comment']) && CNYFundTool::get_userId_from_comment($trans['comment'])> 0) {
                 $userId = CNYFundTool::get_userId_from_comment($trans['comment']);
                 $user = UserAccount::load_by_userId($db, $userId);
+                $amount = CNYFundTool::get_amount_from_comment($trans['comment']);
                 if (!array_key_exists($trans['txid'], $redeem) && !array_key_exists($trans['txid'], $redeem_pending)) {
-                    error_log("User " . $user->username . " does not have txid " . $trans['txid'] . " in withdraw record");
+                    error_log("User " . $user->username . " withdraw " . $amount . " but does not have txid " . $trans['txid'] . " in withdraw record");
                 } else {
                     if (array_key_exists($trans['txid'], $redeem_pending)){
                         $sql = "update `h_withdraw` set ";

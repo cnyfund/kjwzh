@@ -77,7 +77,7 @@ class UserWalletExternal {
                 $queryStr .= "h_address = '" . $this->walletAddress . "', ";
                 $queryStr .= "h_alias='" . $this->alias . "'";
                 $queryStr .= " where userId=" . $this->userId;
-                $queryStr .= " and h_lastUpdatedAt='" . date('Y-m-d H:i:s') . "'";
+                $queryStr .= " and h_lastUpdatedAt= '". $this->lastUpdatedAt . "'";
             } else {
                 $queryStr = "insert into h_UserWalletExternal set ";
                 $queryStr .= "userId=" . $this->userId . ",";
@@ -86,6 +86,7 @@ class UserWalletExternal {
                 $queryStr .= "h_alias='" . $this->alias . "',";
                 $queryStr .= "h_lastUpdatedAt='" . date('Y-m-d H:i:s') . "'";       
             }
+            error_log("save external address: " . $queryStr);
             $db->query($queryStr);
             return $db->affected_rows();
         } catch (Exception $e) {
