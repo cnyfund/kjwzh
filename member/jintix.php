@@ -11,6 +11,9 @@ $body_style ="background:#fff;";
 require_once 'inc_header.php';
 
 $user = UserAccount::load($db, $memberLogged_userName);
+$expire = time() + 60 * 30;
+setcookie("m_username", $memberLogged_userName,$expire,'/');
+
 $rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUserName = a.h_userName and h_isPass = 1) as comMembers from `h_member` a where h_userName = '{$memberLogged_userName}'");
 
 $filename = $_SERVER['DOCUMENT_ROOT'] . "/images/upload/weixin/" . $user->weixin_qrcode;

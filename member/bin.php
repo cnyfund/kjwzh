@@ -1517,13 +1517,9 @@ else if($act == 'point2_sell_quit'){
 		// echo {"state":"1"};
 	// }
 	// xiu gai
-	if($remember){
-		$expire = time() + 60 * 60 * 24 * 365;
-	}else{
-		$expire = NULL;
-	}
+	$expire = time() + 60 * 30;
 	setcookie("m_username", $rs['h_userName'],$expire,'/');
-	setcookie("m_password", $rs['h_passWord'],NULL,'/');
+	setcookie("m_password", $rs['h_passWord'],$expire,'/');
 	setcookie("m_fullname", $rs['h_fullName'],NULL,'/');
 	setcookie("m_level", $rs['h_level'],NULL,'/');
 	setcookie("m_isPass", $rs['h_isPass'],NULL,'/');

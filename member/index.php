@@ -6,7 +6,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 $pageTitle = '首页';
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/member/logged_data.php';
-//echo $memberLogged_userName . '|' . $memberLogged_passWord;exit;
 if(!$memberLogged){
 	redirect('login.php');
 }
