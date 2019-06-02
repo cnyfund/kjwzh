@@ -163,7 +163,7 @@ class UserAccount {
             return false;            
         }
 
-        if ($this->balance - $amount - $fee < 0) {
+        if (round($this->balance - $amount - $fee, 2) < 0) {
             error_log("Debt " . $amount . " and fee " . $fee . " could get account into negative");
             return false; 
         }
