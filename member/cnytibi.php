@@ -3,6 +3,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once '../member/logged_data.php';
 require_once '../entities/UserWallet.php';
+require_once '../entities/UserAccount.php';
 require_once '../entities/UserWalletExternal.php';
 require_once '../include/simple_header.php';
 require_once '../entities/UserAccount.php';
