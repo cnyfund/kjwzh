@@ -21,6 +21,7 @@ if (empty($userwallet->walletCrypto)) {
 
 $userwalletexternal = UserWalletExternal::load_by_username($db, $memberLogged_userName, 'CNYF');
 $externaladdress = !is_null($userwalletexternal) ? $userwalletexternal->walletAddress : '';
+$user = UserAccount::load($db, $memberLogged_userName);
 
 $pageTitle = '钱包提币 - ' . $webInfo['h_webName'] . ' - ' . '会员中心';  ;
 $body_style ="background:#fff;";
@@ -76,8 +77,10 @@ function get_confirmation_text() {
         </div>
         <div class="form-group">        
             <div class="col-sm-offset-1 col-sm-11">
-            <?php if ($memberLogged_userName == '15811302702') :?>
+            <?php if ($user->balance > 0) :?>
                 <button type="button" class="btn btn-large btn-primary" id="btn_redeem">转帐</button>
+            <?php else :?>
+                您的余额为负，请先充值或充币
             <?php endif ?>
             </div>
         </div>
