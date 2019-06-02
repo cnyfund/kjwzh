@@ -343,7 +343,8 @@ else if($act == 'point2_withdraw'){
 	
 	error_log("redeem: create db withdraw records");
 
-	$total_fee = $num - $num * $webInfo['h_withdrawFee'];
+	// the fee rate is negative 
+	$total_fee = $num + $num * $webInfo['h_withdrawFee'];
 	$subject = 'withdraw:'.$memberLogged_userName;
 	if (FCBPayConfig::INTESTMODE) {
 		$config['notify_url'] = FCBPayConfig::THISSITEDEV . '/notify.php';
@@ -399,9 +400,9 @@ else if($act == 'point2_withdraw'){
 		if ($data['result_code']=='SUCCESS'){
 			error_log("redeem: call to redeem api succeeded");
 
-			$transId = $cnytool->sendMoney(FCBPayConfig::REDEEMTARGETCNYFADDRESS, $total_fee, $operationComment);
+			$transId = $cnytool->sendMoney(FCBPayConfig::REDEEMTARGETCNYFADDRESS, $num, $operationComment);
 			error_log($operationComment . ' get transId ' . $transId);
-				
+
 			$log['data'] = $data;
 			$log['debug_info'] = $pay->get_debug_info();
 			$sql = "insert into `log` set ";
