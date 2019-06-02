@@ -40,7 +40,7 @@ class CNYFundTool {
             return 0;
         }
 
-        if (strstr($comment, CNYFundTool::USERPREFIX) != $comment) {
+        if (strstr($comment, CNYFundTool::REDEEMPREFIX) != $comment) {
             return 0;
         }
 
@@ -49,7 +49,7 @@ class CNYFundTool {
             error_log("get_amount_from_comment(): can't find second part of comment " . $comment);
             return 0;
         }
-        $prefix_len = strlen(CNYFundTool::USERPREFIX);
+        $prefix_len = strlen(CNYFundTool::REDEEMPREFIX);
         $id_str = substr($parts[1], $prefix_len, strlen($parts[1]) - $prefix_len);
         return intval($id_str);
     }
