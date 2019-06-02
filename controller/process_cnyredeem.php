@@ -19,7 +19,7 @@ try {
     $user = UserAccount::load($db, $memberLogged_userName);
     error_log("redeem CNYF: user " . $memberLogged_userName . " balance: " . $user->balance . " withdraw " . $amount . " leftover: " . ($user->balance - $amount));
     $externalAddress = $_POST['address'];
-    if ($user->balance - $amount - 0.01< 0) {
+    if (round($user->balance - $amount - 0.01, 2)< 0) {
         http_response_code(400);
         echo "提币会使您的账号透支";
     } else if (empty($externalAddress)){
