@@ -1,10 +1,13 @@
 <?php 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/member/logged_data.php';
-//echo $memberLogged_userName . '|' . $memberLogged_passWord;exit;
 if(!$memberLogged){
 	header("Location: /member/login.php");
 	exit();
 }
+$expire = time() + 60 * 30;
+setcookie("m_username", $memberLogged_userName,$expire,'/');
+setcookie("m_password", $memberLogged_passWord,$expire,'/');
+
 if (!isset($pageTitle)){
   $pageTitle='';
 }

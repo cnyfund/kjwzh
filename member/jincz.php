@@ -2,11 +2,8 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pay/pay.php';
-
-require_once '../member/logged_data.php';
-require_once '../include/simple_header.php';
-
-require_once '../entities/UserAccount.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/simple_header.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/entities/UserAccount.php';
 
 function purchase($db, &$error_msg, &$payment_url, $user) {
     $amount = isset($_REQUEST['amount'])?$_REQUEST['amount']:0;
@@ -93,14 +90,8 @@ $pageTitle = '金币充值 - ';
 
 $body_style ="background:#fff; margin-top:56px;";
 
-if(!$memberLogged){
-    echo '您没有登录，请登录后再操作！';
-    exit;
-}
+error_log("chongzhi: user " . $memberLogged_userName);
 $user = UserAccount::load($db, $memberLogged_userName);
-
-error_log("coming to chongzhi");
-
 $errMsg = '';
 $paymentUrl = '';
 
