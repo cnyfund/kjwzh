@@ -60,7 +60,7 @@ function list_(){
 			echo "           <tr>";
 			echo "				<td><a href=\"/member/txorder.php?oid='{$val['id']}'\">{$val['id']}</a></td>";
 			echo "				<td>" . $val['h_money'] . "</td>";
-			echo "				<td>" . ($val['h_money'] - $val['h_fee']) . "</td>";
+			echo "				<td>" . ($val['h_money'] + $val['h_fee']) . "</td>";
 			echo "				<td>{$val['h_bank']}（{$val['h_bankFullname']}）</td>";
 			echo "				<td>{$val['h_state']} <br />{$val['h_reply']}</td>";
 			echo "				<td>{$val['h_addTime']}</td>";			
