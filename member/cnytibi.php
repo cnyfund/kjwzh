@@ -196,7 +196,7 @@ function get_confirmation_text() {
                 return;                
             }
 
-            if (amount - balance -0.01 < 0) {
+            if (balance - amount - 0.01 < 0) {
                 $("#errorTitle").text("输入错误");
                 $("#errorBody").text("提币金额超过您的余额（包括1分手续费）");
                 $("#errorMessage").modal({backdrop: "static"});
