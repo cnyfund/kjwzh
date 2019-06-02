@@ -40,10 +40,6 @@ class CNYFundTool {
             return 0;
         }
 
-        if (strstr($comment, CNYFundTool::REDEEMPREFIX) != $comment) {
-            return 0;
-        }
-
         $parts = explode(",", $comment);
         if (sizeof($parts)<2) {
             error_log("get_amount_from_comment(): can't find second part of comment " . $comment);
@@ -51,7 +47,7 @@ class CNYFundTool {
         }
         $prefix_len = strlen(CNYFundTool::REDEEMPREFIX);
         $id_str = substr($parts[1], $prefix_len, strlen($parts[1]) - $prefix_len);
-        return intval($id_str);
+        return floatval($id_str);
     }
 
     public function __construct($wallet) {
