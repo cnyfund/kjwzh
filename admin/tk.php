@@ -120,7 +120,7 @@ foreach ($rs_list as $key=>$val)
 ?>
   <tr align="center" class="tdbottom" onMouseOver="javascript:this.className='tdbottomover';" onMouseOut="javascript:this.className='tdbottom';"> 
     <td height="25"><?php echo $val['h_userName']; ?></td>
-    <td><?php echo $val['h_money'] , '-' , $val['h_fee'] , '=' , ($val['h_money'] + $val['h_fee']); ?></td>
+    <td><?php echo $val['h_money'] , $val['h_fee'] , '=' , ($val['h_money'] + $val['h_fee']); ?></td>
     <td><?php echo $val['h_bank']; ?>
 <!--	if($val['h_imgs']){
 		echo "<a  href=\"{$val['h_imgs']}\" title=\"点击查看大图\" target=\"_blank\">
