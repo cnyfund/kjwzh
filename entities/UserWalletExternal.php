@@ -87,6 +87,7 @@ class UserWalletExternal {
                 $queryStr .= "h_alias='" . $this->alias . "',";
                 $queryStr .= "h_lastUpdatedAt='" . date('Y-m-d H:i:s') . "'";       
             }
+            error_log("save external address: " . $queryStr);
             $db->query($queryStr);
             return $db->affected_rows();
         } catch (Exception $e) {

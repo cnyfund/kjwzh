@@ -93,6 +93,10 @@ $pageTitle = '金币充值 - ';
 
 $body_style ="background:#fff; margin-top:56px;";
 
+if(!$memberLogged){
+    echo '您没有登录，请登录后再操作！';
+    exit;
+}
 $user = UserAccount::load($db, $memberLogged_userName);
 
 error_log("coming to chongzhi");
@@ -128,7 +132,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 <div class="container" >
     <div class="row">
         <form name="id_purchase_form" class="form-horizontal" action="/member/jincz.php" method="post" >
-        <input name="data" type="hidden" id="data" value="<?php echo $_COOKIE['m_username']?>" />
+        <input name="data" type="hidden" id="data" value="<?php echo $_COOKIE['h_userName']?>" />
         <input name="weixin" type="hidden" id="weixin" value="<?php echo $user->weixin ?>"/>
         <h3>充值</h3>
         <div class="alert alert-info col-sm-*">每次限额5000元，12小时内到账</div>

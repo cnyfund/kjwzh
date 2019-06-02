@@ -5,6 +5,7 @@ require_once '../include/jsonRPCClient.php';
   
 class CNYFundTool {
     const USERPREFIX = "POS UserId:";
+    const REDEEMPREFIX = "redeem:";
     public $cnyfundtool =  null;
     private $wpass = '';
 
@@ -31,6 +32,25 @@ class CNYFundTool {
         $lastpart_len = strlen(strstr($comment,','));
         $prefix_len = strlen(CNYFundTool::USERPREFIX);
         $id_str = substr($comment, $prefix_len, strlen($comment) - $prefix_len - $lastpart_len);
+        return intval($id_str);
+    }
+
+    public static function get_amount_from_comment($comment) {
+        if (empty($comment)) {
+            return 0;
+        }
+
+        if (strstr($comment, CNYFundTool::USERPREFIX) != $comment) {
+            return 0;
+        }
+
+        $parts = explode(",", $comment);
+        if (sizeof($parts)<2) {
+            error_log("get_amount_from_comment(): can't find second part of comment " . $comment);
+            return 0;
+        }
+        $prefix_len = strlen(CNYFundTool::USERPREFIX);
+        $id_str = substr($parts[1], $prefix_len, strlen($parts[1]) - $prefix_len);
         return intval($id_str);
     }
 

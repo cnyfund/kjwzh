@@ -48,6 +48,7 @@ function list_(){
 	$from_record = $rowset->_offset();
 	$query = "select * from `h_log_point2` where {$where} order by h_addTime desc,id desc LIMIT $from_record, $list_num";
 	$result = $db->query($query);
+	$rs_list = array();
 	while($list = $db->fetch_array($result))
 	{
 		$rs_list[]=$list;

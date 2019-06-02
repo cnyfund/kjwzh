@@ -17,6 +17,7 @@ function isAddressExternal($db, $addr, $login) {
 try {
     $amount = (float)$_POST['amount'];
     $user = UserAccount::load($db, $memberLogged_userName);
+    error_log("redeem CNYF: user " . $memberLogged_userName . " balance: " . $user->balance . " withdraw " . $amount . " leftover: " . ($user->balance - $amount));
     $externalAddress = $_POST['address'];
     if ($user->balance - $amount < 0) {
         http_response_code(400);
@@ -44,33 +45,38 @@ try {
         $wallet = new Wallet($db, 'CNYF');
         $cnytool = new CNYFundTool($wallet);
         $operationComment = CNYFundTool::create_redeem_comment($userwallet->userId, $amount, $externalAddress);
-        error_log("about redeem: " . $operationComment);
+        error_log("about redeem:(send money) " . $operationComment);
         $transId = $cnytool->sendMoney($externalAddress, $amount, $operationComment);
         error_log("send money get : " . $transId);
         $user = UserAccount::load($db, $memberLogged_userName);
-        $user->debt($db, $amount, 0.01, UserAccount::WALLETREDEEM, $transId, UserAccount::WALLETREDEEM, getUserIP());
-        error_log("send money : debt user " . $user->username . " " . $amount . " fee 0.01 " . "trans Id: " . $transId);
+        if ($user->debt($db, $amount, 0.01, UserAccount::WALLETREDEEM, $transId, UserAccount::WALLETREDEEM, getUserIP())) {
+            error_log("send money : debt user " . $user->username . " " . $amount . " fee 0.01 " . "trans Id: " . $transId);
 
-        if (is_null($userwallet_external)) {
-            error_log("send money: create user external wallet with address " . $externalAddress);
-            $userwallet_external = new UserWalletExternal();
-            $userwallet_external->userId = $memberLogged_userId;
-            $userwallet_external->walletCrypto = 'CNYF';
-            $userwallet_external->walletAddress = $externalAddress;
-            $updated = $userwallet_external->save($db);
-            if ($updated != 1) {
-                error_log("send money: create user external address only updated " . $updated . " row");
+            if (is_null($userwallet_external)) {
+                error_log("send money: create user external wallet with address " . $externalAddress);
+                $userwallet_external = new UserWalletExternal();
+                $userwallet_external->userId = $memberLogged_userId;
+                $userwallet_external->walletCrypto = 'CNYF';
+                $userwallet_external->walletAddress = $externalAddress;
+                $updated = $userwallet_external->save($db);
+                if ($updated != 1) {
+                    error_log("send money: create user external address only updated " . $updated . " row");
+                }
+            } elseif (strcasecmp($userwallet_external->walletAddress, $externalAddress) != 0) {
+                error_log("send money: update user external wallet with address " . $externalAddress . " and original is " . $userwallet_external->walletAddress);
+                $userwallet_external->walletAddress = $externalAddress;
+                $updated = $userwallet_external->save($db);
+                if ($updated != 1) {
+                    error_log("send money: update existing user external address only updated " . $updated . " row");
+                }
             }
-        } else if (strcasecmp($userwallet_external->walletAddress, $externalAddress) != 0) {
-            error_log("send money: update user external wallet with address " . $externalAddress . " and original is " . $userwallet_external->walletAddress);
-            $userwallet_external->walletAddress = $externalAddress;
-            $updated = $userwallet_external->save($db);
-            if ($updated != 1) {
-                error_log("send money: update existing user external address only updated " . $updated . " row");
-            }
+
+            echo("OK");
+        } else {
+            error_log("redeem coin: show how user " . $memberLogged_userName . " trying to overdraft coin");
+            http_response_code(400);
+            echo "您在进行透支提币账号";
         }
-
-        echo("OK");
     }
     
 }catch (Exception $e) {
