@@ -5,6 +5,7 @@ require_once '../member/logged_data.php';
 require_once '../entities/UserWallet.php';
 require_once '../entities/UserWalletExternal.php';
 require_once '../include/simple_header.php';
+require_once '../entities/UserAccount.php';
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
