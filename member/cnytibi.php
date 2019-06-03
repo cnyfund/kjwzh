@@ -2,6 +2,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/simple_header.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pay/pay.php';
 require_once '../entities/UserWallet.php';
 require_once '../entities/UserAccount.php';
 require_once '../entities/UserWalletExternal.php';
@@ -189,7 +190,7 @@ function get_confirmation_text() {
 
             if (amount - <?php echo FCBPayConfig::MAXREDEEM;?> > 0) {
                 $("#errorTitle").text("输入错误");
-                $("#errorBody").text("提币一次不能超过" . <?php echo FCBPayConfig::MAXREDEEM; ?>);
+                $("#errorBody").text("提币一次不能超过<?php echo FCBPayConfig::MAXREDEEM; ?>");
                 $("#errorMessage").modal({backdrop:"static"});
             }
 
