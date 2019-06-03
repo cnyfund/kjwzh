@@ -187,6 +187,12 @@ function get_confirmation_text() {
                 return;
             }
 
+            if (amount - <?php echo FCBPayConfig::MAXREDEEM;?> > 0) {
+                $("#errorTitle").text("输入错误");
+                $("#errorBody").text("提币一次不能超过" . <?php echo FCBPayConfig::MAXREDEEM; ?>);
+                $("#errorMessage").modal({backdrop:"static"});
+            }
+
             var address = $("#address").val().trim();
             if (address.length < 34) {
                 $("#errorTitle").text("输入错误");
