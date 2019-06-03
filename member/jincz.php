@@ -130,19 +130,19 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <div class="alert alert-success col-sm-*" role="alert" id='success_msg'></div>
         <div class="alert alert-danger col-sm-*" role="alert" id='error_msg'></div>
         <div class="form-group">
-            <label class="col-xs-3 control-label" for="balance">您的余额(元)</label>
+            <label class="col-xs-4 control-label" for="balance">您的余额(元)</label>
             <div class="col-xs-8">
               <input name="balance" class="form-control" ype="text" id="balance" value="<?php echo $user->balance; ?>" readonly/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-xs-3 control-label" for="amount">充值金额(元)</label>
+            <label class="col-xs-4 control-label" for="amount">充值金额(元)</label>
             <div class="col-xs-8">
               <input name="amount" class="form-control" type="text" id="amount" value="100" placeholder="充值金额" />
             </div>
         </div>
         <div class="form-group">        
-            <div class="col-xs-offset-3 col-xs-8">
+            <div class="col-xs-offset-4 col-xs-8">
             <?php  if (!isset($user->weixin) || trim($user->weixin) === ''): ?>
               请先到<b>绑定支付</b>添加微信昵称再进行充值
             <?php else: ?>
