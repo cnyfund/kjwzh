@@ -126,7 +126,7 @@ class UserAccount {
             $sql .= "out_trade_no = '{$refId}', ";
             $sql .= "h_refIdType = '{$refId_type}',";
             //temporarily use it as weixin account
-            $sql .= "h_bankCardId = '{$weixin}',";
+            $sql .= "h_bankCardId = '{$this->weixin}',";
             $sql .= "h_actIP = '{$userIP}' ";
             $rc = $db->query($sql);
             error_log("credit: execute " . $sql);
