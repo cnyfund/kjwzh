@@ -11,8 +11,12 @@ $body_style ="background:#fff;";
 require_once 'inc_header.php';
 
 $user = UserAccount::load($db, $memberLogged_userName);
-$expire = time() + 60 * 30;
-setcookie("m_username", $memberLogged_userName,$expire,'/');
+$userwallet = UserWallet::load_by_username($db, $memberLogged_userName, 'CNYF');
+if (is_null($userwallet)) {
+    error_log('jintix: create new wallet for user ' . $memberLogged_userName );
+    $userwallet = new UserWallet();
+    $userwallet->create($db, $memberLogged_userName, 'CNYF');
+}
 
 $rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUserName = a.h_userName and h_isPass = 1) as comMembers from `h_member` a where h_userName = '{$memberLogged_userName}'");
 
@@ -33,7 +37,7 @@ error_log("redeem: looking for file " . $filename);
 	<div class="box">
 	    <?php if (!$ready):?> 
 	    <span>请到绑定支付上传微信收款二维码，再来进行提现</span>
-			<?php else :?>
+			<?php else: ?>
 			<span> 每次限额5000元，12小时内到账 </span>
       <?php endif ?>
 

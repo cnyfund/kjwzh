@@ -8,7 +8,7 @@ require_once '../include/simple_header.php';
 $body_style ="background-color:#fff;";
 $userwallet = UserWallet::load_by_username($db, $memberLogged_userName, 'CNYF');
 if (is_null($userwallet)) {
-    error_log('cnychpgzhi.php: create new wallet for user {$memberLogged_userName}');
+    error_log('cnychongzhi.php: create new wallet for user ' . $memberLogged_userName);
     $userwallet = new UserWallet();
     $userwallet->create($db, $memberLogged_userName, 'CNYF');
 }
