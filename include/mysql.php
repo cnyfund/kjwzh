@@ -20,15 +20,15 @@ class dbmysql {
 	}
 
 	function begin_trans($flag = MYSQLI_TRANS_START_READ_WRITE) {
-		$this->link->begin_transaction($flag);
+		return $this->link->begin_transaction($flag);
 	}
 
 	function rollback($flag = MYSQLI_TRANS_START_READ_WRITE) {
-		$this->link->rollback($flag);
+		return $this->link->rollback($flag);
 	}
 
 	function commit($flag = MYSQLI_TRANS_START_READ_WRITE) {
-		$this->link->commit($flag);
+		return $this->link->commit($flag);
 	}
 
 	function select_db($dbname) {
