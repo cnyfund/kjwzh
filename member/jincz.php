@@ -80,7 +80,7 @@ function purchase($db, &$error_msg, &$payment_url, $user) {
           $error_msg = '充值错误: 系统返回不正确的结果: ' . $data['return_code'];
         }
     }catch (PayException $pe) {
-        $err_msg = '充值错误:' . $pe->getMessage() . ".  请稍后再试.";
+        $error_msg = '充值错误:' . $pe->getMessage() . ".  请稍后再试.";
         error_log("chongzhi: hit exception " . $pe->getMessage());
     }
 
@@ -157,6 +157,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
          <img src='/images/Loading_blue.gif' width="50" height="50" /><br>处理中</div>
 </div>
 <script>
+    
     $(document).ready(function(){
         $("#success_msg").hide();
     <?php if (isset($errMsg) && strlen($errMsg) > ''): ?>
@@ -164,20 +165,12 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
     <?php else:?>
         $("#error_msg").hide();
     <?php endif; ?>
-        $(document).ajaxStart(function(){
-            $("#wait").css("display", "block");
-        });
-        $(document).ajaxComplete(function(){
-            $("#wait").css("display", "none");
-        });
-
-        var click_purchased = false;        
+        $("#wait").css("display", "none");
+        function disableButton() {
+            $("#click_purchase").prop('disabled', true);
+        }
         $("#click_purchase").click(function () {
-            if (click_purchased) {
-                return;
-            }
-
-            click_purchased = true;
+            setTimeout(function () { disableButton(); }, 0);    
             $("#success_msg").hide();
             $("#error_msg").hide();
             var amountVal= parseFloat($("#amount").val());
@@ -195,6 +188,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                 $("#errorMessage").modal({backdrop: "static"});
                 return;                
             }
+            $("#wait").css("display", "block");
             $("#id_purchase_form").submit();
         });
     });
