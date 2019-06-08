@@ -80,7 +80,7 @@ function purchase($db, &$error_msg, &$payment_url, $user) {
           $error_msg = '充值错误: 系统返回不正确的结果: ' . $data['return_code'];
         }
     }catch (PayException $pe) {
-        $err_message = '充值错误:' . $pe->getMessage() . ".  请稍后再试.";
+        $err_msg = '充值错误:' . $pe->getMessage() . ".  请稍后再试.";
         error_log("chongzhi: hit exception " . $pe->getMessage());
     }
 
@@ -98,7 +98,7 @@ $paymentUrl = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     error_log("Call purchase");
     purchase($db, $errMsg, $paymentUrl, $user);
-    error_log("Done purchase: " . $errMsg . ' paymenturl:' . $paymentUrl);
+    error_log("Done purchase(" . $user->username . "): error message:" . $errMsg . ' paymenturl:' . $paymentUrl);
     if (empty($errMsg)) {
       header('Location:' . "/member/purchase_qrcode.php?amount=" . $_REQUEST['amount'] . "&payment_qrcode_url=" . urlencode($paymentUrl));
     }
