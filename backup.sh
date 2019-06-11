@@ -1,8 +1,8 @@
 #!/bin/bash
-#echo "`date -u` run settlement: /usr/bin/curl -v -k https://www.9lp.com/settlement.php"
-#output=$(/usr/bin/curl -v -k https://www.9lp.com/settlement.php)
-#echo "`date -u` settlement output is $output"
-#echo "`date -u` settlement return is $?"
+echo "`date -u` run settlement: /usr/bin/curl -v -k https://www.9lp.com/settlement.php"
+output=$(/usr/bin/curl -v -k https://www.9lp.com/settlement.php)
+echo "`date -u` settlement output is $output"
+echo "`date -u` settlement return is $?"
 
 CNYDIR=/tmp/cnyfund/mount
 POSBACKUPSQL=pos-backup-$(date +%F).sql
