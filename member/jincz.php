@@ -44,6 +44,7 @@ function purchase($db, &$error_msg, &$payment_url, $user) {
             $error_msg = '充值错误: ' . $data['return_msg'];
         }elseif ($data['return_code']=='SUCCESS') {
             $payment_url = $data['payment_url'];
+            $trx_bill_no = $data['trx_bill_no'];
             if (empty($payment_url)) {
                 $error_msg = '充值错误: 系统没有提供付款连接';
             } else {
@@ -54,6 +55,7 @@ function purchase($db, &$error_msg, &$payment_url, $user) {
                 $sql .= "out_trade_no = '{$out_trade_no}', ";
                 $sql .= "subject = '{$subject}', ";
                 $sql .= "total_fee = " . $amount . ", ";
+                $sql .= "trx_bill_no = '" . $trx_bill_no . "',";
                 $sql .= "submit_time = '" . date('Y-m-d H:i:s') . "', ";
                 $sql .= "ip = '" . getUserIP() . "' ";
                 error_log($sql);

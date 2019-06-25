@@ -1,6 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pay/pay.php';
 
 $pageTitle = '充值记录 - ';
 
@@ -44,7 +45,7 @@ function list_(){
 	$met_pageskin = 5;
 	$rowset = new Pager($total_count,$list_num,$page);
 	$from_record = $rowset->_offset();
-	$query = "select * from `h_recharge` where h_userName = '{$memberLogged_userName}' order by h_addTime desc,id desc LIMIT $from_record, $list_num";
+	$query = "select r.id, r.h_state, r.h_bank, r.h_money, r.h_addTime, r.out_trade_no, r.h_reply, o.trx_bill_no  from `h_recharge` as r left join `order` as o on r.out_trade_no = o.out_trade_no where r.h_userName ='{$memberLogged_userName}' order by r.h_addTime desc,id desc LIMIT $from_record, $list_num";
 	$result = $db->query($query);
 	while($list = $db->fetch_array($result))
 	{
@@ -63,21 +64,37 @@ function list_(){
 	{
 		foreach ($rs_list as $key=>$val)
 		{
-			if($val['h_state']==0) {$ss='等待审核';}
-if($val['h_state']==1) {$ss='充值成功';}
-if($val['h_state']==2) {$ss='充值失败';}
+			if($val['h_state']==0) {
+				if ($val['trx_bill_no']==="") {
+					$ss = '请求发送失败';
+				} else {
+					$ss='等待审核';
+				}
+			}
+			if($val['h_state']==1) {$ss='充值成功';}
+			if($val['h_state']==2) {$ss='充值失败';}
 
-$pp='';
-if($val['h_bank']==1) {$pp='微信';}
-if($val['h_bank']==2) {$pp='支付宝';}
-if ($val['h_bank']==3) {$pp='充币';}
-echo "           <tr>";
-echo "				<td>" . $val['id'] . "</td>";
-echo "				<td>" . $val['h_money'] . "</td>";
-echo "				<td>" . ($pp) . "</td>";
-echo "				<td>" . $ss . "<br/>" . $val['h_reply'] . "</td>";
-echo "				<td>" . $val['h_addTime'] . "</td>";
-echo "           </tr>";
+			$pp='';
+			if($val['h_bank']==1) {$pp='微信';}
+			if($val['h_bank']==2) {$pp='支付宝';}
+			if ($val['h_bank']==3) {$pp='充币';}
+			echo "           <tr>";
+			echo "				<td>" . $val['id'] . "</td>";
+			echo "				<td>" . $val['h_money'] . "</td>";
+			echo "				<td>" . ($pp) . "</td>";
+			if ($val['h_state']>0 || ($val['h_state'] == 0 && $val['trx_bill_no']==="")) {
+				echo "				<td>" . $ss . "<br/>" . $val['h_reply'] . "</td>";
+			} else {
+				if (FCBPayConfig::INTESTMODE) {
+					$payment_qrcode_url = FCBPayConfig::DEVSITE;
+				} else {
+					$payment_qrcode_url = FCBPayConfig::PRODSITE; 
+				}
+				$payment_qrcode_url =  $payment_qrcode_url . "/trading/payment_qrcode_url/?out_trade_no=" . $val['out_trade_no'];
+				echo "				<td><a href=\"/member/purchase_qrcode.php?amount=" . $val['h_money'] . "&payment_qrcode_url=" . urlencode($payment_qrcode_url) . "\"/>" . $ss . "</a></td>";
+			}
+			echo "				<td>" . $val['h_addTime'] . "</td>";
+			echo "           </tr>";
 		}
 	}
 	else
