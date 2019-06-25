@@ -27,12 +27,10 @@ $qrcode_url = $_REQUEST['payment_qrcode_url'];
                                 <td>总额<?php echo $amount; ?> CNY</td>
                             </tr>
                             <tr>
-                                <td><img src="<?php echo $qrcode_url ?>" width="300" height="400"></td>
+                                <td><div class="text-danger">请长按识别或扫描二维码， <h4>付款时务必在备注栏填入本站注册手机号码，否则不能及时到账</h4></div></td>
                             </tr>
                             <tr>
-                                <td>
-                                    <div>请扫描二维码跳转收款页面</div>
-                                </td>
+                                <td><img src="<?php echo $qrcode_url ?>" width="300" height="400"></td>
                             </tr>
                         </table>
                     </div>

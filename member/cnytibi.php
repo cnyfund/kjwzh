@@ -15,7 +15,7 @@ $rs = $db->get_one("select *,(select count(id) from `h_member` where h_parentUse
 $userwallet = new UserWallet();
 $userwallet->load($db, $memberLogged_userName, 'CNYF');
 if (empty($userwallet->walletCrypto)) {
-    error_log('cnytibi.php: create new wallet for user {$memberLogged_userName}');
+    error_log('cnytibi.php: create new wallet for user ' . $memberLogged_userName);
     $userwallet->create($db, $memberLogged_userName, 'CNYF');
     $userwallet->load($db, $memberLogged_userName, 'CNYF');
 }

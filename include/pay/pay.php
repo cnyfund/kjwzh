@@ -1,6 +1,8 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/curl_errorno.php';
 require_once "PayException.php";
 require_once "FCBPayConfig.php";
+
 class pay{
 	    //默认配置
     protected $values = array(
@@ -192,7 +194,7 @@ class pay{
      * @param int $second   url执行超时时间，默认30s
      * @throws HyWalletException
      */
-    public function post($url, $post_data = '', $timeout = 30){//curl
+    public function post($url, $post_data = '', $timeout = 10){//curl
 		$ch = curl_init();
 		curl_setopt ($ch, CURLOPT_URL, $url);
         curl_setopt ($ch, CURLOPT_POST, 1);
@@ -221,6 +223,7 @@ class pay{
      * @throws HyWalletException
      */
     public function postJsonCurl($url, $jsonData, $json = true, $second = 30) {
+        global $curl_error_codes;
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_TIMEOUT, $second); //设置超时
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -249,25 +252,20 @@ class pay{
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
         error_log("about to send curl command to " . $url);
         $res = curl_exec($curl);
+        $errorno = curl_errno($curl);
+        curl_close($curl);
         //返回结果
-        error_log("get curl command back " . $res);
-        if ($res) {
-            curl_close($curl);
-            $arr = json_decode($res, TRUE);
-			return $arr;
-           // $rep = new PayResults (); // 初始化一个对象
-           // $rep->values = $arr;
-            //以下为返回结果验签，如果报验签错误，请查看返回数据，打印$res
-            //echo $res;
-           // if ($rep->CheckSign()) {
-            //    return $res;
-            //} else {
-            //    return "返回数据验签失败";
-           // }
-        } else {
-            $error = curl_errno($curl);
-            curl_close($curl);
-            throw new PayException("curl出错，错误码:$error");
+        if (0 == $errorno ){
+            if (isset($res) && $res) {
+                error_log("get curl command back " . $res);
+                $arr = json_decode($res, TRUE);
+                return $arr;    
+            }
+            error_log("somehow empty result comes back ");
         }
+
+        $error_str = "系统出错， 请通知客服错误码: (errorno=" . $errorno . ") " . $curl_error_codes[$errorno];
+        error_log($error_str);
+        throw new PayException($error_str);
     }
 }
