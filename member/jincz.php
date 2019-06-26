@@ -41,7 +41,11 @@ function purchase($db, &$error_msg, &$payment_url, $user) {
         error_log(isset($data)? 'return data is ' . $data['return_code']: 'not returned from applypurchase');
         if ($data['return_code']=='FAIL') {
             error_log('return code say failed');
-            $error_msg = '充值错误: ' . $data['return_msg'];
+            if ($data['return_msg'] === '请您等您正在处理的充值购买请求被确认后再发新的请求') {
+                $error_msg = '您还有未处理的充值，如已付款请耐心等待，如未付款请到充值记录里点记录后的【等待审核】链接，继续完成支付';
+            } else {
+                $error_msg = '充值错误: ' . $data['return_msg'];
+            }
         }elseif ($data['return_code']=='SUCCESS') {
             $payment_url = $data['payment_url'];
             $trx_bill_no = $data['trx_bill_no'];
