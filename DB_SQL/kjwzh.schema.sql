@@ -16,12 +16,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `sql918033`
+-- Current Database: `paymentproxydb`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `sql918033` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `paymentproxydb` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
-USE `sql918033`;
+USE `paymentproxydb`;
 
 --
 -- Table structure for table `blypay_order`
