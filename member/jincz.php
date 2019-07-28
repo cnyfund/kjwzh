@@ -96,8 +96,33 @@ $pageTitle = '金币充值 - ';
 
 $body_style ="background:#fff; margin-top:56px;";
 
-error_log("chongzhi: user " . $memberLogged_userName);
-$user = UserAccount::load($db, $memberLogged_userName);
+//TODO: best test it rigorously
+if (isset($_REQUEST['api_key'] && isset($_REQUEST['externaluserId']))){
+    //TODO: validate purchase url input
+    //now load user and see whether it exist or not, if not register the user.
+    $user = UserAccount::load_api_user($db, $userId, $api_key);
+    if (is_null($user)) {
+        error_log("purchase: Did not find the user " . $userId . " with api_key " . $api_key . ", will register the api user");
+        if (!UserAccount::create_api_user($db, $userId, $api_key, getUserIP())) {
+            error_log("purchase: failed to register api_uesr with userId " . $userId . " and api_key  " . $api_key);
+            //TODO: what to do if register new api_user failed in db operation. Need to have dedicated error page.
+        }
+        $user = UserAccount::load_api_user($db, $userId, $api_key);
+    }
+
+    // if user record does not have qrcode, then redirect to paymentmethod.php for input
+    if (is_null($user->weixin_qrcode)) {
+        $next = "/member/jincz.php?api_key=" . $api_key . "&externaluserId=" . $userId . "&return_url=";
+        $next = $next . $_REQUEST['return_url'] . "&signature=" . $_REQUEST['signature'];
+        $redirect = "Location: /member/paymentmethod.php?externaluserId=" . $userId . "&api_key=" . $api_key . "&next=" . $next;
+        error_log("purchase: user " . $user->username . " does not have payment qrcode, setup at " . $redirection);
+        header($redirection);    
+    }
+} else {
+    // load login user if it is normal operation
+    $user = UserAccount::load($db, $memberLogged_userName);
+}
+
 $errMsg = '';
 $paymentUrl = '';
 
@@ -107,6 +132,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     error_log("Done purchase(" . $user->username . "): error message:" . $errMsg . ' paymenturl:' . $paymentUrl);
     if (empty($errMsg)) {
       header('Location:' . "/member/purchase_qrcode.php?amount=" . $_REQUEST['amount'] . "&payment_qrcode_url=" . urlencode($paymentUrl));
+    }
+} else {
+    if (is_payment_proxy_request($_REQUEST)) {
+        $userId = '';
+        $api_key = '';
+        $return_url = '';
+        $rc = parsePurchaseProxyRequest($_REQUEST, $userId, $api_key, $return_url);
+        if $rc != 
+
+
     }
 }
 

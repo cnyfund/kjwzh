@@ -40,7 +40,7 @@ CREATE TABLE `blypay_order` (
   `bank` int(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='充值记录';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='充值记录';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -61,7 +61,7 @@ CREATE TABLE `h_UserWallet` (
   `h_lastUpdatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`)
-) ENGINE=MyISAM AUTO_INCREMENT=635 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=635 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,7 +80,7 @@ CREATE TABLE `h_UserWalletExternal` (
   `h_lastUpdatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`)
-) ENGINE=MyISAM AUTO_INCREMENT=471 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=471 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,7 +98,7 @@ CREATE TABLE `h_Wallet` (
   `h_walletpassphrase` varchar(32) DEFAULT NULL,
   `h_lastUpdatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`h_crypto`)
-) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -117,7 +117,7 @@ CREATE TABLE `h_admin` (
   `h_addTime` datetime DEFAULT NULL,
   `h_permissions` text,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -171,7 +171,7 @@ CREATE TABLE `h_article` (
   `h_kc` int(11) DEFAULT '0' COMMENT '库存',
   `h_isPass` int(11) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=427 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=427 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -192,7 +192,7 @@ CREATE TABLE `h_category` (
   `h_picBig` varchar(250) DEFAULT NULL,
   `h_picBigN` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=228 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=228 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -256,7 +256,7 @@ CREATE TABLE `h_config` (
   `h_point4ComBuy` int(11) DEFAULT '0',
   `h_point5ComBuy` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -283,7 +283,7 @@ CREATE TABLE `h_farm_shop` (
   `cjfh` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `order_id` (`h_title`)
-) ENGINE=MyISAM AUTO_INCREMENT=135 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -303,7 +303,7 @@ CREATE TABLE `h_guestbook` (
   `h_addTime` datetime DEFAULT NULL,
   `h_message` text,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -322,7 +322,7 @@ CREATE TABLE `h_log_point1` (
   `h_actIP` char(50) DEFAULT NULL,
   `h_type` char(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -343,7 +343,7 @@ CREATE TABLE `h_log_point2` (
   `h_member_farm_id` int(11) DEFAULT NULL,
   `h_additional_info` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=17276 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17276 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -397,7 +397,7 @@ CREATE TABLE `h_member` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `h_userName_2` (`h_userName`),
   KEY `h_userName` (`h_userName`)
-) ENGINE=MyISAM AUTO_INCREMENT=922 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=922 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -425,7 +425,7 @@ CREATE TABLE `h_member_farm` (
   `cjfh` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `order_id` (`h_title`)
-) ENGINE=MyISAM AUTO_INCREMENT=1038 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1038 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -447,7 +447,7 @@ CREATE TABLE `h_member_msg` (
   `h_isDelete` int(11) DEFAULT '0' COMMENT '放弃或删除',
   `h_deleteTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1040 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1040 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -469,7 +469,7 @@ CREATE TABLE `h_member_shop_cart` (
   `h_money` int(11) DEFAULT '0' COMMENT '售价',
   PRIMARY KEY (`id`),
   KEY `order_id` (`h_title`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -494,7 +494,7 @@ CREATE TABLE `h_member_shop_order` (
   `h_isReturn` int(20) DEFAULT '0' COMMENT '若审核失败，是否返款了，只返一次',
   `h_reply` char(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -520,7 +520,7 @@ CREATE TABLE `h_menu` (
   `h_picSmallWidth` int(11) DEFAULT '0',
   `h_picSmallHeight` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=112 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -544,7 +544,7 @@ CREATE TABLE `h_pay_order` (
   `h_wxOpenId` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `order_id` (`h_payId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -572,7 +572,7 @@ CREATE TABLE `h_point2_sell` (
   `h_deleteTime` datetime DEFAULT NULL,
   `h_confirmTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -593,7 +593,7 @@ CREATE TABLE `h_point2_shop` (
   `h_addTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `order_id` (`h_title`)
-) ENGINE=MyISAM AUTO_INCREMENT=163 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=163 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -621,7 +621,7 @@ CREATE TABLE `h_recharge` (
   `out_trade_no` varchar(100) DEFAULT NULL,
   `h_refIdType` varchar(32) DEFAULT 'out_trade_no',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2885 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2885 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -650,7 +650,7 @@ CREATE TABLE `h_withdraw` (
   `out_trade_no` varchar(250) DEFAULT '0' COMMENT '支付订单号',
   `h_refIdType` varchar(32) DEFAULT 'out_trade_no',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2016 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2016 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -666,7 +666,7 @@ CREATE TABLE `log` (
   `data` text,
   `type` varchar(255) DEFAULT 'test',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3433 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3433 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -689,7 +689,7 @@ CREATE TABLE `order` (
   `status` varchar(255) DEFAULT 'UNKNOWN' COMMENT '支付状态',
   `type` varchar(255) DEFAULT 'recharge' COMMENT 'recharge 充值，withdraw提现',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3251 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3251 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -710,7 +710,7 @@ CREATE TABLE `shoukuanla_order` (
   `state` tinyint(2) NOT NULL DEFAULT '0' COMMENT '状态',
   `skl_order` char(50) DEFAULT NULL COMMENT '扫码备注',
   PRIMARY KEY (`cid`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='充值记录';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='充值记录';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -726,7 +726,7 @@ CREATE TABLE `t_log_login_member` (
   `h_ip` char(39) DEFAULT NULL,
   `h_addTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11800 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11800 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

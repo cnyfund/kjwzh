@@ -1,6 +1,7 @@
 <?php
 require_once '../include/mysql.php';
 require_once '../entities/UserWallet.php';
+require_once '../entities/APIAccount.php';
 
 class UserAccount {
     const WALLETDEPOSIT ='钱包充值';
@@ -18,6 +19,7 @@ class UserAccount {
     public $balance = 0.0;
     public $canRedeem = 0;
     public $lastUpdatedAt = null;
+    public $api_account = null;
 
     public function __construct() {
 
@@ -35,18 +37,79 @@ class UserAccount {
             $user->canRedeem = $rs['h_canRedeem'];
             $user->weixin_qrcode = $rs['h_weixin_qrcode'];
             $user->lastUpdatedAt = $rs['h_lastUpdatedAt'];
+
+            // if more than 9 colume, then the query is join with h_api_member 
+            // read api acount part and create api_account for the user
+            if ($rs->field_count > 9) {
+                $user->api_account = new APIAccount();
+                $user->api_account->api_key = $rs['api_key'];
+                $user->api_account->api_secret = $rs['api_secret'];
+                $user->api_account->active = $rs['active'];
+                $user->api_account->default_cnyf_address = $rs['default_cnyf_address'];
+            }
             return $user;
         }
 
         return null;
     }
+
+    public static function load_api_user($db, $userId, $api_key) {
+        if (!isset($db) || !($db instanceof dbmysql)) {
+            error_log("UserAccount::load_api_user(): Not valid dbmysql object");
+            return null;
+        }
+
+        if (empty($userId)) {
+            error_log("UserAccount::load_api_user(): userId cannot be empty");
+            return null;
+        }
+
+        if (empty($api_key)) {
+            error_log("UserAccount::load_api_user(): api_key cannot be empty");
+            return null;
+        }
+        $sql = "select m.id, m.h_userName, m.h_parentUserName, m.h_regIP, m.h_point2, ";
+        $sql += "m.h_weixin, m.h_canRedeem, m.h_weixin_qrcode, m.h_lastUpdatedAt, ";
+        $sql += "m.api_key, a.api_secret, a.default_cnyf_address, a.active ";
+        $sql += "from h_member as m inner join h_api_member as a on m.api_key=a.api_key ";
+        $sql += "where m.h_userName='" . $userId . "' and m.api_key='" + $api_key + "'";
+        $rs = $db->get_one($sql);
+        return UserAccount::_read($rs);
+
+    }
+
+    public static function create_api_user($db, $userId, $api_key, $regIP) {
+        if (!isset($db) || !($db instanceof dbmysql)) {
+            error_log("UserAccount::create_api_user(): Not valid dbmysql object");
+            return False;
+        }
+
+        if (empty($userId)) {
+            error_log("UserAccount::create_api_user(): userId cannot be empty");
+            return False;
+        }
+
+        if (empty($api_key)) {
+            error_log("UserAccount::create_api_user(): api_key cannot be empty");
+            return False;
+        }
+
+        $userValues = array("h_userName"=>$userId, 
+                            "h_passWord"=>sha1(rand()),
+                            "h_regIP", $regIP,
+                            "h_regTime"=>date('Y-m-d H:i:s'),
+                            "api_key"=>$api_key);
+        $recordId = $db->insert("h_member", $userValues);
+        return $recordId > 0;
+
+    }    
     public static function load_by_userId($db, $userId) {
         if (!isset($db) || !($db instanceof dbmysql)) {
             error_log("UserAccount::load(): Not valid dbmysql object");
             return null;
         }
 
-        $sql = "select * from h_member where id=" . $userId;
+        $sql = "select id from h_member where id=" . $userId;
         $rs = $db->get_one($sql);
         return UserAccount::_read($rs);
     }
@@ -62,7 +125,9 @@ class UserAccount {
             return null;
         }
 
-        $sql = "select * from h_member where h_userName='" . $login . "'";
+        $sql = "select id, h_userName, h_parentUserName, h_regIP, h_point2, ";
+        $sql += "h_weixin, h_canRedeem, h_weixin_qrcode, h_lastUpdatedAt ";
+        $sql += "from h_member where h_userName='" . $login . "'";
         $rs = $db->get_one($sql);
         return UserAccount::_read($rs);
     }

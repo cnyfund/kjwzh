@@ -1,7 +1,8 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/member/logged_data.php';
 
-if(!$memberLogged){
+
+if(!$memberLogged && $webInfo['h_operationMode'] != 'PAYMENTPROXY'){
     header("Location: /member/login.php");
     exit();
 }
@@ -27,13 +28,17 @@ function generateHeader($pageTitle, $keyword, $pageDescription) {
 <script type="text/javascript" src="/ui/js/bootstrap-confirmation.min.js"></script>
 <script type="text/javascript" src="/ui/js/bootstrap-filestyle.min.js"></script>
 <script type="text/javascript" src="/ui/js/long.js"></script>
+<script type="text/javascript" src="/ui/js/md5.js"></script>
 <script type="text/javascript" src="/ui/js/modernizr.custom.js"></script>
+<script type="text/javascript" src="/ui/js/modernizr.custom.js"></script>
+
 
 <link rel="stylesheet" href="/ui/css/bootstrap.min.css">
 <link href="/res/css/home.css" rel="stylesheet" type="text/css" media="all" />
 <link href="/res/css/css.css" rel="stylesheet" type="text/css" media="all" />
 <link rel="stylesheet" type="text/css" href="/res/css/common.css">
 <link rel="stylesheet" type="text/css" href="/res/css/style1.css">
+
 <!--[if lt IE 9]>
 <script src="/ui/js/html5shiv.min.js"></script>
 <script src="/ui/js/respond.min.js"></script>

@@ -61,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(empty($errors)==true){
         $sql = "update h_member set ";
         $sql = $sql . "h_weixin = '{$weixin}',";
-        $sql = $sql . "h_fullName = '{$fullname}'";
         if (isset($weixin_qrcode)) {
             $sql = $sql . ", h_weixin_qrcode = '{$weixin_qrcode}'";
         }
@@ -108,12 +107,6 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-2" for="pwd">收款人姓名:</label><span class="asteriskField">*</span>
-            <div class="col-sm-6">          
-                <input type="text" class="form-control" id="h_fullName" name="h_fullName" value="<?php echo $fullname;?>">
-            </div>
-        </div>
-        <div class="form-group">
             <label class="control-label col-sm-2" for="id_weixin_qrcode">收款二维码:</label>
             <div class="controls col-sm-6">
                 <input type="file" id="id_weixin_qrcode" class="filestyle" name="weixin_qrcode" />
@@ -134,6 +127,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <div class="form-group">        
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="button" class="btn btn-large btn-primary" id="btn_save">确认</button>
+                <button type="button" class="btn btn-large btn-primary" id="btn_save">继续充值</button>
             </div>
         </div>
     </div>
@@ -193,14 +187,6 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             if (weixin.length == 0) {
                 $("#errorTitle").text("输入错误");
                 $("#errorBody").text("请输入微信昵称");
-                $("#errorMessage").modal({backdrop: "static"});
-                return;
-            }
-
-            var fullname = $("#h_fullName").val().trim();
-            if (fullname.length == 0) {
-                $("#errorTitle").text("输入错误");
-                $("#errorBody").text("请输入收款人姓名");
                 $("#errorMessage").modal({backdrop: "static"});
                 return;
             }
