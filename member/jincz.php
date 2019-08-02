@@ -151,7 +151,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             <?php  if (!isset($user->weixin) || trim($user->weixin) === ''): ?>
               请先到<b>绑定支付</b>添加微信昵称再进行充值
             <?php else: ?>
-                  <button type="submit" id="click_purchase" class="btn btn-big btn-primary">立即充值</button>
+                  <button type="button" id="click_purchase" class="btn btn-big btn-primary">立即充值</button>
             <?php endif; ?>
             </div>
         </div>
@@ -176,7 +176,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             $("#click_purchase").prop('disabled', true);
         }
         $("#click_purchase").click(function () {
-            setTimeout(function () { disableButton(); }, 0);    
+            disableButton();   
             $("#success_msg").hide();
             $("#error_msg").hide();
             var amountVal= parseFloat($("#amount").val());
@@ -184,7 +184,8 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             if (amount <= 0) {
                 $("#errorTitle").text("输入错误");
                 $("#errorBody").text("请输入充值金额");
-                $("#errorMessage").modal({backdrop: "static"});
+                $("#errorMessage").modal({backdrop: "static"});i
+                $("#click_purchase").prop('disabled', false);
                 return;
             }
 
@@ -192,6 +193,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                 $("#errorTitle").text("输入错误");
                 $("#errorBody").text("充值金额不能超过<?php echo FCBPayConfig::MAXPURCHASE ?>");
                 $("#errorMessage").modal({backdrop: "static"});
+                $("#click_purchase").prop('disabled', false);
                 return;                
             }
             $("#wait").css("display", "block");
