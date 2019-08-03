@@ -177,8 +177,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         $("#success_msg").hide();
         <?php if(empty($errors)==true){ ?>
         $("#error_msg").hide();
-        <?php } else {
-            ?>
+        <?php } else { ?>
         $("#error_msg").text("<?php
             echo "<ul class=\"list-group\">\n";
             foreach (errors as $err) {
@@ -227,10 +226,8 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                     return;
                 }
                 window.location.href = $("#return_url").val();
-            }
+            });
         }
-
-
     });
 
 </script>
