@@ -4,11 +4,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once '../member/logged_data.php';
 require_once '../include/simple_header.php';
 
-if(!$memberLogged){
+if (isset($_REQUEST['api_key']) && isset($_REQUEST['externaluserId'])){
+    //TODO: user has been loaded, can we use session object?
+    $next = $_REQUEST['next']; 
+    $return_url = $_REQUEST['return_url'];   
+} else if(!$memberLogged){
 	header("Location: " . "/member/login.php");
 	exit;
 }
-	
+
 $rs = $db->get_one("select h_userName, h_weixin, h_fullName, h_weixin_qrcode from h_member where h_userName='{$memberLogged_userName}'");
 if (!$rs) {
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found", true, 404);
@@ -92,13 +96,19 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 <div class="container">
     <div class="row">
     <form class="form-horizontal" id="form_weixin" enctype="multipart/form-data" action="/member/paymentmethod.php" method="POST">
+        <input type="hidden" id="next" name="next" value="<?php echo $next; ?>">
+        <input type="hidden" id="return_url" name="return_url" value="<?php echo $return_url; ?>">
         <div class="form-group">
            <div class="col-sm-2"></div><div class="col-sm-6"><h3>付款方式</h3></div>
         </div>
         <div class="alert alert-success col-sm-*" role="alert" id='success_msg'></div>
         <div class="alert alert-danger col-sm-*" role="alert" id='error_msg'></div>
-        <?php if (empty($rs["h_weixin_qrcode"])) {?>
-        <div class="alert alert-warning col-sm-*" role="alert" id='warning_msg'>请注意，您还没有上传收款二维码，所以您还暂时不能提现。</div>
+        <?php if (empty($rs["h_weixin_qrcode"])) {
+            if (isset($next) && !empty($next)) :?>
+                <div class="alert alert-info col-sm-*" role="alert" id='warning_msg'>请先设置微信付款二维码。。。</div>
+            <?php else :?>
+                <div class="alert alert-warning col-sm-*" role="alert" id='warning_msg'>请注意，您还没有上传收款二维码，所以您还暂时不能提现。</div>
+            <?php endif;?>
         <?php }?>
         <div class="form-group">
             <label class="control-label col-sm-2">微信昵称:</label><span class="asteriskField">*</span>
@@ -113,7 +123,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             </div>
         </div>
         <?php if (isset($weixin_qrcode) && !empty($weixin_qrcode)) { 
-            
+    
         $new_filepath = $_SERVER['DOCUMENT_ROOT'] . "/images/upload/weixin/".$weixin_qrcode;
         $new_file_time = filemtime($new_filepath);        
         ?>
@@ -126,9 +136,18 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <?php }?>
         <div class="form-group">        
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="button" class="btn btn-large btn-primary" id="btn_save">确认</button>
-                <button type="button" class="btn btn-large btn-primary" id="btn_save">继续充值</button>
+                <button type="button" class="btn btn-large btn-primary" id="btn_save"><?php 
+                   if (isset($next) && !empty($next)) {
+                       echo "下一步";
+                   } else {
+                       echo "确认";
+                   }
+                ?></button>
+                <?php if (isset($return_url) && !empty($return_url)) :?>
+                <button type="button" class="btn btn-large btn-primary" id="btn_back">返回</button>
+                <?php endif; ?>
             </div>
+            
         </div>
     </div>
     </form>
@@ -200,6 +219,18 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             $("#confirmationDialog").modal("hide");
             $("#form_weixin").submit();
         });
+
+        if ($("#btn_back").length > 0) {
+            var click_back = false;
+            $("#btn_back").click(function () {
+                if (click_back) {
+                    return;
+                }
+                window.location.href = $("#return_url").val();
+            }
+        }
+
+
     });
 
 </script>

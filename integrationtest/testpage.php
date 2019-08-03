@@ -59,12 +59,17 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         $("#purchase_btn").click(function () {
             setTimeout(function () { disableButton("#purchase_btn"); }, 0);
             var url ="http://localhost:8080/member/jincz.php?";
-            var uri_param = "externaluserId=" + $("#userId").val() + "&";
-            uri_param = uri_param + $("#cnyaddress").val() + "&";
+            var uri_param = "api_key=api_key_1234567&";
+            var uri_param = uri_param + "externaluserId=" + $("#userId").val() + "&";
+            uri_param = uri_param + "external_cnyf_address=" + $("#cnyaddress").val() + "&";
             uri_param = uri_param + "return_url=http://localhost:8080/integrationtest/testpage.php" + "&";
-            uri_param = uri_param + "api_key=api_key_1234567";
             var string_to_sign = uri_param + "secret=api_secret_1234567";
-            var signature  = md5(encodeURI(string_to_sign));
+            alert('string to sign:' + string_to_sign);
+
+            var encoded_string_to_sign = encodeURI(string_to_sign);
+            alert('encoded string to sign:' + encoded_string_to_sign);
+
+            var signature  = md5(encoded_string_to_sign);
             url = url + uri_param + "&signature=" + signature;
 
             alert("充值URL：" + url);

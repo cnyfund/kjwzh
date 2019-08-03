@@ -9,13 +9,9 @@
 
 <title>403</title>
 <style>
-	body{
-		background-color:#444;
-		font-size:14px;
-	}
 	h3{
 		font-size:60px;
-		color:#eee;
+		color:#0;
 		text-align:center;
 		padding-top:30px;
 		font-weight:normal;
@@ -33,7 +29,9 @@
 </div>
 <?php if (!empty(return_url)):?>
 <div class="row">
-<button type="button" id="btn-back" class="btn btn-big btn-primary">立即充值</button>
+<div class="col-md-*-auto">
+<p class="text-center"><button type="button" id="btn-back" class="btn btn-big btn-primary">返回</button></p>
+</div>
 </div>
 <?php endif ?>
 </div>
