@@ -42,6 +42,7 @@ class UserAccount {
             // read api acount part and create api_account for the user
             if ($rs->field_count > 9) {
                 $user->api_account = new APIAccount();
+                $user->api_account->name = $rs['name'];
                 $user->api_account->api_key = $rs['api_key'];
                 $user->api_account->api_secret = $rs['api_secret'];
                 $user->api_account->active = $rs['active'];
@@ -68,14 +69,16 @@ class UserAccount {
             error_log("UserAccount::load_api_user(): api_key cannot be empty");
             return null;
         }
+
+        error_log("load_api_user(" . $userId . ", " . $api_key . ")");
         $sql = "select m.id, m.h_userName, m.h_parentUserName, m.h_regIP, m.h_point2, ";
-        $sql += "m.h_weixin, m.h_canRedeem, m.h_weixin_qrcode, m.h_lastUpdatedAt, ";
-        $sql += "m.api_key, a.api_secret, a.default_cnyf_address, a.active ";
-        $sql += "from h_member as m inner join h_api_member as a on m.api_key=a.api_key ";
-        $sql += "where m.h_userName='" . $userId . "' and m.api_key='" + $api_key + "'";
+        $sql = $sql . "m.h_weixin, m.h_canRedeem, m.h_weixin_qrcode, m.h_lastUpdatedAt, ";
+        $sql = $sql . "m.api_key, a.api_secret, a.name, a.default_cnyf_address, a.active ";
+        $sql = $sql . "from h_member as m inner join h_api_member as a on m.api_key=a.api_key ";
+        $sql = $sql . "where m.h_userName='" . $userId . "' and m.api_key='" . $api_key . "'";
+        error_log("sql=" . $sql);
         $rs = $db->get_one($sql);
         return UserAccount::_read($rs);
-
     }
 
     public static function create_api_user($db, $userId, $api_key, $regIP) {
@@ -94,9 +97,10 @@ class UserAccount {
             return False;
         }
 
+        $fake_password = md5(strval(rand()));
         $userValues = array("h_userName"=>$userId, 
-                            "h_passWord"=>sha1(rand()),
-                            "h_regIP", $regIP,
+                            "h_passWord"=>$fake_password,
+                            "h_regIP"=>$regIP,
                             "h_regTime"=>date('Y-m-d H:i:s'),
                             "api_key"=>$api_key);
         $recordId = $db->insert("h_member", $userValues);
