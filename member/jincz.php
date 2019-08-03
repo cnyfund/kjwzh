@@ -184,7 +184,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             if (amount <= 0) {
                 $("#errorTitle").text("输入错误");
                 $("#errorBody").text("请输入充值金额");
-                $("#errorMessage").modal({backdrop: "static"});i
+                $("#errorMessage").modal({backdrop: "static"});
                 $("#click_purchase").prop('disabled', false);
                 return;
             }
