@@ -59,12 +59,13 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         $("#purchase_btn").click(function () {
             setTimeout(function () { disableButton("#purchase_btn"); }, 0);
             var url ="http://localhost:8080/member/jincz.php?";
-            var uri_param = "externaluserId=" + $("#userId").val + "&";
+            var uri_param = "externaluserId=" + $("#userId").val() + "&";
+            uri_param = uri_param + $("#cnyaddress").val() + "&";
             uri_param = uri_param + "return_url=http://localhost:8080/integrationtest/testpage.php" + "&";
-            uri_param = uri_param + "api_key=1234567890";
-            var string_to_sign = uri_param + "secret=0987654321";
+            uri_param = uri_param + "api_key=api_key_1234567";
+            var string_to_sign = uri_param + "secret=api_secret_1234567";
             var signature  = md5(encodeURI(string_to_sign));
-            url = url + "&signature=" + signature;
+            url = url + uri_param + "&signature=" + signature;
 
             alert("充值URL：" + url);
             window.location.href=url;
@@ -72,7 +73,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         $("#redeem_btn").click(function () {
             setTimeout(function () { disableButton("#redeem_btn"); }, 0);
             var url ="http://localhost:8080/member/jintx.php?";
-            var uri_param = "externaluserId=" + $("#userId").val + "&";
+            var uri_param = "externaluserId=" + $("#userId").val() + "&";
             uri_param = uri_param + "return_url=http://localhost:8080/integrationtest/testpage.php" + "&";
             uri_param = uri_param + "amount=" + $("#redeem_amount") + "&";
             //uri_param = uri_param + "txid=b9fb980205af6d6cea797671fca47119b6cf996b63409c4ab50bce6e33511e87&";
