@@ -13,8 +13,24 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 
 $amount = $_REQUEST['amount'];
 $qrcode_url = $_REQUEST['payment_qrcode_url'];
+$return_url = isset($_REQUEST['return_url']) ? $_REQUEST['return_url'] : null;
+if (!empty($return_url)) :
 ?>
-
+<script language="javascript">
+function goBack(){
+	<?php if (isset($return_url) && !empty($return_url)):?>
+	          window.location = <?php echo $return_url; ?>
+	<?php else:?>
+		      window.history.back();
+	<?php endif; ?>
+}   
+$(document).ready(function(){
+    $("#btn_back").click(function () {
+        goBack();
+    });
+});
+</script>
+<?php endif; ?>
 <body style="<?php echo $body_style; ?>">
 <div class="container">
         <div class="well">
@@ -36,6 +52,11 @@ $qrcode_url = $_REQUEST['payment_qrcode_url'];
                     </div>
                 </div>
             </div>
+            <?php if (!empty(return_url)) :?>
+            <div class="row">
+            <button type="button" class="btn btn-large btn-primary" id="btn_back">返回</button>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
