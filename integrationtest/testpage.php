@@ -26,28 +26,29 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 <body style="<?php echo $body_style; ?>">
 <div class="container" >
     <div class="row">
-    <div class="form-group">
-        <label for="userId">UserID:</label>
-        <input type="text" class="form-control" id="userId">
-    </div>
-    <div class="form-group">
-        <label for="cnyaddress">User CNY Address:</label>
-        <input type="text" class="form-control" id="cnyaddress">
-    </div>
-    <div class="form-group">
-        <label for="redeem_amount">Redeem Amount:</label>
-        <input type="text" class="form-control" id="redeem_amount">
-    </div>
-    <div class="form-group">
-        <label for="redeem_amount">Redeem Amount:</label>
-        <input type="text" class="form-control" id="redeem_amount">
-    </div>
-    <div class="form-group">
-        <label for="redeem_amount">转币txid:</label>
-        <input type="text" class="form-control" id="txid">
-    </div>
+    <form name="purchase_form" id="purchase_form" class="form-horizontal" action="http://localhost:8080/member/jincz.php" method="post" >
+        <input type="hidden" name="api_key" id = "api_key" value="api_key_1234567"/>
+        <input type="hidden" name="return_url" id = "return_url" value="http://localhost:8080/integrationtest/testpage.php"/>
+        <input type="hidden" name="signature" id = "signature" value=""/>
+        <div class="form-group">
+            <label for="externaluserId">UserID:</label>
+            <input type="text" class="form-control" id="externaluserId" name="externaluserId">
+        </div>
+        <div class="form-group">
+            <label for="external_cny_rec_address">User CNY Address:</label>
+            <input type="text" class="form-control" id="external_cny_rec_address" name="external_cny_rec_address">
+        </div>
+        <div class="form-group">
+            <label for="redeem_amount">Redeem Amount:</label>
+            <input type="text" class="form-control" id="redeem_amount" name="redeem_amount">
+        </div>
+        <div class="form-group">
+            <label for="redeem_amount">转币txid:</label>
+            <input type="text" class="form-control" id="txid" name="txid">
+        </div>
     <a href="#" id="purchase_btn" class="btn btn-info" role="button">充值</a>
     <a href="#" id="redeem_btn" class="btn btn-info" role="button">提现</a>
+    </form>
  </div>
 <script>
     
@@ -58,27 +59,20 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         }
         $("#purchase_btn").click(function () {
             setTimeout(function () { disableButton("#purchase_btn"); }, 0);
-            var url ="http://localhost:8080/member/jincz.php?";
             var uri_param = "api_key=api_key_1234567&";
-            var uri_param = uri_param + "externaluserId=" + $("#userId").val() + "&";
-            uri_param = uri_param + "external_cnyf_address=" + $("#cnyaddress").val() + "&";
-            uri_param = uri_param + "return_url=http://localhost:8080/integrationtest/testpage.php" + "&";
+            var uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
+            uri_param = uri_param + "external_cny_rec_address=" + $("#external_cny_rec_address").val() + "&";
+            uri_param = uri_param + "return_url=" + "&";
             var string_to_sign = uri_param + "secret=api_secret_1234567";
             alert('string to sign:' + string_to_sign);
-
-            var encoded_string_to_sign = encodeURI(string_to_sign);
-            alert('encoded string to sign:' + encoded_string_to_sign);
-
-            var signature  = md5(encoded_string_to_sign);
-            url = url + uri_param + "&signature=" + signature;
-
-            alert("充值URL：" + url);
-            window.location.href=url;
+            var signature  = md5(string_to_sign);
+            $("#signature").val(signature);
+            $("#purchase_form").submit();
         });
         $("#redeem_btn").click(function () {
             setTimeout(function () { disableButton("#redeem_btn"); }, 0);
             var url ="http://localhost:8080/member/jintx.php?";
-            var uri_param = "externaluserId=" + $("#userId").val() + "&";
+            var uri_param = "externaluserId=" + $("#externaluserId").val() + "&";
             uri_param = uri_param + "return_url=http://localhost:8080/integrationtest/testpage.php" + "&";
             uri_param = uri_param + "amount=" + $("#redeem_amount") + "&";
             //uri_param = uri_param + "txid=b9fb980205af6d6cea797671fca47119b6cf996b63409c4ab50bce6e33511e87&";

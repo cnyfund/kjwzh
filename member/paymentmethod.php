@@ -1,31 +1,47 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
-require_once '../member/logged_data.php';
-require_once '../include/simple_header.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . "/member/logged_data.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/include/simple_header.php";
+if (isset($_REQUEST['api_key'])){
+    // validate user input url
+    $api_key = $_REQUEST['api_key'];
+    if (!isset($_REQUEST['return_url'])){
+        show_403_error("你的请求没有包含return_url", $return_url);
+        return;
+    }
+    $return_url = $_REQUEST['return_url'];
+    if (!isset($_REQUEST['externaluserId'])){
+        show_403_error("你的请求没有包含你的客户的用户ID", $return_url);
+        return;
+    }
+    $userId = $_REQUEST['externaluserId'];
 
-if (isset($_REQUEST['api_key']) && isset($_REQUEST['externaluserId'])){
-    //TODO: user has been loaded, can we use session object?
+    if (!isset($_REQUEST['next'])){
+        show_403_error("要求输入付款方式的请求没有包含下一步的URL", $return_url);
+        return;
+    }
     $next = $_REQUEST['next']; 
-    $return_url = $_REQUEST['return_url'];   
+    
 } else if(!$memberLogged){
 	header("Location: " . "/member/login.php");
 	exit;
 }
 
-$rs = $db->get_one("select h_userName, h_weixin, h_fullName, h_weixin_qrcode from h_member where h_userName='{$memberLogged_userName}'");
+$query = "select h_userName, h_weixin, h_fullName, h_weixin_qrcode from h_member where h_userName='";
+$query = $query . ((isset($userId) && !empty($userId)) ? $userId : $memberLogged) . "'";
+$rs = $db->get_one($query);
 if (!$rs) {
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found", true, 404);
 }
 
 $username = $rs['h_userName'];
-$fullname = $rs['h_fullName'];
 $weixin = $rs['h_weixin'];
 $weixin_qrcode = $rs['h_weixin_qrcode'];
 
+$record_updated = False;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors= array();
-    $fullname = $_POST['h_fullName'];
     $weixin = $_POST['h_weixin'];
     if (isset($_FILES['weixin_qrcode'])) {
         $file_name = $_FILES['weixin_qrcode']['name'];
@@ -41,16 +57,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $extensions= array("jpeg","jpg","png");
             
             if (in_array($file_ext, $extensions)=== false) {
-                $errors[] = "{$memberLogged_userName} upload weixin qrcode: {$file_ext} not allowed, please choose a JPEG or PNG file.";
+                $errors[] = "{$username} upload weixin qrcode: {$file_ext} not allowed, please choose a JPEG or PNG file.";
             }
             
             if ($file_size > 2097152) {
-                $errors[]= "{$memberLogged_userName} upload weixin qrcode: File size must be less than  2 MB";
+                $errors[]= "{$username} upload weixin qrcode: File size must be less than  2 MB";
             }
         
             if (empty($errors)==true) {
                 error_log("come to move the file");
-                $weixin_qrcode = $memberLogged_userName . "_qrcode" . "." . $file_ext;
+                $weixin_qrcode = $username . "_qrcode" . "." . $file_ext;
                 $new_filepath = $_SERVER['DOCUMENT_ROOT'] . "/images/upload/weixin/".$weixin_qrcode;
                 move_uploaded_file($file_tmp, $new_filepath);
                 $new_file_time = filemtime($new_filepath);
@@ -64,14 +80,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     if(empty($errors)==true){
         $sql = "update h_member set ";
-        $sql = $sql . "h_weixin = '{$weixin}',";
+        $sql = $sql . "h_weixin = '{$weixin}'";
         if (isset($weixin_qrcode)) {
             $sql = $sql . ", h_weixin_qrcode = '{$weixin_qrcode}'";
         }
 
-        $sql = $sql . " where h_userName= '{$memberLogged_userName}'";
+        $sql = $sql . " where h_userName= '{$username}'";
 
         $db->query($sql);
+        $record_updated = True;
     }
 }
 
@@ -96,6 +113,8 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 <div class="container">
     <div class="row">
     <form class="form-horizontal" id="form_weixin" enctype="multipart/form-data" action="/member/paymentmethod.php" method="POST">
+        <input type="hidden" id="api_key" name="api_key" value="<?php echo $api_key; ?>">
+        <input type="hidden" id="externaluserId" name="externaluserId" value="<?php echo $externaluserId; ?>">
         <input type="hidden" id="next" name="next" value="<?php echo $next; ?>">
         <input type="hidden" id="return_url" name="return_url" value="<?php echo $return_url; ?>">
         <div class="form-group">
@@ -136,13 +155,10 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <?php }?>
         <div class="form-group">        
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="button" class="btn btn-large btn-primary" id="btn_save"><?php 
-                   if (isset($next) && !empty($next)) {
-                       echo "下一步";
-                   } else {
-                       echo "确认";
-                   }
-                ?></button>
+                <button type="button" class="btn btn-large btn-primary" id="btn_save">确认</button>
+                <?php if (isset($next) && !empty($next) && $record_updated) :?>
+                <button type="button" class="btn btn-large btn-primary" id="btn_next">下一步</button>
+                <?php endif; ?>
                 <?php if (isset($return_url) && !empty($return_url)) :?>
                 <button type="button" class="btn btn-large btn-primary" id="btn_back">返回</button>
                 <?php endif; ?>
@@ -219,6 +235,15 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             $("#form_weixin").submit();
         });
 
+        if ($("#btn_next").length > 0) {
+            var click_next = false;
+            $("#btn_next").click(function () {
+                if (click_next) {
+                    return;
+                }
+                window.location.href = $("#next").val();
+            });
+        }
         if ($("#btn_back").length > 0) {
             var click_back = false;
             $("#btn_back").click(function () {

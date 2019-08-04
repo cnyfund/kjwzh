@@ -27,6 +27,7 @@ class UserAccount {
 
     private static function _read($rs) {
         if ($rs) {
+            $field_count = count($rs);
             $user = new UserAccount();
             $user->id = $rs['id'];
             $user->username = $rs['h_userName'];
@@ -40,7 +41,7 @@ class UserAccount {
 
             // if more than 9 colume, then the query is join with h_api_member 
             // read api acount part and create api_account for the user
-            if ($rs->field_count > 9) {
+            if ($field_count > 9) {
                 $user->api_account = new APIAccount();
                 $user->api_account->name = $rs['name'];
                 $user->api_account->api_key = $rs['api_key'];

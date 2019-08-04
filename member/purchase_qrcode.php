@@ -19,7 +19,7 @@ if (!empty($return_url)) :
 <script language="javascript">
 function goBack(){
 	<?php if (isset($return_url) && !empty($return_url)):?>
-	          window.location = <?php echo $return_url; ?>
+	          window.location.href = "<?php echo $return_url; ?>";
 	<?php else:?>
 		      window.history.back();
 	<?php endif; ?>
@@ -52,7 +52,7 @@ $(document).ready(function(){
                     </div>
                 </div>
             </div>
-            <?php if (!empty(return_url)) :?>
+            <?php if (!empty($return_url)) :?>
             <div class="row">
             <button type="button" class="btn btn-large btn-primary" id="btn_back">返回</button>
             </div>

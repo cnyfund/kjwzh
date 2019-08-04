@@ -27,7 +27,7 @@
 <div class="row">
 <h3>403, <?php echo $error_msg; ?></h3>
 </div>
-<?php if (!empty(return_url)):?>
+<?php if (!empty($return_url)):?>
 <div class="row">
 <div class="col-md-*-auto">
 <p class="text-center"><button type="button" id="btn-back" class="btn btn-big btn-primary">返回</button></p>
@@ -39,7 +39,7 @@
 <script>
     $(document).ready(function(){
         $("#bnt-back").click(function(){
-           window.location="<?php echo $return_url; ?>";     
+           window.location.href = "<?php echo $return_url; ?>";     
         });
     });
 </script>
