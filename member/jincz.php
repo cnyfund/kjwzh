@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // validate user input url if it is not purchase submission
         if (!isset($_POST['return_url'])){
             if ($is_purchase_submission) {
-                show_403_error("你的请求没有包含return_url", null);
+                show_proxy_error("403", "你的请求没有包含return_url", null);
                 return;
             } else {
                 $errMsg = "你的请求没有包含return_url";
@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if (!isset($_POST['externaluserId'])){
             if ($is_purchase_submission) {
-                show_403_error("你的请求没有包含你的客户的用户ID", $return_url);
+                show_proxy_error("403", "你的请求没有包含你的客户的用户ID", $return_url);
                 return;
             } else {
                 $errMsg = "你的请求没有包含你的客户的用户ID";
@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
         if (!isset($_POST['external_cny_rec_address'])){
             if ($is_purchase_submission) {
-                show_403_error("你的请求没有包含你的客户的钱包地址", $return_url);
+                show_proxy_error("403", "你的请求没有包含你的客户的钱包地址", $return_url);
                 return;
             } else {
                 $errMsg = "你的请求没有包含你的客户的钱包地址";
@@ -154,6 +154,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         $external_cnyf_address = $_POST['external_cny_rec_address'];    
     
+        if (!isset($_POST['signature'])) {
+            if ($is_purchase_submission) {
+                show_proxy_error("403", "你的请求没有包含签名", $return_url);
+                return;
+            } else {
+                $errMsg = "你的请求没有包含签名";
+            }
+
+        }
+        $signature = $_POST['signature'];
+
         //now load user and see whether it exist or not, if not register the user.
         error_log("now load external user");
         $user = UserAccount::load_api_user($db, $userId, $api_key);
@@ -162,40 +173,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 error_log("purchase: Did not find the user " . $userId . " with api_key " . $api_key . ", will register the api user");
                 if (!UserAccount::create_api_user($db, $userId, $api_key, getUserIP())) {
                     error_log("purchase: failed to register api_uesr with userId " . $userId . " and api_key  " . $api_key);
-                    //TODO: what to do if register new api_user failed in db operation. Need to have dedicated error page.
+                    show_proxy_error("500", "系统为用户" . $userId . "绑定支付出现问题，请联系客服", $return_url);
+                    return;
                 }
                 $user = UserAccount::load_api_user($db, $userId, $api_key);
-                // if user record does not have qrcode, then redirect to paymentmethod.php for input
-                if (is_null($user->weixin_qrcode)) {
-                    $next = $_SERVER['REQUEST_URI'];
-                    $redirection = "/member/paymentmethod.php?api_key=" . $api_key . "&externaluserId=" . $userId . "&next=" . urlencode($next);
-                    if (isset($return_url) && !empty($return_url)) {
-                        $redirection = $redirection . "&return_url=" . $return_url;
-                    }
-            
-                    $redirection = "Location: " . $redirection;
-                    error_log("purchase: user " . $user->username . " does not have payment qrcode, setup at " . $redirection);
-                    header($redirection);
+                if (is_null($user)) {
+                    show_proxy_error("500", "系统注册用户" . $userId . "出现问题，请联系客服", $return_url);
+                    return;
                 }
             }
+        } 
+        if (!$is_purchase_submission && !purchase_signature_is_valid($user->api_account->api_key, $user->api_account->api_secret, $user->username, $external_cnyf_address, $return_url, $signature)) {
+            show_proxy_error("403", "你的请求签名不符", $return_url);
+            return;
         }
+        // if user record does not have qrcode, then redirect to paymentmethod.php for input
+        if (is_null($user->weixin_qrcode)) {
+            $redirection = "/member/paymentmethod.php?api_key=" . $api_key . "&externaluserId=" . $externaluserId;
+            $redirection = $redirection . "&external_cny_rec_address=" . $external_cnyf_address;
+            if (isset($return_url) && !empty($return_url)) {
+                $redirection = $redirection . "&return_url=" . $return_url;
+            }
+            $redirection = $redirection . "&signature=" . $signature;
+    
+            $redirection = "Location: " . $redirection;
+            error_log("purchase: user " . $user->username . " does not have payment qrcode, setup at " . $redirection);
+            header($redirection);
+            return;
+        }
+    } 
+
+    if (is_null($user)) {
+        show_proxy_error("500", "系统找不到用户" . $userId . "，请联系客服", $return_url);
+        return;        
     }
-    if (!is_null($user)) {
-        if ($is_purchase_submission) {
-            error_log("Call purchase");
-            purchase($db, $errMsg, $paymentUrl, $user, $external_cnyf_address);
-            error_log("Done purchase(" . $user->username . "): error message:" . $errMsg . ' paymenturl:' . $paymentUrl);
-            if (empty($errMsg)) {
-                $qrcode_url = 'Location:' . "/member/purchase_qrcode.php?amount=" . $_REQUEST['amount'];
-                $qrcode_url = $qrcode_url . "&payment_qrcode_url=" . urlencode($paymentUrl);
-                if (isset($return_url) && !empty($return_url)) {
-                    $qrcode_url = $qrcode_url . "&return_url=" . $return_url;
-                }
-                header($qrcode_url);
-            }    
-        }
-    } else {
-        $errMsg = "系统没有找到相关客户信息";
+
+    if ($is_purchase_submission) {
+        error_log("Call purchase");
+        purchase($db, $errMsg, $paymentUrl, $user, $external_cnyf_address);
+        error_log("Done purchase(" . $user->username . "): error message:" . $errMsg . ' paymenturl:' . $paymentUrl);
+        if (empty($errMsg)) {
+            $qrcode_url = 'Location:' . "/member/purchase_qrcode.php?amount=" . $_REQUEST['amount'];
+            $qrcode_url = $qrcode_url . "&payment_qrcode_url=" . urlencode($paymentUrl);
+            if (isset($return_url) && !empty($return_url)) {
+                $qrcode_url = $qrcode_url . "&return_url=" . $return_url;
+            }
+            header($qrcode_url);
+        }    
     }
 }
 
@@ -230,6 +254,9 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <?php endif; ?>
         <?php if (isset($return_url) &&!empty($return_url)) :?>
         <input name="return_url" type="hidden" id="return_url" value="<?php echo $return_url; ?>"/>
+        <?php endif; ?>
+        <?php if (isset($signature) &&!empty($signature)) :?>
+        <input name="signature" type="hidden" id="signature" value="<?php echo $signature; ?>"/>
         <?php endif; ?>
         <input name="weixin" type="hidden" id="weixin" value="<?php echo $user->weixin ?>"/>
         <h3>充值</h3>
@@ -302,6 +329,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
     });
 </script>
 
-<?php
-require_once 'inc_footer.php';
+<?php if (!isset($api_key) || empty($api_key)) {
+    require_once 'inc_footer.php';
+}
 ?>

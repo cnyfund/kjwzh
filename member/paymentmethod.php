@@ -1,35 +1,42 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/proxyutil.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . "/member/logged_data.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/include/simple_header.php";
 if (isset($_REQUEST['api_key'])){
     // validate user input url
     $api_key = $_REQUEST['api_key'];
     if (!isset($_REQUEST['return_url'])){
-        show_403_error("你的请求没有包含return_url", $return_url);
+        show_proxy_error("403", "你的请求没有包含return_url", $return_url);
         return;
     }
     $return_url = $_REQUEST['return_url'];
     if (!isset($_REQUEST['externaluserId'])){
-        show_403_error("你的请求没有包含你的客户的用户ID", $return_url);
+        show_proxy_error("403", "你的请求没有包含你的客户的用户ID", $return_url);
         return;
     }
-    $userId = $_REQUEST['externaluserId'];
+    $externaluserId = $_REQUEST['externaluserId'];
 
-    if (!isset($_REQUEST['next'])){
-        show_403_error("要求输入付款方式的请求没有包含下一步的URL", $return_url);
+    if (!isset($_REQUEST['external_cny_rec_address'])){
+        show_proxy_error("403", "你的请求没有包含你的客户的钱包地址", $return_url);
         return;
     }
-    $next = $_REQUEST['next']; 
-    
+    $external_cnyf_address = $_REQUEST['external_cny_rec_address'];    
+
+    if (!isset($_REQUEST['signature'])) {
+        show_proxy_error("403", "你的请求没有包含签名", $return_url);
+        return;
+    }
+    $signature = $_REQUEST['signature'];
+
 } else if(!$memberLogged){
 	header("Location: " . "/member/login.php");
 	exit;
 }
 
 $query = "select h_userName, h_weixin, h_fullName, h_weixin_qrcode from h_member where h_userName='";
-$query = $query . ((isset($userId) && !empty($userId)) ? $userId : $memberLogged) . "'";
+$query = $query . ((isset($externaluserId) && !empty($externaluserId)) ? $externaluserId : $memberLogged) . "'";
 $rs = $db->get_one($query);
 if (!$rs) {
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found", true, 404);
@@ -41,6 +48,14 @@ $weixin_qrcode = $rs['h_weixin_qrcode'];
 
 $record_updated = False;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['api_key'])) {
+        $api_key = $_POST['api_key'];
+        $return_url = $_POST['return_url'];
+        $externaluserId = $_POST['externaluserId'];
+        $external_cnyf_address = $_POST['external_cny_rec_address'];    
+        $signature = $_POST['signature'];
+    }
+
     $errors= array();
     $weixin = $_POST['h_weixin'];
     if (isset($_FILES['weixin_qrcode'])) {
@@ -79,6 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     
     if(empty($errors)==true){
+        error_log("come to update weixin and qrcode in h_member");
         $sql = "update h_member set ";
         $sql = $sql . "h_weixin = '{$weixin}'";
         if (isset($weixin_qrcode)) {
@@ -86,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         $sql = $sql . " where h_userName= '{$username}'";
+        error_log("udpate h_member weixin: " . $sql);
 
         $db->query($sql);
         $record_updated = True;
@@ -115,8 +132,9 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
     <form class="form-horizontal" id="form_weixin" enctype="multipart/form-data" action="/member/paymentmethod.php" method="POST">
         <input type="hidden" id="api_key" name="api_key" value="<?php echo $api_key; ?>">
         <input type="hidden" id="externaluserId" name="externaluserId" value="<?php echo $externaluserId; ?>">
-        <input type="hidden" id="next" name="next" value="<?php echo $next; ?>">
+        <input type="hidden" id="external_cny_rec_address" name="external_cny_rec_address" value="<?php echo $external_cnyf_address; ?>">
         <input type="hidden" id="return_url" name="return_url" value="<?php echo $return_url; ?>">
+        <input type="hidden" id="signature" name="signature" value="<?php echo $signature; ?>">
         <div class="form-group">
            <div class="col-sm-2"></div><div class="col-sm-6"><h3>付款方式</h3></div>
         </div>
@@ -156,7 +174,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <div class="form-group">        
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="button" class="btn btn-large btn-primary" id="btn_save">确认</button>
-                <?php if (isset($next) && !empty($next) && $record_updated) :?>
+                <?php if (isset($api_key) && !empty($api_key) && $record_updated) :?>
                 <button type="button" class="btn btn-large btn-primary" id="btn_next">下一步</button>
                 <?php endif; ?>
                 <?php if (isset($return_url) && !empty($return_url)) :?>
@@ -166,6 +184,13 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             
         </div>
     </div>
+    </form>
+    <form class="form-horizontal" id="form_next" name="form_next" enctype="multipart/form-data" action="/member/jincz.php" method="POST">
+        <input type="hidden" id="api_key" name="api_key" value="<?php echo $api_key; ?>">
+        <input type="hidden" id="externaluserId" name="externaluserId" value="<?php echo $externaluserId; ?>">
+        <input type="hidden" id="external_cny_rec_address" name="external_cny_rec_address" value="<?php echo $external_cnyf_address; ?>">
+        <input type="hidden" id="return_url" name="return_url" value="<?php echo $return_url; ?>">
+        <input type="hidden" id="signature" name="signature" value="<?php echo $signature; ?>">
     </form>
     <!-- Message Modal -->
     <div class="modal" id="errorMessage" role="dialog">
@@ -241,7 +266,8 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                 if (click_next) {
                     return;
                 }
-                window.location.href = $("#next").val();
+                click_next = true;
+                $("#form_next").submit();
             });
         }
         if ($("#btn_back").length > 0) {
@@ -250,6 +276,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                 if (click_back) {
                     return;
                 }
+                click_back = true;
                 window.location.href = $("#return_url").val();
             });
         }
