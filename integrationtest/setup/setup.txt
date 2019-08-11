@@ -1,0 +1,7 @@
+1. setup apache, php, based on the model of investment site
+2. remmember include/pay/FCPayConfig.php INTESTMODE=FALSE
+3. create folder /var/log/php/ and sudo chown -R www-data:root /var/log/php
+4. create folder /var/www/html/<site>/logs
+5. create upload folder /var/www/html/<site>/public_html/images/upload/weixin/ (maybe placeholder will creat this)
+6. sudo chown -R www-data:www-data upload/  give upload folder permission
+

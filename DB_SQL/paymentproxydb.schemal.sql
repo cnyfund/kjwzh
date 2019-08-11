@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.26, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.20, for macos10.12 (x86_64)
 --
--- Host: localhost    Database: 
+-- Host: localhost    Database: paymentproxydb
 -- ------------------------------------------------------
--- Server version	5.7.26-0ubuntu0.16.04.1
+-- Server version	5.7.20
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,14 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Current Database: `paymentproxydb`
---
-
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `paymentproxydb` /*!40100 DEFAULT CHARACTER SET utf8 */;
-
-USE `paymentproxydb`;
 
 --
 -- Table structure for table `blypay_order`
@@ -40,7 +32,7 @@ CREATE TABLE `blypay_order` (
   `bank` int(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='充值记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='充值记录';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -61,7 +53,7 @@ CREATE TABLE `h_UserWallet` (
   `h_lastUpdatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=635 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,7 +72,7 @@ CREATE TABLE `h_UserWalletExternal` (
   `h_lastUpdatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=471 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,7 +90,7 @@ CREATE TABLE `h_Wallet` (
   `h_walletpassphrase` varchar(32) DEFAULT NULL,
   `h_lastUpdatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`h_crypto`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -117,7 +109,26 @@ CREATE TABLE `h_admin` (
   `h_addTime` datetime DEFAULT NULL,
   `h_permissions` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `h_api_member`
+--
+
+DROP TABLE IF EXISTS `h_api_member`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `h_api_member` (
+  `api_key` varchar(128) NOT NULL,
+  `api_secret` varchar(256) NOT NULL,
+  `active` int(4) DEFAULT '1' COMMENT '是否激活',
+  `default_cnyf_address` varchar(128) DEFAULT NULL,
+  `h_lastUpdatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `h_createdAt` datetime DEFAULT NULL,
+  `name` varchar(128) NOT NULL DEFAULT '""' COMMENT '外部应用的名字',
+  PRIMARY KEY (`api_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -171,7 +182,7 @@ CREATE TABLE `h_article` (
   `h_kc` int(11) DEFAULT '0' COMMENT '库存',
   `h_isPass` int(11) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=427 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -192,7 +203,7 @@ CREATE TABLE `h_category` (
   `h_picBig` varchar(250) DEFAULT NULL,
   `h_picBigN` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=228 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -255,6 +266,7 @@ CREATE TABLE `h_config` (
   `h_point3ComBuy` int(11) DEFAULT '0',
   `h_point4ComBuy` int(11) DEFAULT '0',
   `h_point5ComBuy` int(11) DEFAULT '0',
+  `h_operationMode` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -283,7 +295,7 @@ CREATE TABLE `h_farm_shop` (
   `cjfh` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `order_id` (`h_title`)
-) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -303,7 +315,7 @@ CREATE TABLE `h_guestbook` (
   `h_addTime` datetime DEFAULT NULL,
   `h_message` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -343,7 +355,7 @@ CREATE TABLE `h_log_point2` (
   `h_member_farm_id` int(11) DEFAULT NULL,
   `h_additional_info` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17276 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -355,7 +367,7 @@ DROP TABLE IF EXISTS `h_member`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `h_member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `h_userName` varchar(20) DEFAULT NULL,
+  `h_userName` varchar(32) DEFAULT NULL,
   `h_passWord` varchar(32) DEFAULT NULL,
   `h_passWordII` varchar(32) DEFAULT NULL,
   `h_fullName` varchar(20) DEFAULT NULL,
@@ -394,10 +406,11 @@ CREATE TABLE `h_member` (
   `h_lastUpdatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `h_canRedeem` int(11) DEFAULT '0' COMMENT '是否可以提现',
   `h_weixin_qrcode` varchar(256) DEFAULT NULL COMMENT '微信收款二维码文件名',
+  `api_key` varchar(128) DEFAULT NULL COMMENT 'Foreign Key to API MEMBER',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `h_userName_2` (`h_userName`),
-  KEY `h_userName` (`h_userName`)
-) ENGINE=InnoDB AUTO_INCREMENT=922 DEFAULT CHARSET=utf8;
+  UNIQUE KEY `QUNIQUE_USER_API_KEY` (`h_userName`,`api_key`),
+  KEY `INDEX_USER_API_KEY` (`h_userName`,`api_key`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -425,7 +438,7 @@ CREATE TABLE `h_member_farm` (
   `cjfh` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `order_id` (`h_title`)
-) ENGINE=InnoDB AUTO_INCREMENT=1038 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -447,7 +460,7 @@ CREATE TABLE `h_member_msg` (
   `h_isDelete` int(11) DEFAULT '0' COMMENT '放弃或删除',
   `h_deleteTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1040 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -520,7 +533,7 @@ CREATE TABLE `h_menu` (
   `h_picSmallWidth` int(11) DEFAULT '0',
   `h_picSmallHeight` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -593,7 +606,7 @@ CREATE TABLE `h_point2_shop` (
   `h_addTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `order_id` (`h_title`)
-) ENGINE=InnoDB AUTO_INCREMENT=163 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -621,7 +634,7 @@ CREATE TABLE `h_recharge` (
   `out_trade_no` varchar(100) DEFAULT NULL,
   `h_refIdType` varchar(32) DEFAULT 'out_trade_no',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2885 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -650,7 +663,7 @@ CREATE TABLE `h_withdraw` (
   `out_trade_no` varchar(250) DEFAULT '0' COMMENT '支付订单号',
   `h_refIdType` varchar(32) DEFAULT 'out_trade_no',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2016 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -666,7 +679,7 @@ CREATE TABLE `log` (
   `data` text,
   `type` varchar(255) DEFAULT 'test',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3433 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -688,8 +701,9 @@ CREATE TABLE `order` (
   `trx_bill_no` varchar(255) DEFAULT '',
   `status` varchar(255) DEFAULT 'UNKNOWN' COMMENT '支付状态',
   `type` varchar(255) DEFAULT 'recharge' COMMENT 'recharge 充值，withdraw提现',
+  `txid` varchar(128) DEFAULT NULL COMMENT '对于recharge, 这是成功后转币的交易，对于提现，这是提现前的转给场外交易的地址',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3251 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -710,7 +724,7 @@ CREATE TABLE `shoukuanla_order` (
   `state` tinyint(2) NOT NULL DEFAULT '0' COMMENT '状态',
   `skl_order` char(50) DEFAULT NULL COMMENT '扫码备注',
   PRIMARY KEY (`cid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='充值记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='充值记录';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -726,7 +740,7 @@ CREATE TABLE `t_log_login_member` (
   `h_ip` char(39) DEFAULT NULL,
   `h_addTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11800 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -738,4 +752,4 @@ CREATE TABLE `t_log_login_member` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-25  1:46:31
+-- Dump completed on 2019-08-08 17:01:08

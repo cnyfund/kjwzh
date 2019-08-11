@@ -1,9 +1,9 @@
 <?php
 
 con_db_host = "localhost"
-con_db_id   = "sql918033"
-con_db_pass	= "ae0a9f56"
-con_db_name = "sql918033"
+con_db_id   = "root"
+con_db_pass	= "AXFund@017"
+con_db_name = "paymentproxydb"
 tablepre    =  ""
 db_charset  =  "utf8";
 

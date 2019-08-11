@@ -46,6 +46,13 @@ class pay{
 			throw new PayException("未指定 return_url");
 		}
 
+        // add external cnyf address to the request if it is needed
+        if (array_key_exists("external_cny_rec_address", $biz_content)){
+            error_log("Found external_cny_rec_address in bizcontent, set it to top level and remove it from biz_content");
+            $this->SetValue("external_cny_rec_address", $biz_content["external_cny_rec_address"]);
+            unset($biz_content["external_cny_rec_address"]);
+            $this->SetValue("version","2.0");
+        }
 		$this->SetBiz_content($biz_content);
 		$this->SetSign();
 		
@@ -54,6 +61,7 @@ class pay{
 	
 	/* 提现 */
 	public function applyredeem($biz_content=array()){
+
 		if (FCBPayConfig::INTESTMODE){
 			$api = FCBPayConfig::DEVSITE . '/api/v1/applyredeem/';
 		}else{
@@ -84,6 +92,7 @@ class pay{
      * @param string $value 
      * */
     public function SetBiz_content($value) {
+
 		ksort($value);
         $this->values['biz_content'] = json_encode($value,JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
     }

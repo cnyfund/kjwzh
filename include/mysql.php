@@ -86,7 +86,7 @@ class dbmysql {
 		$query = $this->query($sql, $type);
 		$rs = $this->fetch_array($query);
 		$this->free_result($query);
-                return $rs ;
+        return $rs ;
 	}
 	
 
@@ -149,7 +149,8 @@ class dbmysql {
 	}
 
 	function insert_id() {
-		return ($id = $this->link->insert_id()) >= 0 ? $id : $this->result($this->query("SELECT last_insert_id()"), 0);
+		$id = $this->link->insert_id;
+		return ($id >= 0) ? $id : $this->result($this->query("SELECT last_insert_id()"), 0);
 	}
 
 	function fetch_row($query) {

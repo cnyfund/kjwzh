@@ -3,9 +3,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pay/pay.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/simple_header.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/proxyutil.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/entities/UserAccount.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/member/logged_data.php';
 
-function purchase($db, &$error_msg, &$payment_url, $user) {
+function purchase($db, &$error_msg, &$payment_url, $user, $external_cnyf_address) {
     $amount = isset($_REQUEST['amount'])?$_REQUEST['amount']:0;
     if ($amount == 0) {
         error_log("amount is 0");
@@ -23,7 +25,6 @@ function purchase($db, &$error_msg, &$payment_url, $user) {
     $total_fee = $amount*100;
     $pay = new pay();
     $out_trade_no = date('YmdHis').rand(100000,999999);
-    $subject = 'chongzhi';
     if (FCBPayConfig::INTESTMODE) {
         $config['notify_url'] = FCBPayConfig::THISSITEDEV . '/notify.php';
         $config['return_url'] = FCBPayConfig::THISSITEDEV . '/return.php';	
@@ -32,9 +33,16 @@ function purchase($db, &$error_msg, &$payment_url, $user) {
         $config['return_url'] = FCBPayConfig::THISSITEPROD . '/return.php';
     }
     $config['out_trade_no'] = $out_trade_no;
-    $config['subject'] = $subject;
+    if ($user->api_account != null) {
+        $config['subject'] = '[' . $user->api_account->name . ']:'. $user->username . '请求充值' . $amount . '元';
+    } else {
+        $config['subject'] = '投资网站客户' . $user->username . '请求充值' . $amount . '元';
+    }
     $config['total_fee'] = $total_fee;
     $config['attach'] = 'weixin=' . $weixin . ';username=' . $user->username;
+    if (isset($external_cnyf_address) && !empty($external_cnyf_address)) {
+        $config['external_cny_rec_address'] = $external_cnyf_address;
+    }
 
     try {
         $data  = $pay->applypurchase($config);
@@ -96,17 +104,122 @@ $pageTitle = '金币充值 - ';
 
 $body_style ="background:#fff; margin-top:56px;";
 
-error_log("chongzhi: user " . $memberLogged_userName);
-$user = UserAccount::load($db, $memberLogged_userName);
+//TODO: best test it rigorously
+$next = null;
+$external_cnyf_address = null;
+
+//check whether it is payment proxy related
+$api_key = isset($_POST['api_key'])?$_POST['api_key']:"";
+// check whether it is request of purchase submission
+$is_purchase_submission = isset($_POST['is_purchase_submission'])? (strtoupper($_POST['is_purchase_submission']) == 'Y'):FALSE;
+if (empty($api_key)) {
+    // load login user if it is normal operation
+    error_log("purchase: read login user normally");
+    $user = UserAccount::load($db, $memberLogged_userName);
+}
+
 $errMsg = '';
 $paymentUrl = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    error_log("Call purchase");
-    purchase($db, $errMsg, $paymentUrl, $user);
-    error_log("Done purchase(" . $user->username . "): error message:" . $errMsg . ' paymenturl:' . $paymentUrl);
-    if (empty($errMsg)) {
-      header('Location:' . "/member/purchase_qrcode.php?amount=" . $_REQUEST['amount'] . "&payment_qrcode_url=" . urlencode($paymentUrl));
+    if (!empty($api_key)){
+        // validate user input url if it is not purchase submission
+        if (!isset($_POST['return_url'])){
+            if ($is_purchase_submission) {
+                show_proxy_error("403", "你的请求没有包含return_url", null);
+                return;
+            } else {
+                $errMsg = "你的请求没有包含return_url";
+            }
+        }
+        $return_url = $_POST['return_url'];
+
+        if (!isset($_POST['externaluserId'])){
+            if ($is_purchase_submission) {
+                show_proxy_error("403", "你的请求没有包含你的客户的用户ID", $return_url);
+                return;
+            } else {
+                $errMsg = "你的请求没有包含你的客户的用户ID";
+            }
+        }
+        $userId = $_POST['externaluserId'];
+    
+        if (!isset($_POST['external_cny_rec_address'])){
+            if ($is_purchase_submission) {
+                show_proxy_error("403", "你的请求没有包含你的客户的钱包地址", $return_url);
+                return;
+            } else {
+                $errMsg = "你的请求没有包含你的客户的钱包地址";
+            }
+        }
+        $external_cnyf_address = $_POST['external_cny_rec_address'];    
+    
+        if (!isset($_POST['signature'])) {
+            if ($is_purchase_submission) {
+                show_proxy_error("403", "你的请求没有包含签名", $return_url);
+                return;
+            } else {
+                $errMsg = "你的请求没有包含签名";
+            }
+
+        }
+        $signature = $_POST['signature'];
+
+        //now load user and see whether it exist or not, if not register the user.
+        error_log("now load external user");
+        $user = UserAccount::load_api_user($db, $userId, $api_key);
+        if (is_null($user)) {
+            if (!$is_purchase_submission) {
+                error_log("purchase: Did not find the user " . $userId . " with api_key " . $api_key . ", will register the api user");
+                if (!UserAccount::create_api_user($db, $userId, $api_key, getUserIP())) {
+                    error_log("purchase: failed to register api_uesr with userId " . $userId . " and api_key  " . $api_key);
+                    show_proxy_error("500", "系统为用户" . $userId . "绑定支付出现问题，请联系客服", $return_url);
+                    return;
+                }
+                $user = UserAccount::load_api_user($db, $userId, $api_key);
+                if (is_null($user)) {
+                    show_proxy_error("500", "系统注册用户" . $userId . "出现问题，请联系客服", $return_url);
+                    return;
+                }
+            }
+        } 
+        if (!$is_purchase_submission && !purchase_signature_is_valid($user->api_account->api_key, $user->api_account->api_secret, $user->username, $external_cnyf_address, $return_url, $signature)) {
+            show_proxy_error("403", "你的请求签名不符", $return_url);
+            return;
+        }
+        // if user record does not have qrcode, then redirect to paymentmethod.php for input
+        if (is_null($user->weixin_qrcode)) {
+            $redirection = "/member/paymentmethod.php?api_key=" . $api_key . "&externaluserId=" . $externaluserId;
+            $redirection = $redirection . "&external_cny_rec_address=" . $external_cnyf_address;
+            if (isset($return_url) && !empty($return_url)) {
+                $redirection = $redirection . "&return_url=" . $return_url;
+            }
+            $redirection = $redirection . "&signature=" . $signature;
+    
+            $redirection = "Location: " . $redirection;
+            error_log("purchase: user " . $user->username . " does not have payment qrcode, setup at " . $redirection);
+            header($redirection);
+            return;
+        }
+    } 
+
+    if (is_null($user)) {
+        show_proxy_error("500", "系统找不到用户" . $userId . "，请联系客服", $return_url);
+        return;        
+    }
+
+    if ($is_purchase_submission) {
+        error_log("Call purchase");
+        purchase($db, $errMsg, $paymentUrl, $user, $external_cnyf_address);
+        error_log("Done purchase(" . $user->username . "): error message:" . $errMsg . ' paymenturl:' . $paymentUrl);
+        if (empty($errMsg)) {
+            $qrcode_url = 'Location:' . "/member/purchase_qrcode.php?amount=" . $_REQUEST['amount'];
+            $qrcode_url = $qrcode_url . "&payment_qrcode_url=" . urlencode($paymentUrl);
+            if (isset($return_url) && !empty($return_url)) {
+                $qrcode_url = $qrcode_url . "&return_url=" . $return_url;
+            }
+            header($qrcode_url);
+        }    
     }
 }
 
@@ -129,9 +242,25 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 <div class="container" >
     <div class="row">
         <form name="id_purchase_form" id="id_purchase_form" class="form-horizontal" action="/member/jincz.php" method="post" >
+        <input name="is_purchase_submission" type="hidden" id="is_purchase_submission" value=""/>
+        <?php if (!empty($api_key)) :?>
+        <input name="api_key" type="hidden" id="api_key" value="<?php echo $api_key; ?>"/>
+        <?php endif; ?>
+        <?php if (isset($userId) && !empty($userId)) :?>
+        <input name="externaluserId" type="hidden" id="externaluserId" value="<?php echo $userId; ?>"/>
+        <?php endif; ?>
+        <?php if (isset($external_cnyf_address) && !empty($external_cnyf_address)) :?>
+        <input name="external_cny_rec_address" type="hidden" id="external_cny_rec_address" value="<?php echo $external_cnyf_address; ?>"/>
+        <?php endif; ?>
+        <?php if (isset($return_url) &&!empty($return_url)) :?>
+        <input name="return_url" type="hidden" id="return_url" value="<?php echo $return_url; ?>"/>
+        <?php endif; ?>
+        <?php if (isset($signature) &&!empty($signature)) :?>
+        <input name="signature" type="hidden" id="signature" value="<?php echo $signature; ?>"/>
+        <?php endif; ?>
         <input name="weixin" type="hidden" id="weixin" value="<?php echo $user->weixin ?>"/>
         <h3>充值</h3>
-        <div class="alert alert-info col-sm-*">每次限额5000元，12小时内到账</div>
+        <div class="alert alert-info col-sm-*">每次限额<?php echo FCBPayConfig::MAXPURCHASE ?>元，12小时内到账</div>
         <div class="alert alert-success col-sm-*" role="alert" id='success_msg'></div>
         <div class="alert alert-danger col-sm-*" role="alert" id='error_msg'></div>
         <div class="form-group">
@@ -172,11 +301,8 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         $("#error_msg").hide();
     <?php endif; ?>
         $("#wait").css("display", "none");
-        function disableButton() {
-            $("#click_purchase").prop('disabled', true);
-        }
         $("#click_purchase").click(function () {
-            disableButton();   
+            $("#click_purchase").prop('disabled', true);
             $("#success_msg").hide();
             $("#error_msg").hide();
             var amountVal= parseFloat($("#amount").val());
@@ -197,11 +323,13 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                 return;                
             }
             $("#wait").css("display", "block");
+            $("#is_purchase_submission").val("Y");
             $("#id_purchase_form").submit();
         });
     });
 </script>
 
-<?php
-require_once 'inc_footer.php';
+<?php if (!isset($api_key) || empty($api_key)) {
+    require_once 'inc_footer.php';
+}
 ?>
