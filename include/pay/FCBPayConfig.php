@@ -34,7 +34,7 @@ class FCBPayConfig {
     const SECRETKEY = '93a3a0f5c46c7111a4d880583ab06a19';
     const DEVSITE = 'http://localhost:8000';
     const PRODSITE = 'https://www.uuvc.com';
-    const THISSITEPROD = 'https://www.9lp.com';
+    const THISSITEPROD = 'https://txproxy.9lp.com';
     const THISSITEDEV = 'http://localhost:8080';
     const DEVACCOUNTID = '';
     const DEVOPENID = '';
