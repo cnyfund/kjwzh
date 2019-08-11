@@ -63,10 +63,10 @@ isset($pageTitle) or $pageTitle ='';
 				tishi4('请输入您的玩家编号','#username')
 				return false;
 				}
-			if(!checkMobile(username)){
+			if(!checkMobile(username) && $webInfo['h_operationMode'] != 'PAYMENTPROXY'){
 				tishi4('玩家编号应该是手机号码形式的11位数字','#username')
 				return false;
-				}
+			}
 			if(pwd==""){
 				tishi4('请输入您的密码','#pwd')
 				return false;
