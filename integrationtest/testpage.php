@@ -26,7 +26,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 <body style="<?php echo $body_style; ?>">
 <div class="container" >
     <div class="row">
-    <form name="purchase_form" id="purchase_form" class="form-horizontal" action="http://localhost:8080/member/jincz.php" method="post" >
+    <form name="purchase_form" id="purchase_form" class="form-horizontal" action="https://txproxy.9lp.com/member/jincz.php" method="post" >
         <input type="hidden" name="api_key" id = "api_key" value="api_key_1234567"/>
         <input type="hidden" name="return_url" id = "return_url" value="http://localhost:8080/integrationtest/testpage.php"/>
         <input type="hidden" name="signature" id = "signature" value=""/>
