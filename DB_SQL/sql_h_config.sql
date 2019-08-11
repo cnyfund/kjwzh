@@ -9,7 +9,7 @@ ALTER TABLE h_config ADD COLUMN h_tradeex_test_api_secret varchar(256) NULL COMM
 ALTER TABLE h_config ADD COLUMN h_tradeex_cnyf_address varchar(256) NOT NULL DEFAULT 'CePqp1uYqM3nsNZqaUdQJWe8awdRsKEhGK' COMMENT '用于把提现的金额转给场外交易的地址';
 ALTER TABLE h_config ADD COLUMN h_purchase_limit int NOT NULL DEFAULT 3000 COMMENT '每次充值的上限';
 ALTER TABLE h_config ADD COLUMN h_redeem_limit int NOT NULL DEFAULT 3000 COMMENT '每次提现的上限';
-ALTER TABLE h_config ADD COLUMN h_transfer_cnyf_limit int NOT NULL DEFAULT 0 COMMENT '每次转币上限';
+ALTER TABLE h_config ADD COLUMN h_transfer_cnyf_limit int NOT NULL DEFAULT 1000 COMMENT '每次转币上限';
 ALTER TABLE h_config ADD COLUMN h_is_test_mode int NOT NULL DEFAULT 0 COMMENT '是否是测试阶段';
 
 
