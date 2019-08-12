@@ -62,7 +62,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         $("#purchase_btn").click(function () {
             setTimeout(function () { disableButton("#purchase_btn"); }, 0);
             $("#integration_form").attr("action", "<?php 
-            if ($INTESTMODE) { echo $NOTIFYSITEDEV; } else { echo $NOTIFYSITEPROD; } ?>member/jincz.php");
+            if ($INTESTMODE) { echo $NOTIFYSITEDEV; } else { echo $NOTIFYSITEPROD; } ?>/member/jincz.php");
             var uri_param = $("#api_key").val() + "&";
             uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
             uri_param = uri_param + "external_cny_rec_address=" + $("#external_cny_rec_address").val() + "&";
@@ -76,7 +76,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         $("#redeem_btn").click(function () {
             setTimeout(function () { disableButton("#redeem_btn"); }, 0);
             $("#integration_form").attr("action", "<?php 
-            if ($INTESTMODE) { echo $NOTIFYSITEDEV; } else { echo $NOTIFYSITEPROD; } ?>member/jintx.php");
+            if ($INTESTMODE) { echo $NOTIFYSITEDEV; } else { echo $NOTIFYSITEPROD; } ?>/member/jintx.php");
             var uri_param = $("#api_key").val() + "&";
             uri_param = uri_param + "amount=" + $("#redeem_amount").val() + "&" 
             uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
