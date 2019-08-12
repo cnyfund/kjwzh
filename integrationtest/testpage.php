@@ -30,7 +30,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <input type="hidden" name="api_key" id = "api_key" value="<?php echo $PROXY_APIKEY; ?>"/>
         <input type="hidden" name="return_url" id = "return_url" value="<?php 
          if ($INTESTMODE) { echo $NOTIFYSITEDEV; } else { echo $NOTIFYSITEPROD; }
-         ?>integrationtest/testpage.php"/>
+         ?>/integrationtest/testpage.php"/>
         <input type="hidden" name="signature" id = "signature" value=""/>
         <div class="form-group">
             <label for="externaluserId">UserID:</label>
