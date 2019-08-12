@@ -1,5 +1,6 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/curl_errorno.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once "PayException.php";
 require_once "FCBPayConfig.php";
 
@@ -10,29 +11,30 @@ class pay{
 		'charset'			=>	'utf-8',
 		'sign_type'			=> 'MD5',
     );
-    protected $api_key =  FCBPayConfig::APIKEY;
-    protected $secret_key =  FCBPayConfig::SECRETKEY;
+    protected $api_key = '';
+    protected $secret_key =  '';
     protected $debug_info = array();
     protected $IsTest = false;
+    protected $tradesite = '';
 	 
     /**
      * 类架构函数
      * Auth constructor.
      */
-    public function __construct(){
+    public function __construct($apiKey, $secret, $tradesite){
+        $this->api_key = $apiKey;
+        $this->secret_key = $secret;
+        $this->tradesite = $tradesite;
+
 		$this->SetValue('api_key',$this->api_key);
 		$this->SetValue('timestamp',date('YmdHis'));
     }
 	
 	/* 申请充值 */
 	public function applypurchase($biz_content=array()){
-		if (FCBPayConfig::INTESTMODE){
-			$api =  FCBPayConfig::DEVSITE . '/api/v1/applypurchase/';
-		}else{
-			$api =  FCBPayConfig::PRODSITE . '/api/v1/applypurchase/';
-		}
-        
-		$this->SetValue('method',FCBPayConfig::PAYAPPLYMETHOD);
+        $api = $this->tradesite . 'api/v1/applypurchase/';
+
+        $this->SetValue('method',FCBPayConfig::PAYAPPLYMETHOD);
 		$biz_content['api_account_type'] = 'Account';
 		$biz_content['payment_provider'] = 'heepay';
 		if(!isset($biz_content['expire_minute'])) $biz_content['expire_minute']= 30;
@@ -61,12 +63,8 @@ class pay{
 	
 	/* 提现 */
 	public function applyredeem($biz_content=array()){
+        $api = $this->tradesite . 'api/v1/applyredeem/';
 
-		if (FCBPayConfig::INTESTMODE){
-			$api = FCBPayConfig::DEVSITE . '/api/v1/applyredeem/';
-		}else{
-			$api = FCBPayConfig::PRODSITE . '/api/v1/applyredeem/';
-		}
 		$this->SetValue('method', FCBPayConfig::REDEEMMETHOD);
 		$biz_content['api_account_type'] = 'Account';
 		$biz_content['payment_provider'] = 'heepay';

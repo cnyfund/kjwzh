@@ -7,7 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/proxyutil.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/entities/UserAccount.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/member/logged_data.php';
 
-function purchase($db, &$error_msg, &$payment_url, $user, $external_cnyf_address) {
+function purchase($db, &$error_msg, &$payment_url, $user, $external_cnyf_address, $api_key, $api_secret, $tradesite, $notify_url, $return_url) {
     $amount = isset($_REQUEST['amount'])?$_REQUEST['amount']:0;
     if ($amount == 0) {
         error_log("amount is 0");
@@ -23,15 +23,11 @@ function purchase($db, &$error_msg, &$payment_url, $user, $external_cnyf_address
     }
 
     $total_fee = $amount*100;
-    $pay = new pay();
+    $pay = new pay($api_key, $api_secret, $tradesite);
     $out_trade_no = date('YmdHis').rand(100000,999999);
-    if (FCBPayConfig::INTESTMODE) {
-        $config['notify_url'] = FCBPayConfig::THISSITEDEV . '/notify.php';
-        $config['return_url'] = FCBPayConfig::THISSITEDEV . '/return.php';	
-    }else {
-        $config['notify_url'] = FCBPayConfig::THISSITEPROD . '/notify.php';
-        $config['return_url'] = FCBPayConfig::THISSITEPROD . '/return.php';
-    }
+    $config['notify_url'] = $notify_url;
+    $config['return_url'] = $return_url;
+
     $config['out_trade_no'] = $out_trade_no;
     if ($user->api_account != null) {
         $config['subject'] = '[' . $user->api_account->name . ']:'. $user->username . '请求充值' . $amount . '元';
@@ -210,7 +206,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($is_purchase_submission) {
         error_log("Call purchase");
-        purchase($db, $errMsg, $paymentUrl, $user, $external_cnyf_address);
+        $purchase_notify_url =  (($INTESTMODE) ? $NOTIFYSITEDEV :  $NOTIFYSITEPROD) . "notify.php";
+        $purchase_return_url =  (($INTESTMODE) ? $NOTIFYSITEDEV :  $NOTIFYSITEPROD) . "return.php";
+        $tradesite = ($INTESTMODE) ? $DEVSITE : $PRODSITE;
+        purchase($db, $errMsg, $paymentUrl, $user, $external_cnyf_address, $APIKEY, $SECRETKEY, $tradesite,
+                $purchase_notify_url, $purchase_return_url);
         error_log("Done purchase(" . $user->username . "): error message:" . $errMsg . ' paymenturl:' . $paymentUrl);
         if (empty($errMsg)) {
             $qrcode_url = 'Location:' . "/member/purchase_qrcode.php?amount=" . $_REQUEST['amount'];
@@ -260,7 +260,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <?php endif; ?>
         <input name="weixin" type="hidden" id="weixin" value="<?php echo $user->weixin ?>"/>
         <h3>充值</h3>
-        <div class="alert alert-info col-sm-*">每次限额<?php echo FCBPayConfig::MAXPURCHASE ?>元，12小时内到账</div>
+        <div class="alert alert-info col-sm-*">每次限额<?php echo $MAXPURCHASE ?>元，12小时内到账</div>
         <div class="alert alert-success col-sm-*" role="alert" id='success_msg'></div>
         <div class="alert alert-danger col-sm-*" role="alert" id='error_msg'></div>
         <div class="form-group">
@@ -315,9 +315,9 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                 return;
             }
 
-            if (amount > <?php echo FCBPayConfig::MAXPURCHASE ?>) {
+            if (amount > <?php echo $MAXPURCHASE ?>) {
                 $("#errorTitle").text("输入错误");
-                $("#errorBody").text("充值金额不能超过<?php echo FCBPayConfig::MAXPURCHASE ?>");
+                $("#errorBody").text("充值金额不能超过<?php echo $MAXPURCHASE ?>");
                 $("#errorMessage").modal({backdrop: "static"});
                 $("#click_purchase").prop('disabled', false);
                 return;                

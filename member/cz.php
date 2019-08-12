@@ -136,10 +136,10 @@ list_();
                 if ($val['h_state']>0 || ($val['h_state'] == 0 && $val['trx_bill_no']==="")) {
                     echo "				<td>" . $ss . "<br/>" . $val['h_reply'] . "</td>";
                 } else {
-                    if (FCBPayConfig::INTESTMODE) {
-                        $payment_qrcode_url = FCBPayConfig::DEVSITE;
+                    if ($INTESTMODE) {
+                        $payment_qrcode_url = $DEVSITE;
                     } else {
-                        $payment_qrcode_url = FCBPayConfig::PRODSITE;
+                        $payment_qrcode_url = $PRODSITE;
                     }
                     $payment_qrcode_url =  $payment_qrcode_url . "/trading/payment_qrcode_url/?out_trade_no=" . $val['out_trade_no'];
                     echo "				<td><a href=\"/member/purchase_qrcode.php?amount=" . $val['h_money'] . "&payment_qrcode_url=" . urlencode($payment_qrcode_url) . "\"/>" . $ss . "</a></td>";

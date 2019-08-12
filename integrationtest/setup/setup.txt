@@ -4,4 +4,7 @@
 4. create folder /var/www/html/<site>/logs
 5. create upload folder /var/www/html/<site>/public_html/images/upload/weixin/ (maybe placeholder will creat this)
 6. sudo chown -R www-data:www-data upload/  give upload folder permission
+7. run sql_h_config.sql,  and insert right value
+8. run (missing) sql_h_api_member.sql (create table and foreign key) and insert the api key and secrete, and proxy key and secret. 
+
 
