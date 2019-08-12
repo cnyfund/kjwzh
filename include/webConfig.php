@@ -5,8 +5,8 @@ $webInfo = $db->get_one("SELECT * FROM `h_config`");
 $rewriteOpen = $webInfo['h_rewriteOpen'];
 //$rewriteOpen = 0;
 
-$APIKEY = $webInfo['h_tradeex_test_api_key'];
-$SECRETKEY = $webInfo['h_tradeex_test_api_secret'];
+$APIKEY = $webInfo['h_tradeex_api_key'];
+$SECRETKEY = $webInfo['h_tradeex_api_secret'];
 $PROXY_APIKEY = $webInfo['h_proxy_api_key'];
 $PROXY_SECRETKEY = $webInfo['h_proxy_api_secret'];
 $DEVSITE = $webInfo['h_test_tradeex_hostname'];
