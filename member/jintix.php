@@ -128,8 +128,8 @@ layui.use('upload', function(){
 			tishi4("请输入填写提现金额",'#x2');
 			return false;
 			}
-		if ($("#x2").val() ><?php echo FCBPayConfig::MAXREDEEM ?>) {
-			  tishi4("目前阶段系统一次提现最多<?php echo FCBPayConfig::MAXREDEEM ?>元。大额提现您可以通过多次实现。");
+		if ($("#x2").val() ><?php echo $MAXREDEEM ?>) {
+			  tishi4("目前阶段系统一次提现最多<?php echo $MAXREDEEM ?>元。大额提现您可以通过多次实现。");
 				return false;
 		 }
 		if(!checkNum($("#x2").val()) || $("#x2").val()<<?php echo $webInfo['h_withdrawMinMoney']; ?>){
