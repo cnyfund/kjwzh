@@ -6,7 +6,7 @@ insert into `h_api_member` (
   `api_key`,
   `api_secret`,
   `active`,
-  `defaul_cnyf_address`,
+  `default_cnyf_address`,
   `name`
 ) values(
    'api_key_1234567',
