@@ -49,6 +49,8 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             <input type="text" class="form-control" id="txid" name="txid">
         </div>
     <a href="#" id="purchase_btn" class="btn btn-info" role="button">充值</a>
+    <a href="#" id="purchase_history_btn" class="btn btn-info" role="button">充值历史</a>
+    <a href="#" id="qrcode_btn"  class="btn btn-info" role="button">绑定支付</a>
     <a href="#" id="redeem_btn" class="btn btn-info" role="button">提现</a>
     </form>
  </div>
@@ -90,6 +92,21 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             alert("请注意，用户自己的网站需要1）确保提现金额有效 2） 把提现金额的CNYF发送给指定地址（系统设置时我们会提供）3）把转币的txid记住 4）按以下例子把用户ID，提现金额，转币txid发给网关");
             alert("提现URL：" + url);
 
+            $("#integration_form").submit();
+        });
+
+        $("#qrcode_btn").click(function(){
+            setTimeout(function () { disableButton("#purchase_btn"); }, 0);
+            $("#integration_form").attr("action", "<?php 
+            if ($INTESTMODE) { echo $NOTIFYSITEDEV; } else { echo $NOTIFYSITEPROD; } ?>/member/paymentmethod.php");
+            var uri_param = $("#api_key").val() + "&";
+            uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
+            uri_param = uri_param + "external_cny_rec_address=" + $("#external_cny_rec_address").val() + "&";
+            uri_param = uri_param + "return_url=" + $("#return_url").val() + "&";
+            var string_to_sign = uri_param + "secret=<?php echo $PROXY_SECRETKEY; ?>";
+            alert('string to sign:' + string_to_sign);
+            var signature  = md5(string_to_sign);
+            $("#signature").val(signature);
             $("#integration_form").submit();
         });
     });

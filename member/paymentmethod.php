@@ -4,33 +4,58 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/proxyutil.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . "/member/logged_data.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/include/simple_header.php";
-if (isset($_REQUEST['api_key'])){
-    // validate user input url
-    $api_key = $_REQUEST['api_key'];
-    if (!isset($_REQUEST['return_url'])){
-        show_proxy_error("403", "你的请求没有包含return_url", $return_url);
-        return;
-    }
-    $return_url = $_REQUEST['return_url'];
-    if (!isset($_REQUEST['externaluserId'])){
-        show_proxy_error("403", "你的请求没有包含你的客户的用户ID", $return_url);
-        return;
-    }
-    $externaluserId = $_REQUEST['externaluserId'];
 
-    if (!isset($_REQUEST['external_cny_rec_address'])){
-        show_proxy_error("403", "你的请求没有包含你的客户的钱包地址", $return_url);
+function read_proxy_parameters(&$api_key, &$return_url, &$externaluserId, &$external_cnyf_address, &$signature, &$next, $dict, $method){
+    if (isset($dict['api_key'])) {
+        // validate user input url
+        if (empty($dict['api_key'])) {
+            show_proxy_error("403", "你的请求没有包含api_key", null);
+            return false;
+        }
+        $api_key = $dict['api_key'];
+
+        if (!isset($dict['return_url'])) {
+            show_proxy_error("403", "你的请求没有包含return_url", $return_url);
+            return false;
+        }
+        $return_url = $dict['return_url'];
+
+        if (!isset($dict['externaluserId'])  || empty($dict['externaluserId'])) {
+            show_proxy_error("403", "你的请求没有包含你的客户的用户ID", $return_url);
+            return false;
+        }
+        $externaluserId = $dict['externaluserId'];
+    
+        if ($method == 'GET') {
+            if (!isset($dict['external_cny_rec_address'])) {
+                show_proxy_error("403", "你的请求没有包含你的客户的钱包地址", $return_url);
+                return false;
+            }
+        }
+
+        $external_cnyf_address = $dict['external_cny_rec_address'];
+
+        if (!isset($dict['signature'])) {
+            show_proxy_error("403", "你的请求没有包含签名", $return_url);
+            return false;
+        }
+        $signature = $dict['signature'];
+
+        $next =  isset($dict['next']) ? $dict['next'] : "";
+
+        return true;
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["api_key"])) {
+    if (!read_proxy_parameters($api_key, $return_url, $externaluserId, $external_cnyf_address, $signature, $next, $_POST, 'POST')){
         return;
     }
-    $external_cnyf_address = $_REQUEST['external_cny_rec_address'];    
-
-    if (!isset($_REQUEST['signature'])) {
-        show_proxy_error("403", "你的请求没有包含签名", $return_url);
+} else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_SESSION['api_key'])) {
+    if (!read_proxy_parameters($api_key, $return_url, $externaluserId, $external_cnyf_address, $signature, $next, $_SESSION, 'GET')){
         return;
     }
-    $signature = $_REQUEST['signature'];
-
-} else if(!$memberLogged){
+} else if (!$memberLogged) {
 	header("Location: " . "/member/login.php");
 	exit;
 }
@@ -46,66 +71,58 @@ $username = $rs['h_userName'];
 $weixin = $rs['h_weixin'];
 $weixin_qrcode = $rs['h_weixin_qrcode'];
 
-$record_updated = False;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['api_key'])) {
-        $api_key = $_POST['api_key'];
-        $return_url = $_POST['return_url'];
-        $externaluserId = $_POST['externaluserId'];
-        $external_cnyf_address = $_POST['external_cny_rec_address'];    
-        $signature = $_POST['signature'];
-    }
-
-    $errors= array();
-    $weixin = $_POST['h_weixin'];
-    if (isset($_FILES['weixin_qrcode'])) {
-        $file_name = $_FILES['weixin_qrcode']['name'];
-        if (!empty($file_name)) {
-            error_log("Come to save upload file {$file_name}");
-            $file_size =$_FILES['weixin_qrcode']['size'];
-            $file_tmp =$_FILES['weixin_qrcode']['tmp_name'];
-            $file_type=$_FILES['weixin_qrcode']['type'];
-            $str_array  = explode('.', $file_name);
-            $str_suffix = end($str_array);
-            $file_ext=strtolower($str_suffix);
+    if (isset($_POST['submit_for_update']) && !empty($_POST['submit_for_update'])) {
+        $errors= array();
+        $weixin = $_POST['h_weixin'];
+        if (isset($_FILES['weixin_qrcode'])) {
+            $file_name = $_FILES['weixin_qrcode']['name'];
+            if (!empty($file_name)) {
+                error_log("Come to save upload file {$file_name}");
+                $file_size =$_FILES['weixin_qrcode']['size'];
+                $file_tmp =$_FILES['weixin_qrcode']['tmp_name'];
+                $file_type=$_FILES['weixin_qrcode']['type'];
+                $str_array  = explode('.', $file_name);
+                $str_suffix = end($str_array);
+                $file_ext=strtolower($str_suffix);
             
-            $extensions= array("jpeg","jpg","png");
+                $extensions= array("jpeg","jpg","png");
             
-            if (in_array($file_ext, $extensions)=== false) {
-                $errors[] = "{$username} upload weixin qrcode: {$file_ext} not allowed, please choose a JPEG or PNG file.";
-            }
+                if (in_array($file_ext, $extensions)=== false) {
+                    $errors[] = "{$username} upload weixin qrcode: {$file_ext} not allowed, please choose a JPEG or PNG file.";
+                }
             
-            if ($file_size > 2097152) {
-                $errors[]= "{$username} upload weixin qrcode: File size must be less than  2 MB";
-            }
+                if ($file_size > 2097152) {
+                    $errors[]= "{$username} upload weixin qrcode: File size must be less than  2 MB";
+                }
         
-            if (empty($errors)==true) {
-                error_log("come to move the file");
-                $weixin_qrcode = $username . "_qrcode" . "." . $file_ext;
-                $new_filepath = $_SERVER['DOCUMENT_ROOT'] . "/images/upload/weixin/".$weixin_qrcode;
-                move_uploaded_file($file_tmp, $new_filepath);
-                $new_file_time = filemtime($new_filepath);
-            } else {
-                foreach ($errors as $err) {
-                    error_log($err);
+                if (empty($errors)==true) {
+                    $weixin_qrcode = $username . "_qrcode" . "." . $file_ext;
+                    $new_filepath = $_SERVER['DOCUMENT_ROOT'] . "/images/upload/weixin/".$weixin_qrcode;
+                    error_log("come to move the file to " . $new_filepath);
+                    move_uploaded_file($file_tmp, $new_filepath);
+                    $new_file_time = filemtime($new_filepath);
+                } else {
+                    foreach ($errors as $err) {
+                        error_log($err);
+                    }
                 }
             }
         }
-    }
     
-    if(empty($errors)==true){
-        error_log("come to update weixin and qrcode in h_member");
-        $sql = "update h_member set ";
-        $sql = $sql . "h_weixin = '{$weixin}'";
-        if (isset($weixin_qrcode)) {
-            $sql = $sql . ", h_weixin_qrcode = '{$weixin_qrcode}'";
+        if (empty($errors)==true) {
+            error_log("come to update weixin and qrcode in h_member");
+            $sql = "update h_member set ";
+            $sql = $sql . "h_weixin = '{$weixin}'";
+            if (isset($weixin_qrcode)) {
+                $sql = $sql . ", h_weixin_qrcode = '{$weixin_qrcode}'";
+            }
+
+            $sql = $sql . " where h_userName= '{$username}'";
+            error_log("udpate h_member weixin: " . $sql);
+
+            $db->query($sql);
         }
-
-        $sql = $sql . " where h_userName= '{$username}'";
-        error_log("udpate h_member weixin: " . $sql);
-
-        $db->query($sql);
-        $record_updated = True;
     }
 }
 
@@ -135,6 +152,8 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <input type="hidden" id="external_cny_rec_address" name="external_cny_rec_address" value="<?php echo $external_cnyf_address; ?>">
         <input type="hidden" id="return_url" name="return_url" value="<?php echo $return_url; ?>">
         <input type="hidden" id="signature" name="signature" value="<?php echo $signature; ?>">
+        <input type="hidden" id="next" name="next" value="<?php echo $next; ?>">
+        <input type="hidden" id="submit_for_update" name="submit_for_update" value="">
         <div class="form-group">
            <div class="col-sm-2"></div><div class="col-sm-6"><h3>付款方式</h3></div>
         </div>
@@ -142,7 +161,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <div class="alert alert-danger col-sm-*" role="alert" id='error_msg'></div>
         <?php if (empty($rs["h_weixin_qrcode"])) {
             if (isset($next) && !empty($next)) :?>
-                <div class="alert alert-info col-sm-*" role="alert" id='warning_msg'>请先设置微信付款二维码。。。</div>
+                <div class="alert alert-info col-sm-*" role="alert" id='warning_msg'>请先设置微信付款二维码再充值或提现。。。</div>
             <?php else :?>
                 <div class="alert alert-warning col-sm-*" role="alert" id='warning_msg'>请注意，您还没有上传收款二维码，所以您还暂时不能提现。</div>
             <?php endif;?>
@@ -174,7 +193,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <div class="form-group">        
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="button" class="btn btn-large btn-primary" id="btn_save">确认</button>
-                <?php if (isset($api_key) && !empty($api_key) && $record_updated) :?>
+                <?php if (isset($next) && !empty($next) && isset($weixin_qrcode) && !empty($weixin_qrcode)) :?>
                 <button type="button" class="btn btn-large btn-primary" id="btn_next">下一步</button>
                 <?php endif; ?>
                 <?php if (isset($return_url) && !empty($return_url)) :?>
@@ -191,6 +210,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <input type="hidden" id="external_cny_rec_address" name="external_cny_rec_address" value="<?php echo $external_cnyf_address; ?>">
         <input type="hidden" id="return_url" name="return_url" value="<?php echo $return_url; ?>">
         <input type="hidden" id="signature" name="signature" value="<?php echo $signature; ?>">
+        <input type="hidden" id="next" name="next" value="<?php echo $next; ?>">
     </form>
     <!-- Message Modal -->
     <div class="modal" id="errorMessage" role="dialog">
@@ -228,7 +248,6 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         $("error_msg").show();<?php
         }?>
 
-        $("#warning_msg").hide();
         $(document).ajaxStart(function(){
             $("#wait").css("display", "block");
         });
@@ -257,6 +276,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             }
             click_save = true;
             $("#confirmationDialog").modal("hide");
+            $("#submit_for_update").val("Y");
             $("#form_weixin").submit();
         });
 
@@ -281,7 +301,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             });
         }
     });
-
+    
 </script>
 
 <?php

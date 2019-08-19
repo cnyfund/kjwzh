@@ -7,6 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/proxyutil.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/entities/UserAccount.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/member/logged_data.php';
 
+
 function purchase($db, &$error_msg, &$payment_url, $user, $external_cnyf_address, $api_key, $api_secret, $tradesite, $notify_url, $return_url) {
     $amount = isset($_REQUEST['amount'])?$_REQUEST['amount']:0;
     if ($amount == 0) {
@@ -120,8 +121,8 @@ $paymentUrl = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!empty($api_key)){
         // validate user input url if it is not purchase submission
-        if (!isset($_POST['return_url'])){
-            if ($is_purchase_submission) {
+        if (!isset($_POST['return_url']) || empty($_POST['return_url'])){
+            if (!$is_purchase_submission) {
                 show_proxy_error("403", "你的请求没有包含return_url", null);
                 return;
             } else {
@@ -130,8 +131,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         $return_url = $_POST['return_url'];
 
-        if (!isset($_POST['externaluserId'])){
-            if ($is_purchase_submission) {
+        if (!isset($_POST['externaluserId']) || empty($_POST['externaluserId'])){
+            if (!$is_purchase_submission) {
                 show_proxy_error("403", "你的请求没有包含你的客户的用户ID", $return_url);
                 return;
             } else {
@@ -139,9 +140,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
         $userId = $_POST['externaluserId'];
-    
-        if (!isset($_POST['external_cny_rec_address'])){
-            if ($is_purchase_submission) {
+        if (!isset($_POST['external_cny_rec_address']) || empty($_POST['external_cny_rec_address'])){
+            if (!$is_purchase_submission) {
                 show_proxy_error("403", "你的请求没有包含你的客户的钱包地址", $return_url);
                 return;
             } else {
@@ -150,8 +150,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         $external_cnyf_address = $_POST['external_cny_rec_address'];    
     
-        if (!isset($_POST['signature'])) {
-            if ($is_purchase_submission) {
+        if (!isset($_POST['signature']) || empty($_POST['signature'])) {
+            if (!$is_purchase_submission) {
                 show_proxy_error("403", "你的请求没有包含签名", $return_url);
                 return;
             } else {
@@ -162,7 +162,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $signature = $_POST['signature'];
 
         //now load user and see whether it exist or not, if not register the user.
-        error_log("now load external user");
         $user = UserAccount::load_api_user($db, $userId, $api_key);
         if (is_null($user)) {
             if (!$is_purchase_submission) {
@@ -185,13 +184,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         // if user record does not have qrcode, then redirect to paymentmethod.php for input
         if (is_null($user->weixin_qrcode)) {
-            $redirection = "/member/paymentmethod.php?api_key=" . $api_key . "&externaluserId=" . $externaluserId;
-            $redirection = $redirection . "&external_cny_rec_address=" . $external_cnyf_address;
-            if (isset($return_url) && !empty($return_url)) {
-                $redirection = $redirection . "&return_url=" . $return_url;
-            }
-            $redirection = $redirection . "&signature=" . $signature;
-    
+            $_SESSION['api_key'] = $api_key;
+            $_SESSION['externaluserId'] = $externaluserId;
+            $_SESSION['external_cny_rec_address'] = $external_cnyf_address;
+            $_SESSION['return_url'] = (isset($return_url) && !empty($return_url)) ? $return_url: '';
+            $_SESSION['signature'] = $signature;
+            $_SESSION['next'] = "/member/jincz.php";
+
+            $redirection = "/member/paymentmethod.php";
             $redirection = "Location: " . $redirection;
             error_log("purchase: user " . $user->username . " does not have payment qrcode, setup at " . $redirection);
             header($redirection);
@@ -206,8 +206,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($is_purchase_submission) {
         error_log("Call purchase");
-        $purchase_notify_url =  (($INTESTMODE) ? $NOTIFYSITEDEV :  $NOTIFYSITEPROD) . "notify.php";
-        $purchase_return_url =  (($INTESTMODE) ? $NOTIFYSITEDEV :  $NOTIFYSITEPROD) . "return.php";
+        $purchase_notify_url =  (($INTESTMODE) ? $NOTIFYSITEDEV :  $NOTIFYSITEPROD) . "/notify.php";
+        $purchase_return_url =  (($INTESTMODE) ? $NOTIFYSITEDEV :  $NOTIFYSITEPROD) . "/return.php";
         $tradesite = ($INTESTMODE) ? $DEVSITE : $PRODSITE;
         purchase($db, $errMsg, $paymentUrl, $user, $external_cnyf_address, $APIKEY, $SECRETKEY, $tradesite,
                 $purchase_notify_url, $purchase_return_url);
