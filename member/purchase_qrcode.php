@@ -46,7 +46,7 @@ $(document).ready(function(){
                                 <td><div class="text-danger">请长按识别或扫描二维码， <h4>付款时务必在备注栏填入本站注册手机号码，否则不能及时到账</h4></div></td>
                             </tr>
                             <tr>
-                                <td><img src="<?php echo $qrcode_url ?>" width="300" height="400"></td>
+                                <td><img src="<?php echo $qrcode_url ?>&time=<?php echo time(); ?>" width="300" height="400"></td>
                             </tr>
                         </table>
                     </div>

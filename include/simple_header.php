@@ -7,6 +7,8 @@ if(!$memberLogged && $webInfo['h_operationMode'] != 'PAYMENTPROXY'){
     exit();
 }
 
+session_start();
+
 $expire = time() + 60 * 30;
 setcookie("m_username", $memberLogged_userName,$expire,'/');
 setcookie("m_password", $memberLogged_passWord,$expire,'/');

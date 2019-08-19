@@ -1,5 +1,6 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
+session_start();
 ?>
 <HTML>
 <HEAD>
@@ -28,7 +29,6 @@ body{
 $clause = array_key_exists("clause", $_GET)? $_GET['clause'] : "";
 if($clause == "chklogin")
 {
-	session_start();
 	if($code != $_SESSION['code']){hintAndBack('验证码错误!',1);}
 	if('' == $loginName){hintAndBack('请输入帐号!',1);}
 	if('' == $loginPwd){hintAndBack('请输入密码!',1);}

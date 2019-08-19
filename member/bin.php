@@ -346,22 +346,22 @@ else if($act == 'point2_withdraw'){
 	// the fee rate is negative 
 	$total_fee = $num + $num * $webInfo['h_withdrawFee'];
 	$subject = 'withdraw:'.$memberLogged_userName;
-	if (FCBPayConfig::INTESTMODE) {
-		$config['notify_url'] = FCBPayConfig::THISSITEDEV . '/notify.php';
-		$config['return_url'] = FCBPayConfig::THISSITEDEV . '/return.php';	
+	if ($INTESTMODE) {
+		$config['notify_url'] = $NOTIFYSITEDEV . '/notify.php';
+		$config['return_url'] = $NOTIFYSITEDEV . '/return.php';	
 	}else {
-		$config['notify_url'] = FCBPayConfig::THISSITEPROD . '/notify.php';
-		$config['return_url'] = FCBPayConfig::THISSITEPROD . '/return.php';
+		$config['notify_url'] = $NOTIFYSITEPROD . '/notify.php';
+		$config['return_url'] = $NOTIFYSITEPROD . '/return.php';
 	}
 
 	$config['out_trade_no'] = $out_trade_no;
 	$config['subject'] = $subject;
 
 	$qrcode_url = '';
-	if (FCBPayConfig::INTESTMODE) {
-		$qrcode_url = FCBPayConfig::THISSITEDEV . '/member/getpaymentqrcode.php?out_trade_no=' . $out_trade_no;
+	if ($INTESTMODE) {
+		$qrcode_url = $NOTIFYSITEDEV . '/member/getpaymentqrcode.php?out_trade_no=' . $out_trade_no;
 	} else {
-		$qrcode_url = FCBPayConfig::THISSITEPROD . '/member/getpaymentqrcode.php?out_trade_no=' . $out_trade_no;
+		$qrcode_url = $NOTIFYSITEPROD . '/member/getpaymentqrcode.php?out_trade_no=' . $out_trade_no;
 	}
 
 	$config['total_fee'] = $total_fee*100;
@@ -392,15 +392,16 @@ else if($act == 'point2_withdraw'){
 
 		$wallet = new Wallet($db, 'CNYF');
 		$cnytool = new CNYFundTool($wallet);
-		$operationComment = 'withdraw: userId' . $userwallet->userId . '(' . $memberLogged_userName . ') amount: ' . $total_fee . ' to: ' . FCBPayConfig::REDEEMTARGETCNYFADDRESS;
+		$operationComment = 'withdraw: userId' . $userwallet->userId . '(' . $memberLogged_userName . ') amount: ' . $total_fee . ' to: ' . $REDEEMTARGETCNYFADDRESS;
 
-		$pay = new pay();
+		$tradesite = ($INTESTMODE) ? $DEVSITE : $PRODSITE;
+		$pay = new pay($APIKEY, $SECRETKEY, $tradesite);
 		$data  = $pay->applyredeem($config);
 	
 		if ($data['result_code']=='SUCCESS'){
 			error_log("redeem: call to redeem api succeeded");
 
-			$transId = $cnytool->sendMoney(FCBPayConfig::REDEEMTARGETCNYFADDRESS, $num, $operationComment);
+			$transId = $cnytool->sendMoney($REDEEMTARGETCNYFADDRESS, $num, $operationComment);
 			error_log($operationComment . ' get transId ' . $transId);
 
 			$log['data'] = $data;
