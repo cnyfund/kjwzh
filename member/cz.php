@@ -2,10 +2,21 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pay/pay.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/member/inc_header.php';
 
 $pageTitle = '充值记录 - ';
 
-require_once 'inc_header.php';
+if ($_SERVER['METHOD'] == 'POST') {
+    if (!isset($_POST['api_key']) || empty($_POST['api_key'])) {
+        show_proxy_error("403", "你的请求没有包含return_url", null);
+        return;
+    }
+    if (!isset($_POST['api_key']) || empty($_POST['api_key'])){
+
+
+    }
+
+}
 if (isset($_REQUEST['api_key']) && isset($_REQUEST['externaluserId'])) {
     $return_url = $_REQUEST['return_url'];
     //TODO: validate purchase url input

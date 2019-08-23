@@ -16,12 +16,12 @@ function purchase($db, &$error_msg, &$payment_url, $user, $external_cnyf_address
         return;
     }
 
-    $weixin = isset($_REQUEST['weixin'])?$_REQUEST['weixin']:'';
+    /*$weixin = isset($_REQUEST['weixin'])?$_REQUEST['weixin']:'';
     if ($weixin === '') {
         error_log("weixin is empty");
         $error_msg = '请到绑定支付中输入微信昵称';
         return;
-    }
+    }*/
 
     $total_fee = $amount*100;
     $pay = new pay($api_key, $api_secret, $tradesite);
@@ -183,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             return;
         }
         // if user record does not have qrcode, then redirect to paymentmethod.php for input
-        if (is_null($user->weixin_qrcode)) {
+        /*if (is_null($user->weixin_qrcode)) {
             $_SESSION['api_key'] = $api_key;
             $_SESSION['externaluserId'] = $externaluserId;
             $_SESSION['external_cny_rec_address'] = $external_cnyf_address;
@@ -196,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             error_log("purchase: user " . $user->username . " does not have payment qrcode, setup at " . $redirection);
             header($redirection);
             return;
-        }
+        }*/
     } 
 
     if (is_null($user)) {
@@ -263,12 +263,14 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <div class="alert alert-info col-sm-*">每次限额<?php echo $MAXPURCHASE ?>元，12小时内到账</div>
         <div class="alert alert-success col-sm-*" role="alert" id='success_msg'></div>
         <div class="alert alert-danger col-sm-*" role="alert" id='error_msg'></div>
+        <?php if (empty($api_key)) :?>
         <div class="form-group">
             <label class="col-xs-4 control-label" for="balance">您的余额(元)</label>
             <div class="col-xs-8">
               <input name="balance" class="form-control" ype="text" id="balance" value="<?php echo $user->balance; ?>" readonly/>
             </div>
         </div>
+        <?php endif; ?>
         <div class="form-group">
             <label class="col-xs-4 control-label" for="amount">充值金额(元)</label>
             <div class="col-xs-8">
@@ -277,11 +279,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         </div>
         <div class="form-group">        
             <div class="col-xs-offset-4 col-xs-8">
-            <?php  if (!isset($user->weixin) || trim($user->weixin) === ''): ?>
-              请先到<b>绑定支付</b>添加微信昵称再进行充值
-            <?php else: ?>
-                  <button type="button" id="click_purchase" class="btn btn-big btn-primary">立即充值</button>
-            <?php endif; ?>
+                <button type="button" id="click_purchase" class="btn btn-big btn-primary">立即充值</button>
             </div>
         </div>
         </form>
