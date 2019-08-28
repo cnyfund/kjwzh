@@ -96,12 +96,25 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         });
 
         $("#qrcode_btn").click(function(){
-            setTimeout(function () { disableButton("#purchase_btn"); }, 0);
+            setTimeout(function () { disableButton("#qrcode_btn"); }, 0);
             $("#integration_form").attr("action", "<?php 
             if ($INTESTMODE) { echo $NOTIFYSITEDEV; } else { echo $NOTIFYSITEPROD; } ?>/member/paymentmethod.php");
             var uri_param = $("#api_key").val() + "&";
             uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
             uri_param = uri_param + "external_cny_rec_address=" + $("#external_cny_rec_address").val() + "&";
+            uri_param = uri_param + "return_url=" + $("#return_url").val() + "&";
+            var string_to_sign = uri_param + "secret=<?php echo $PROXY_SECRETKEY; ?>";
+            alert('string to sign:' + string_to_sign);
+            var signature  = md5(string_to_sign);
+            $("#signature").val(signature);
+            $("#integration_form").submit();
+        });
+        $("#purchase_history_btn").click(function(){
+            setTimeout(function () { disableButton("#purchase_history_btn"); }, 0);
+            $("#integration_form").attr("action", "<?php 
+            if ($INTESTMODE) { echo $NOTIFYSITEDEV; } else { echo $NOTIFYSITEPROD; } ?>/member/cz.php");
+            var uri_param = $("#api_key").val() + "&";
+            uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
             uri_param = uri_param + "return_url=" + $("#return_url").val() + "&";
             var string_to_sign = uri_param + "secret=<?php echo $PROXY_SECRETKEY; ?>";
             alert('string to sign:' + string_to_sign);
