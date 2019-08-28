@@ -1,6 +1,6 @@
 <?php 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/member/logged_data.php';
-if(!$memberLogged){
+if(!$memberLogged && $webInfo['h_operationMode'] != 'PAYMENTPROXY'){
 	header("Location: /member/login.php");
 	exit();
 }
