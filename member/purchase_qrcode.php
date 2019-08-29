@@ -60,6 +60,8 @@ $(document).ready(function(){
         </div>
     </div>
 </div>
+<?php if (empty($return_url)) :?>
 <?php
 require_once 'inc_footer.php';
 ?>
+<?php endif; ?>
