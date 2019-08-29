@@ -31,6 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $userId = $_POST['externaluserId'];
 
+    if (!isset($_POST['external_cny_rec_address']) || empty($_POST['external_cny_rec_address'])){
+        show_proxy_error("403", "你的请求没有包含你的客户的钱包地址", $return_url);
+        return;
+    }
+    $external_cnyf_address = $_POST['external_cny_rec_address'];
+
     if (!isset($_POST['signature']) || empty($_POST['signature'])) {
         show_proxy_error("403", "你的请求没有包含签名", $return_url);
         return;

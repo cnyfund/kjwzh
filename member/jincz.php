@@ -241,6 +241,25 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
 <body style="<?php echo $body_style; ?>">
 <div class="container" >
     <div class="row">
+        <?php if (!empty($api_key)) :?>
+            <form name="id_history_form" id="id_history_form" class="form-horizontal" action="/member/cz.php" method="post" >
+                <?php if (!empty($api_key)) :?>
+                <input name="api_key" type="hidden" id="api_key" value="<?php echo $api_key; ?>"/>
+                <?php endif; ?>
+                <?php if (isset($userId) && !empty($userId)) :?>
+                <input name="externaluserId" type="hidden" id="externaluserId" value="<?php echo $userId; ?>"/>
+                <?php endif; ?>
+                <?php if (isset($external_cnyf_address) && !empty($external_cnyf_address)) :?>
+                <input name="external_cny_rec_address" type="hidden" id="external_cny_rec_address" value="<?php echo $external_cnyf_address; ?>"/>
+                <?php endif; ?>
+                <?php if (isset($return_url) &&!empty($return_url)) :?>
+                <input name="return_url" type="hidden" id="return_url" value="<?php echo $return_url; ?>"/>
+                <?php endif; ?>
+                <?php if (isset($signature) &&!empty($signature)) :?>
+                <input name="signature" type="hidden" id="signature" value="<?php echo $signature; ?>"/>
+                <?php endif; ?>                
+            </form>
+        <?php endif; ?>
         <form name="id_purchase_form" id="id_purchase_form" class="form-horizontal" action="/member/jincz.php" method="post" >
         <input name="is_purchase_submission" type="hidden" id="is_purchase_submission" value=""/>
         <?php if (!empty($api_key)) :?>
@@ -280,6 +299,10 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <div class="form-group">        
             <div class="col-xs-offset-4 col-xs-8">
                 <button type="button" id="click_purchase" class="btn btn-big btn-primary">立即充值</button>
+                <?php if (!empty($api_key)) :?>
+                <button type="button" id="click_back" class="btn btn-big btn-primary">返回</button>
+                <button type="button" id="click_history" class="btn btn-big btn-primary">充值历史</button>
+                <?php endif; ?>                
             </div>
         </div>
         </form>
@@ -290,6 +313,13 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
          <img src='/images/Loading_blue.gif' width="50" height="50" /><br>处理中</div>
 </div>
 <script>
+function goBack(){
+	<?php if (isset($return_url) && !empty($return_url)):?>
+	          window.location.href = "<?php echo $return_url; ?>";
+	<?php else:?>
+		      window.history.back();
+	<?php endif; ?>
+}   
     
     $(document).ready(function(){
         $("#success_msg").hide();
@@ -299,6 +329,20 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         $("#error_msg").hide();
     <?php endif; ?>
         $("#wait").css("display", "none");
+        if ($("#click_back").length > 0) {
+            $("#click_back").click(function(){
+                $("#click_back").prop('disabled', true);
+			    goBack();
+		    });
+        }
+
+        if ($("#click_history").length > 0) {
+            $("#click_history").click(function(){
+                $("#click_history").prop('disabled', true);
+			    $("#id_history_form").submit();
+		    });
+        }
+
         $("#click_purchase").click(function () {
             $("#click_purchase").prop('disabled', true);
             $("#success_msg").hide();
