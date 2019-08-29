@@ -16,8 +16,8 @@ function purchase($db, &$error_msg, &$payment_url, $user, $external_cnyf_address
         return;
     }
 
-    /*$weixin = isset($_REQUEST['weixin'])?$_REQUEST['weixin']:'';
-    if ($weixin === '') {
+    $weixin = isset($_REQUEST['weixin'])?$_REQUEST['weixin']:'';
+    /*if ($weixin === '') {
         error_log("weixin is empty");
         $error_msg = '请到绑定支付中输入微信昵称';
         return;
