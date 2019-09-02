@@ -301,7 +301,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                 <button type="button" id="click_purchase" class="btn btn-big btn-primary">立即充值</button>
                 <?php if (!empty($api_key)) :?>
                 <button type="button" id="click_back" class="btn btn-big btn-primary">返回</button>
-                <button type="button" id="click_history" class="btn btn-big btn-primary">充值历史</button>
+                <button type="button" id="click_history" class="btn btn-big btn-primary">充值记录</button>
                 <?php endif; ?>                
             </div>
         </div>
