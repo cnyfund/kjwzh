@@ -114,8 +114,8 @@ if ($INTESTMODE) {
 } else {
     $payment_site = $PRODSITE;
 }
-list_($userId, $payment_site);
-    function list_($userId, $payment_site)
+list_($userId, $payment_site, $return_url);
+    function list_($userId, $payment_site, $return_url)
     {
         global $rewriteOpen,$db;
         global $page,$total_count,$met_pageskin;
@@ -175,7 +175,11 @@ list_($userId, $payment_site);
                     echo "				<td>" . $ss . "<br/>" . $val['h_reply'] . "</td>";
                 } else {
                     $payment_qrcode_url =  $payment_site . "/trading/payment_qrcode_url/?out_trade_no=" . $val['out_trade_no'];
-                    echo "				<td><a href=\"/member/purchase_qrcode.php?amount=" . $val['h_money'] . "&payment_qrcode_url=" . urlencode($payment_qrcode_url) . "\"/>" . $ss . "</a></td>";
+                    echo "				<td><a href=\"/member/purchase_qrcode.php?amount=" . $val['h_money'] . "&payment_qrcode_url=" . urlencode($payment_qrcode_url);
+                    if (isset($return_url) && !empty($return_url)){
+                        echo "&return_url=" . $return_url;
+                    }
+                    echo "\"/>" . $ss . "</a></td>";
                 }
                 echo "				<td>" . $val['h_addTime'] . "</td>";
                 echo "           </tr>";
