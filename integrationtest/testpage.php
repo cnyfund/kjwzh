@@ -49,7 +49,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             <input type="text" class="form-control" id="txid" name="txid">
         </div>
     <a href="#" id="purchase_btn" class="btn btn-info" role="button">充值</a>
-    <a href="#" id="purchase_history_btn" class="btn btn-info" role="button">充值记录</a>
+    <a href="#" id="purchase_history_btn" class="btn btn-info" role="button">充值历史</a>
     <a href="#" id="qrcode_btn"  class="btn btn-info" role="button">绑定支付</a>
     <a href="#" id="redeem_btn" class="btn btn-info" role="button">提现</a>
     </form>
