@@ -2,7 +2,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/simple_header.php';
-
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/proxyutil.php';
 
 $pageTitle = '集成测试 - ';
 
@@ -29,7 +29,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
     <form name="integration_form" id="integration_form" class="form-horizontal" action="" method="post" >
         <input type="hidden" name="api_key" id = "api_key" value="<?php echo $PROXY_APIKEY; ?>"/>
         <input type="hidden" name="return_url" id = "return_url" value="<?php 
-         if ($INTESTMODE) { echo $NOTIFYSITEDEV; } else { echo $NOTIFYSITEPROD; }
+         if ($INTESTMODE) { echo get_url_host_part($NOTIFYSITEDEV); } else { echo get_url_host_part($NOTIFYSITEPROD); }
          ?>/integrationtest/testpage.php"/>
         <input type="hidden" name="signature" id = "signature" value=""/>
         <div class="form-group">
@@ -64,8 +64,8 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         $("#purchase_btn").click(function () {
             setTimeout(function () { disableButton("#purchase_btn"); }, 0);
             $("#integration_form").attr("action", "<?php 
-            if ($INTESTMODE) { echo $NOTIFYSITEDEV; } else { echo $NOTIFYSITEPROD; } ?>/member/jincz.php");
-            var uri_param = $("#api_key").val() + "&";
+            if ($INTESTMODE) { echo get_url_host_part($NOTIFYSITEDEV); } else { echo get_url_host_part($NOTIFYSITEPROD); } ?>/member/jincz.php");
+            var uri_param = "api_key=" + $("#api_key").val() + "&";
             uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
             uri_param = uri_param + "external_cny_rec_address=" + $("#external_cny_rec_address").val() + "&";
             uri_param = uri_param + "return_url=" + $("#return_url").val() + "&";
@@ -78,7 +78,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         $("#redeem_btn").click(function () {
             setTimeout(function () { disableButton("#redeem_btn"); }, 0);
             $("#integration_form").attr("action", "<?php 
-            if ($INTESTMODE) { echo $NOTIFYSITEDEV; } else { echo $NOTIFYSITEPROD; } ?>/member/jintx.php");
+            if ($INTESTMODE) { echo get_url_host_part($NOTIFYSITEDEV); } else { echo get_url_host_part($NOTIFYSITEPROD); } ?>/member/jintx.php");
             var uri_param = $("#api_key").val() + "&";
             uri_param = uri_param + "amount=" + $("#redeem_amount").val() + "&" 
             uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
@@ -98,7 +98,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         $("#qrcode_btn").click(function(){
             setTimeout(function () { disableButton("#qrcode_btn"); }, 0);
             $("#integration_form").attr("action", "<?php 
-            if ($INTESTMODE) { echo $NOTIFYSITEDEV; } else { echo $NOTIFYSITEPROD; } ?>/member/paymentmethod.php");
+            if ($INTESTMODE) { echo get_url_host_part($NOTIFYSITEDEV); } else { echo get_url_host_part($NOTIFYSITEPROD); } ?>/member/paymentmethod.php");
             var uri_param = $("#api_key").val() + "&";
             uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
             uri_param = uri_param + "external_cny_rec_address=" + $("#external_cny_rec_address").val() + "&";
@@ -112,9 +112,10 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         $("#purchase_history_btn").click(function(){
             setTimeout(function () { disableButton("#purchase_history_btn"); }, 0);
             $("#integration_form").attr("action", "<?php 
-            if ($INTESTMODE) { echo $NOTIFYSITEDEV; } else { echo $NOTIFYSITEPROD; } ?>/member/cz.php");
-            var uri_param = $("#api_key").val() + "&";
+            if ($INTESTMODE) { echo get_url_host_part($NOTIFYSITEDEV); } else { echo get_url_host_part($NOTIFYSITEPROD); } ?>/member/cz.php");
+            var uri_param = "api_key=" + $("#api_key").val() + "&";
             uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
+            uri_param = uri_param + "external_cny_rec_address=&";
             uri_param = uri_param + "return_url=" + $("#return_url").val() + "&";
             var string_to_sign = uri_param + "secret=<?php echo $PROXY_SECRETKEY; ?>";
             alert('string to sign:' + string_to_sign);

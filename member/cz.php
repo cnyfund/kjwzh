@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $userId = $_POST['externaluserId'];
 
-    if (!isset($_POST['external_cny_rec_address']) || empty($_POST['external_cny_rec_address'])){
+    if (!isset($_POST['external_cny_rec_address'])){
         show_proxy_error("403", "你的请求没有包含你的客户的钱包地址", $return_url);
         return;
     }
@@ -44,6 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $signature = $_POST['signature'];
 
     $user = UserAccount::load_api_user($db, $userId, $api_key);
+    if (!purchase_signature_is_valid($user->api_account->api_key, $user->api_account->api_secret, $user->username, $external_cnyf_address, $return_url, $signature)) {
+        show_proxy_error("403", "你的请求签名不符", $return_url);
+        return;
+    }
+
 }
 
 $userId = is_null($user) ? $memberLogged_userName : $user->username;
