@@ -35,12 +35,14 @@ function purchase($db, &$error_msg, &$payment_url, $user, $external_cnyf_address
     } else {
         $config['subject'] = '投资网站客户' . $user->username . '请求充值' . $amount . '元';
     }
+    $subject = $config['subject'];
     $config['total_fee'] = $total_fee;
     $config['attach'] = 'weixin=' . $weixin . ';username=' . $user->username;
     if (isset($external_cnyf_address) && !empty($external_cnyf_address)) {
         $config['external_cny_rec_address'] = $external_cnyf_address;
     }
 
+   
     try {
         $data  = $pay->applypurchase($config);
         error_log(isset($data)? 'return data is ' . $data['return_code']: 'not returned from applypurchase');
