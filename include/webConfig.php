@@ -18,6 +18,7 @@ $MAXPURCHASE = $webInfo['h_purchase_limit'];
 $MAXREDEEM = $webInfo['h_redeem_limit'];
 $MAXCNYFREDEEM = $webInfo['h_transfer_cnyf_limit'];
 $INTESTMODE = $webInfo['h_is_test_mode'];
+$MINREDEEMAMOUNT = (int)$webInfo['h_withdrawMinMoney'];
 
 //模板编号，/templets/web/ 目录下
 $templetsFolder = 'a001';

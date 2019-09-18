@@ -234,8 +234,10 @@ class pay{
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_TIMEOUT, $second); //设置超时
         curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        if ($url.startWith('https:')) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, TRUE);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, TRUE);
+        }
         curl_setopt($curl, CURLOPT_HEADER, FALSE);
         if (!empty($jsonData)) {
             if ($json && is_array($jsonData)) {
