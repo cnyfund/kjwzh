@@ -79,6 +79,7 @@ function get_url_host_part($url_host) {
 
 
 function create_json_response($status, $msg, $http_resp_code = 403) {
+    $resp = new \stdClass();
     $resp->status = $status;
     $resp->message = $msg;
 	header('Content-Type: application/json');

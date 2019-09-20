@@ -1,7 +1,7 @@
 <?php
 
-require_once '../entities/Wallet.php';
-require_once '../include/jsonRPCClient.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/entities/Wallet.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/jsonRPCClient.php';
   
 class CNYFundTool {
     const USERPREFIX = "POS UserId:";

@@ -1,5 +1,5 @@
 <?php
-require_once '../include/mysql.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/mysql.php';
 
 class Wallet{
     const CONFIRMATION_THRESHOLD = 3; 

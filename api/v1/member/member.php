@@ -3,11 +3,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/webConfig.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/pay/pay.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/curl_util.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/member/inc_header.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/proxyutil.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/entities/UserAccount.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if (!isset($_GET['api_key']) || !empty($_GET['api_key'])) {
-        return create_json_response("ERROR_MISS_RETURNID", "你的请求没有包含API KEY");
+    if (!isset($_GET['api_key']) || empty($_GET['api_key'])) {
+        return create_json_response("ERROR_MISS_APIKEY", "你的请求没有包含API KEY");
     }
     $api_key = $_GET['api_key'];
 
@@ -16,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
     $auth_token = $_GET['auth_token'];
   
-    if (!isset($_POST['auth_check_url']) || empty($_GET['auth_check_url'])) {
+    if (!isset($_GET['auth_check_url']) || empty($_GET['auth_check_url'])) {
         return create_json_response("ERROR_MISS_AUTH_CHECK_URL", "你的请求没有包含登陆核实URL");
     }
     $auth_check_url = $_GET['auth_check_url'];
@@ -26,11 +27,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
     $userId = $_GET['externaluserId'];
 
-    if (!member_check_signature_is_valid($api_key, $api_secret, $externaluserId, $original_signature)) {
+    if (!isset($_GET['signature']) || empty($_GET['signature'])) {
+        return create_json_response("ERROR_MISS_SIGNATURE", "你的请求没有包含签名");
+    }
+    $original_signature = $_GET['signature'];
+
+    $apiAccount = APIAccount::load($db, $api_key);
+    if (is_null($apiAccount)) {
+        return create_json_response("ERROR_API_KEY_NOT_EXIST", "你的请求的API_KEY不存在", 404);
+    }
+
+    if (!member_check_signature_is_valid($apiAccount->api_key, $apiAccount->api_secret, $externaluserId, $original_signature)) {
         return create_json_response("ERROR_AUTH_FAILED", "你的请求签名不符");
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (!isset($_POST['api_key']) || !empty($_POST['api_key'])) {
+    if (!isset($_POST['api_key']) || empty($_POST['api_key'])) {
         return create_json_response("ERROR_MISS_RETURNID", "你的请求没有包含API KEY");
     }
     $api_key = $_POST['api_key'];
@@ -50,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
     $userId = $_POST['externaluserId'];
 
-    if (!isset($_POST['weixin_nickname']) || empty($_POST['weixin_nickname'])){
+    if (!sset($_POST['weixin_nickname']) || empty($_POST['weixin_nickname'])){
         return create_json_response("ERROR_MISS_WEIXIN", "你的请求没有包含微信昵称");
     }
     $weixin = $_POST['weixin_nickname'];
@@ -60,7 +71,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
     $signature = $_POST['signature'];
     
-    if (!update_qrcode_signature_is_valid($api_key, $api_secret, $auth_token, $auth_check_url, $externaluserId, $weixin, $original_signature)) {
+    $apiAccount = APIAccount::load($db, $api_key);
+    if (is_null($apiAccount)) {
+        return create_json_response("ERROR_API_KEY_NOT_EXIST", "你的请求的API_KEY不存在", 404);
+    }
+
+    if (!update_qrcode_signature_is_valid($apiAccount->api_key, $apiAccount->api_secret, $auth_token, $auth_check_url, $externaluserId, $weixin, $original_signature)) {
         return create_json_response("ERROR_AUTH_FAILED", "你的请求签名不符");
     }
 
