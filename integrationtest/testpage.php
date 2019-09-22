@@ -142,8 +142,17 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                 }
                 if (jqXHR.status=='404') {
                     if (jqXHR.responseJSON.status=="ERROR_USER_NOTFOUND"){
-                        var paymentmethod_url = "/integrationtest/paymentqrcode.php?api_key=" + $("#api_key").val();
+                        var paymentmethod_url = "<?php if ($INTESTMODE) { echo get_url_host_part($DEVSITE); } else { echo get_url_host_part($PRODSITE); }?>/trading/test_payment_qrcode/?api_key=" + $("#api_key").val();
+                        paymentmethod_url = paymentmethod_url + "&auth_token="  + $("#auth_token").val() + "&";
+                        paymentmethod_url = paymentmethod_url + "auth_check_url=" + $("#auth_check_url").val() + "&";
                         paymentmethod_url = paymentmethod_url + "&externaluserId=" + $("#externaluserId").val();
+                        var uri_param = "api_key=" + $("#api_key").val() + "&";
+                        uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
+                        var string_to_sign = uri_param + "secret=<?php echo $PROXY_SECRETKEY; ?>";
+                        alert('string to sign:' + string_to_sign);
+                        var signature  = md5(string_to_sign);
+                        $("#signature").val(signature);
+                        paymentmethod_url = paymentmethod_url + "&signature=" + signature;
                         alert("User not found, so we go to upload qrcode at " + paymentmethod_url);
                         window.location.href= paymentmethod_url;
                     }

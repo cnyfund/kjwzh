@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'GET') {
 }
 
 if (!isset($_POST['api_key']) || !empty($_POST['api_key'])) {
-    return create_json_response("ERROR_MISS_RETURNID", "你的请求没有包含API KEY");
+    return create_json_response("ERROR_MISS_API_KEY", "你的请求没有包含API KEY");
 }
 $api_key = $_POST['api_key'];
 

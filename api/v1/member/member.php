@@ -8,27 +8,27 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/entities/UserAccount.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (!isset($_GET['api_key']) || empty($_GET['api_key'])) {
-        return create_json_response("ERROR_MISS_APIKEY", "你的请求没有包含API KEY");
+        return create_json_response("ERROR_MISSING_APIKEY", "你的请求没有包含API KEY");
     }
     $api_key = $_GET['api_key'];
 
     if (!isset($_GET['auth_token']) || empty($_GET['auth_token'])) {
-        return create_json_response("ERROR_MISS_AUTHTOKEN", "你的请求没有包含登陆认证");
+        return create_json_response("ERROR_MISSING_AUTHTOKEN", "你的请求没有包含登陆认证");
     }
     $auth_token = $_GET['auth_token'];
   
     if (!isset($_GET['auth_check_url']) || empty($_GET['auth_check_url'])) {
-        return create_json_response("ERROR_MISS_AUTH_CHECK_URL", "你的请求没有包含登陆核实URL");
+        return create_json_response("ERROR_MISSING_AUTH_CHECK_URL", "你的请求没有包含登陆核实URL");
     }
     $auth_check_url = $_GET['auth_check_url'];
   
     if (!isset($_GET['externaluserId']) || empty($_GET['externaluserId'])){
-        return create_json_response("ERROR_MISS_USERID", "你的请求没有包含你的客户的用户ID");
+        return create_json_response("ERROR_MISSING_USERID", "你的请求没有包含你的客户的用户ID");
     }
     $userId = $_GET['externaluserId'];
 
     if (!isset($_GET['signature']) || empty($_GET['signature'])) {
-        return create_json_response("ERROR_MISS_SIGNATURE", "你的请求没有包含签名");
+        return create_json_response("ERROR_MISSING_SIGNATURE", "你的请求没有包含签名");
     }
     $original_signature = $_GET['signature'];
 
@@ -38,36 +38,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     if (!member_check_signature_is_valid($apiAccount->api_key, $apiAccount->api_secret, $externaluserId, $original_signature)) {
-        return create_json_response("ERROR_AUTH_FAILED", "你的请求签名不符");
+        return create_json_response("ERROR_SIGNATURE_NOTMATCH", "你的请求签名不符");
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!isset($_POST['api_key']) || empty($_POST['api_key'])) {
-        return create_json_response("ERROR_MISS_RETURNID", "你的请求没有包含API KEY");
+        return create_json_response("ERROR_MISSING_APIKEY", "你的请求没有包含API KEY");
     }
     $api_key = $_POST['api_key'];
 
     if (!isset($_POST['auth_token']) || empty($_POST['auth_token'])) {
-      return create_json_response("ERROR_MISS_AUTHTOKEN", "你的请求没有包含登陆认证");
+      return create_json_response("ERROR_MISSING_AUTHTOKEN", "你的请求没有包含登陆认证");
     }
     $auth_token = $_POST['auth_token'];
 
     if (!isset($_POST['auth_check_url']) || empty($_POST['auth_check_url'])) {
-      return create_json_response("ERROR_MISS_AUTH_CHECK_URL", "你的请求没有包含登陆核实URL");
+      return create_json_response("ERROR_MISSING_AUTH_CHECK_URL", "你的请求没有包含登陆核实URL");
     }
     $auth_check_url = $_POST['auth_check_url'];
 
     if (!isset($_POST['externaluserId']) || empty($_POST['externaluserId'])){
-        return create_json_response("ERROR_MISS_USERID", "你的请求没有包含你的客户的用户ID");
+        return create_json_response("ERROR_MISSING_USERID", "你的请求没有包含你的客户的用户ID");
     }
     $userId = $_POST['externaluserId'];
 
     if (!sset($_POST['weixin_nickname']) || empty($_POST['weixin_nickname'])){
-        return create_json_response("ERROR_MISS_WEIXIN", "你的请求没有包含微信昵称");
+        return create_json_response("ERROR_MISSING_WEIXIN", "你的请求没有包含微信昵称");
     }
     $weixin = $_POST['weixin_nickname'];
 
     if (!isset($_POST['signature']) || empty($_POST['signature'])) {
-        return create_json_response("ERROR_MISS_SIGNATURE", "你的请求没有包含签名");
+        return create_json_response("ERROR_MISSING_SIGNATURE", "你的请求没有包含签名");
     }
     $signature = $_POST['signature'];
     
@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     if (!update_qrcode_signature_is_valid($apiAccount->api_key, $apiAccount->api_secret, $auth_token, $auth_check_url, $externaluserId, $weixin, $original_signature)) {
-        return create_json_response("ERROR_AUTH_FAILED", "你的请求签名不符");
+        return create_json_response("ERROR_MISSING_SIGNATURE", "你的请求签名不符");
     }
 
     $check_url= $auth_check_url . "?token=" . url_encode($auth_token);
