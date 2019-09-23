@@ -32,7 +32,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
         <input type="hidden" name="auth_check_url" id = "auth_check_url" value="<?php 
          if ($INTESTMODE) { echo get_url_host_part($NOTIFYSITEDEV); } else {
              echo get_url_host_part($NOTIFYSITEPROD);
-         }?>/integration/auth_check.php"/>
+         }?>/integrationtest/auth_check.php"/>
         <input type="hidden" name="return_url" id = "return_url" value="<?php 
          if ($INTESTMODE) { echo get_url_host_part($NOTIFYSITEDEV); } else { echo get_url_host_part($NOTIFYSITEPROD); }
          ?>/integrationtest/testpage.php"/>
@@ -145,7 +145,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                         var paymentmethod_url = "<?php if ($INTESTMODE) { echo get_url_host_part($DEVSITE); } else { echo get_url_host_part($PRODSITE); }?>/trading/test_payment_qrcode/?api_key=" + $("#api_key").val();
                         paymentmethod_url = paymentmethod_url + "&auth_token="  + $("#auth_token").val() + "&";
                         paymentmethod_url = paymentmethod_url + "auth_check_url=" + $("#auth_check_url").val() + "&";
-                        paymentmethod_url = paymentmethod_url + "&externaluserId=" + $("#externaluserId").val();
+                        paymentmethod_url = paymentmethod_url + "externaluserId=" + $("#externaluserId").val();
                         var uri_param = "api_key=" + $("#api_key").val() + "&";
                         uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
                         var string_to_sign = uri_param + "secret=<?php echo $PROXY_SECRETKEY; ?>";
