@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
     $userId = $_POST['externaluserId'];
 
-    if (!sset($_POST['weixin_nickname']) || empty($_POST['weixin_nickname'])){
+    if (!isset($_POST['weixin_nickname']) || empty($_POST['weixin_nickname'])){
         return create_json_response("ERROR_MISSING_WEIXIN", "你的请求没有包含微信昵称");
     }
     $weixin = $_POST['weixin_nickname'];
@@ -76,8 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         return create_json_response("ERROR_API_KEY_NOT_EXIST", "你的请求的API_KEY不存在", 404);
     }
 
-    if (!update_qrcode_signature_is_valid($apiAccount->api_key, $apiAccount->api_secret, $auth_token, $auth_check_url, $externaluserId, $weixin, $original_signature)) {
-        return create_json_response("ERROR_MISSING_SIGNATURE", "你的请求签名不符");
+    if (!update_qrcode_signature_is_valid($apiAccount->api_key, $apiAccount->api_secret, $auth_token, $auth_check_url, $externaluserId, $weixin, $signature)) {
+        return create_json_response("ERROR_SIGNATURE_MISMATCH", "你的请求签名不符");
     }
 
     $check_url= $auth_check_url . "?token=" . url_encode($auth_token);
