@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         return create_json_response("ERROR_SIGNATURE_MISMATCH", "你的请求签名不符");
     }
 
-    $check_url= $auth_check_url . "?token=" . url_encode($auth_token);
+    $check_url= $auth_check_url . "?token=" . urlencode($auth_token);
     try {
         curl_get($check_url, null, $response, $response_code);
         if ($response_code != 200) {
@@ -143,7 +143,7 @@ if (isset($_FILES['weixin_qrcode'])) {
         }
 
         if (empty($errors)==true) {
-            $weixin_qrcode = $username . "_qrcode" . "." . $file_ext;
+            $weixin_qrcode = $userId . "_qrcode" . "." . $file_ext;
             $new_filepath = $_SERVER['DOCUMENT_ROOT'] . "/images/upload/weixin/".$weixin_qrcode;
             error_log("come to move the file to " . $new_filepath);
             move_uploaded_file($file_tmp, $new_filepath);
@@ -164,7 +164,7 @@ if (empty($errors)==true) {
         $sql = $sql . ", h_weixin_qrcode = '{$weixin_qrcode}'";
     }
 
-    $sql = $sql . " where h_userName= '{$username}'";
+    $sql = $sql . " where h_userName= '{$userId}'";
     error_log("udpate h_member weixin: " . $sql);
 
     $db->query($sql);
