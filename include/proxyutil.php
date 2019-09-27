@@ -123,5 +123,14 @@ function read_proxy_parameters(&$api_key, &$return_url, &$externaluserId, &$exte
     }
 }
 
+function create_member_response($user, $auth_token, $host_url) {
+    $resp = new \stdClass();
+    $resp->auth_token = $auth_token;
+    $resp->api_key = $user->api_account->api_key;
+    $resp->username = $user->username;
+    $resp->weixin = $user->weixin;
+    $resp->qrcode = $host_url . "/api/v1/member/getqrcode.php?api_key=" . $user->api_account->api_key . "&externaluserId=" . $user->username;
+    return json_encode($resp);
+}
 
 ?>

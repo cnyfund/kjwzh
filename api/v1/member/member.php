@@ -6,7 +6,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/curl_util.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/proxyutil.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/entities/UserAccount.php';
 
+header("Access-Control-Allow-Origin: *");
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    error_log("coming to GET member.php" . $_GET['api_key']);
     if (!isset($_GET['api_key']) || empty($_GET['api_key'])) {
         return create_json_response("ERROR_MISSING_APIKEY", "你的请求没有包含API KEY");
     }
@@ -123,6 +125,7 @@ if (is_null($user)) {
 
 if (isset($_FILES['weixin_qrcode'])) {
     $file_name = $_FILES['weixin_qrcode']['name'];
+    error_log("Coming to save file " . $file_name);
     if (!empty($file_name)) {
         error_log("Come to save upload file {$file_name}");
         $file_size =$_FILES['weixin_qrcode']['size'];
@@ -170,4 +173,10 @@ if (empty($errors)==true) {
     $db->query($sql);
 }
 
+//now load user and see whether it exist or not
+$user = UserAccount::load_api_user($db, $userId, $api_key);
+
+$resp = create_member_response($user, $auth_token, ($INTESTMODE) ? $NOTIFYSITEDEV: $NOTIFYSITEPROD);
+header('Content-Type: application/json');
+echo $resp;
 ?>

@@ -1,20 +1,23 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/conn.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/proxyutil.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/entities/UserAccount.php';
+
 
 if ($_SERVER['REQUEST_METHOD'] != 'GET') {
     return create_json_response("ERROR_BAD_METHOD", "系统只接受GETT请求");
 }
 
-if (!isset($_POST['api_key']) || !empty($_POST['api_key'])) {
+error_log("coming to getqrcode" . $_GET['api_key']);
+if (!isset($_GET['api_key']) || empty($_GET['api_key'])) {
     return create_json_response("ERROR_MISS_API_KEY", "你的请求没有包含API KEY");
 }
-$api_key = $_POST['api_key'];
+$api_key = $_GET['api_key'];
 
-if (!isset($_POST['externaluserId']) || empty($_POST['externaluserId'])){
+if (!isset($_GET['externaluserId']) || empty($_GET['externaluserId'])){
     return create_json_response("ERROR_MISS_USERID", "你的请求没有包含你的客户的用户ID");
 }
-$userId = $_POST['externaluserId'];
+$userId = $_GET['externaluserId'];
 
 //now load user and see whether it exist or not, return 404 if it does not
 $user = UserAccount::load_api_user($db, $userId, $api_key);
@@ -24,10 +27,11 @@ if (is_null($user)) {
 }
 
 $file_out = $_SERVER['DOCUMENT_ROOT'] . "/images/badqrcode.png";
-if ($rs) {
+if (!is_null($user)) {
     $file_out = $_SERVER['DOCUMENT_ROOT'] . "/images/upload/weixin/" . $user->weixin_qrcode;
 } 
 
+error_log("getqrcode: fileout=" . $file_out);
 if (file_exists($file_out)) {
 
     //Set the content-type header as appropriate
