@@ -14,7 +14,11 @@ class dbmysql {
                 if ($db_charset!='latin1') {
                    $this->link->set_charset($db_charset);
                 }
-        }	
+		}	
+	
+	function set_autocommit($flag = TRUE) {
+		return $this->link->autocommit($flag);
+	}
 	function move_first($query) {
 		$query->data_seek(0);
 	}

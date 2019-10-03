@@ -1,7 +1,7 @@
 <?php
-require_once '../include/mysql.php';
-require_once '../entities/UserWallet.php';
-require_once '../entities/APIAccount.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/mysql.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/entities/UserWallet.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/entities/APIAccount.php';
 
 class UserAccount {
     const WALLETDEPOSIT ='钱包充值';

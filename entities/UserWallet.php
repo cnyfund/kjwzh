@@ -1,7 +1,7 @@
 <?php
-require_once '../include/mysql.php';
-require_once '../entities/Wallet.php';
-require_once '../include/CNYFundTool.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/mysql.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/entities/Wallet.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/include/CNYFundTool.php';
 
 class UserWallet{
     const MASTERACCOUNT = '';

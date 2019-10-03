@@ -78,9 +78,25 @@ class pay{
 		}
 		if(!isset($biz_content['return_url']) || empty($biz_content['return_url'])){
 			throw new PayException("未指定 return_url");
-		}
+        }
 
-		$this->SetBiz_content($biz_content);
+        // add external cnyf address to the request if it is needed
+        if (array_key_exists("external_cny_rec_address", $biz_content)){
+            error_log("Found external_cny_rec_address in bizcontent, set it to top level and remove it from biz_content");
+            $this->SetValue("external_cny_rec_address", $biz_content["external_cny_rec_address"]);
+            unset($biz_content["external_cny_rec_address"]);
+            $this->SetValue("version","2.0");
+        }
+
+        // add txid to the request if it is needed
+        if (array_key_exists("txid", $biz_content)){
+            error_log("Found txid in bizcontent, set it to top level and remove it from biz_content");
+            $this->SetValue("txid", $biz_content["txid"]);
+            unset($biz_content["txid"]);
+            $this->SetValue("version","2.0");
+        }
+
+        $this->SetBiz_content($biz_content);
 		$this->SetSign();
 		return $this->postJsonCurl($api,$this->values);
 	}
@@ -234,8 +250,10 @@ class pay{
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_TIMEOUT, $second); //设置超时
         curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        if (strpos($url, 'https:') == 0) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, TRUE);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+        }
         curl_setopt($curl, CURLOPT_HEADER, FALSE);
         if (!empty($jsonData)) {
             if ($json && is_array($jsonData)) {
