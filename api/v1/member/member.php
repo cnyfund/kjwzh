@@ -105,6 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         return create_json_response("ERROR_USER_NOTFOUND", "你提供的用户" . $userId . "不存在", 404);
     }
 
+    $resp = new \stdClass();
     $resp->username = $user->username;
     $resp->weixin = $user->weixin;
     $url_path_getqrcode = "/api/v1/member/getqrcode.php?externaluserId=" . $resp->username . "&api_key=" . $api_key;

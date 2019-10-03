@@ -101,16 +101,15 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                 async : true,
                 dataType: "json",
                 url : user_check_url
-            }).done(function(data){
-                if (json.weixin_qrcode.length() > 0) {
+            }).done(function(user_check_response){
+                if (user_check_response.weixin_qrcode.length > 0) {
                     // call redeem interface
                     var redeem_url = "<?php if ($INTESTMODE) { echo get_url_host_part($NOTIFYSITEDEV); } else { echo get_url_host_part($NOTIFYSITEPROD); } ?>/api/v1/request/redeem.php";
                     $("#integration_form").attr("action", redeem_url);
                     var uri_param = "api_key=" + $("#api_key").val() + "&";
-                    uri_param = uri_param + "amount=" + $("#redeem_amount").val() + "&" 
                     uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
                     uri_param = uri_param + "external_cny_rec_address=" + $("#external_cny_rec_address").val() + "&";
-                    uri_param = uri_param + "return_url=" + $("#return_url").val() + "&";
+                    uri_param = uri_param + "redeem_amount=" + $("#redeem_amount").val() + "&" 
                     uri_param = uri_param + "txid=" + $("#txid").val() + "&";
                     var string_to_sign = uri_param + "secret=<?php echo $PROXY_SECRETKEY; ?>";
                     alert('string to sign:' + string_to_sign);
@@ -120,12 +119,14 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                     alert("提现URL：" + redeem_url);
                     $.ajax({
                         type: "post",
-                        data: $("form#integrate_form").serialize(),
+                        data: $("form#integration_form").serialize(),
+                        url: redeem_url,
+                        contentType: 'application/x-www-form-urlencoded',
                         success: function(json, status, jqXHR){
-                            alert("redeem succeed");
+                            alert("redeem succeed" + JSON.stringify(json));
                         },
                         error: function(json, status, jqXHR) {
-                            alert("redeem failed");
+                            alert("redeem failed " + json.responseText);
                         }
                     });
                 } else {

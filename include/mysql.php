@@ -17,7 +17,7 @@ class dbmysql {
 		}	
 	
 	function set_autocommit($flag = TRUE) {
-		return $this->autocommit($flag);
+		return $this->link->autocommit($flag);
 	}
 	function move_first($query) {
 		$query->data_seek(0);

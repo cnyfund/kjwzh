@@ -43,8 +43,7 @@ function update_qrcode_signature_is_valid($api_key, $api_secret, $auth_token, $a
 }
 
 function redeem_signature_is_valid($api_key, $api_secret, $externaluserId, $external_cnyf_address, $redeem_amount, $txid, $original_signature){
-	$str_to_be_signed = "api_key=" . $api_key . "auth_token=". $auth_token;
-	$str_to_be_signed = $str_to_be_signed . "auth_check_url=". $auth_check_url;
+	$str_to_be_signed = "api_key=" . $api_key;
 	$str_to_be_signed = $str_to_be_signed . "&externaluserId=" . $externaluserId;
     $str_to_be_signed = $str_to_be_signed . "&external_cny_rec_address=" . $external_cnyf_address;
     $str_to_be_signed = $str_to_be_signed . "&redeem_amount=" . $redeem_amount;
