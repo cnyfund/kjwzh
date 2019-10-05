@@ -15,6 +15,11 @@ function curl_get($url, $headers, &$response, &$response_code) {
         $optArray[CURLOPT_HTTPHEADER] = $headers;
     }
 
+    if (strpos($url, 'https:') == 0) {
+        $optArray[CURLOPT_SSL_VERIFYPEER] = TRUE;
+        $optArray[CURLOPT_SSL_VERIFYHOST] = 2;
+    }
+
     // apply those options
     curl_setopt_array($ch, $optArray);
 
