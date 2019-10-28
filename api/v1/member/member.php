@@ -81,20 +81,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (!update_qrcode_signature_is_valid($apiAccount->api_key, $apiAccount->api_secret, $auth_token, $auth_check_url, $externaluserId, $weixin, $signature)) {
         return create_json_response("ERROR_SIGNATURE_MISMATCH", "你的请求签名不符");
     }
-
-    $check_url= $auth_check_url . "?token=" . urlencode($auth_token) . "&username=" . $userId;
-    try {
-        curl_get($check_url, null, $response, $response_code);
-        if ($response_code != 200) {
-            error_log("calling " . $check_url . " return (" . $response_code . "):" . $response);
-            return create_json_response("ERROR_AUTH_CHECK_FAIL", "你的请求没有通过登陆核实:(". $response_code . "):" . $response);
-        }
-    } catch (PayException $pe) {
-        error_log("calling " . $check_url . " hit exception:" . $pe->getMessage());
-        return create_json_response("ERROR_CONNECT_AUTH_CHECK_URL_FAIL", "无法链接登陆核实URL");
-    }
 }
 
+// check with the app that auth_token is valid
+$check_url= $auth_check_url . "?token=" . urlencode($auth_token) . "&username=" . $userId;
+try {
+    curl_get($check_url, null, $response, $response_code);
+    if ($response_code != 200) {
+        error_log("calling " . $check_url . " return (" . $response_code . "):" . $response);
+        return create_json_response("ERROR_AUTH_CHECK_FAIL", "你的请求没有通过登陆核实:(". $response_code . "):" . $response);
+    }
+} catch (PayException $pe) {
+    error_log("calling " . $check_url . " hit exception:" . $pe->getMessage());
+    return create_json_response("ERROR_CONNECT_AUTH_CHECK_URL_FAIL", "无法链接登陆核实URL");
+}
 
 //now load user and see whether it exist or not
 $user = UserAccount::load_api_user($db, $userId, $api_key);
