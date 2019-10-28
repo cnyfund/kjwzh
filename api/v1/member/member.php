@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         return create_json_response("ERROR_SIGNATURE_MISMATCH", "你的请求签名不符");
     }
 
-    $check_url= $auth_check_url . "?token=" . urlencode($auth_token);
+    $check_url= $auth_check_url . "?token=" . urlencode($auth_token) . "&username=" . $userId;
     try {
         curl_get($check_url, null, $response, $response_code);
         if ($response_code != 200) {

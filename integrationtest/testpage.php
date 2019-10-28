@@ -80,6 +80,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             $("#signature").val(signature);
             $("#integration_form").submit();
         });
+        /* redeem sample. */
         $("#redeem_btn").click(function () {
             setTimeout(function () { disableButton("#redeem_btn"); }, 0);
             var user_check_url= "<?php 
