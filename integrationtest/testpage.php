@@ -61,6 +61,23 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
  </div>
 <script>
     
+    function goto_external_paymentmethod(){
+        alert("Now need to go to setup payment method");
+        var paymentmethod_url = "<?php if ($INTESTMODE) { echo get_url_host_part($DEVSITE); } else { echo get_url_host_part($PRODSITE); }?>/trading/test_payment_qrcode/?api_key=" + $("#api_key").val();
+        paymentmethod_url = paymentmethod_url + "&auth_token="  + $("#auth_token").val() + "&";
+        paymentmethod_url = paymentmethod_url + "auth_check_url=" + $("#auth_check_url").val() + "&";
+        paymentmethod_url = paymentmethod_url + "externaluserId=" + $("#externaluserId").val();
+        var uri_param = "api_key=" + $("#api_key").val() + "&";
+        uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
+        var string_to_sign = uri_param + "secret=<?php echo $PROXY_SECRETKEY; ?>";
+        alert('string to sign:' + string_to_sign);
+        var signature  = md5(string_to_sign);
+        $("#signature").val(signature);
+        paymentmethod_url = paymentmethod_url + "&signature=" + signature;
+        alert("User not found, so we go to upload qrcode at " + paymentmethod_url);
+        window.location.href= paymentmethod_url;
+
+    }
     $(document).ready(function(){
         $("#wait").css("display", "none");
         function disableButton(btn) {
@@ -80,6 +97,7 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
             $("#signature").val(signature);
             $("#integration_form").submit();
         });
+        /* redeem sample. */
         $("#redeem_btn").click(function () {
             setTimeout(function () { disableButton("#redeem_btn"); }, 0);
             var user_check_url= "<?php 
@@ -130,10 +148,8 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                         }
                     });
                 } else {
-                    var paymentmethod_url = "/integrationtest/paymentqrcode.php?api_key=" + $("#api_key").val();
-                        paymentmethod_url = paymentmethod_url + "&externaluserId=" + $("#externaluserId").val();
-                        alert("User does not have qrcode, so we go to upload qrcode at " + paymentmethod_url);
-                        window.location.href= paymentmethod_url;
+                    alert("User has empty qrcode, which means he/she still has not setup payment system");
+                    goto_external_paymentmethod();
                 }
             }).fail(function(jqXHR, textStatus, errorThrown){
                 if (jqXHR.hasOwnProperty('responseJSON')) {
@@ -148,6 +164,8 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                         paymentmethod_url = paymentmethod_url + "auth_check_url=" + $("#auth_check_url").val() + "&";
                         paymentmethod_url = paymentmethod_url + "externaluserId=" + $("#externaluserId").val();
                         var uri_param = "api_key=" + $("#api_key").val() + "&";
+                        uri_param = uri_param + "auth_token=" + $("#auth_token").val() + "&";
+                        uri_param = uri_param + "auth_check_url=" + $("#auth_check_url").val() + "&";
                         uri_param = uri_param + "externaluserId=" + $("#externaluserId").val() + "&";
                         var string_to_sign = uri_param + "secret=<?php echo $PROXY_SECRETKEY; ?>";
                         alert('string to sign:' + string_to_sign);
@@ -157,6 +175,8 @@ generateHeader($pageTitle, $webInfo['h_keyword'], $webInfo['h_description']);
                         alert("User not found, so we go to upload qrcode at " + paymentmethod_url);
                         window.location.href= paymentmethod_url;
                     }
+                } else if (jqXHR.status == '403') {
+                    alert("auth_token " + $("#auth_token").val() + " was not a valid sessionkey on app's system.  Need to retry");
                 }
             });
         });
