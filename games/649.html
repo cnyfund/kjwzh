@@ -10,18 +10,57 @@
 
 <style>
 div.number_block{
-   width: 22px;
-   height: 22px;
-   text-align: center;
-   border: 1px solid green;
-   display: inline-block;
-   margin: 3px;
+    width: 22px;
+    height: 22px;
+    text-align: center;
+    border: 1px solid green;
+    display: inline-block;
+    margin: 3px;
 }
+div.number_block a:link {
+        text-decoration: none;
+    }
+div.number_block a:visited {
+        text-decoration: none;
+    }
+div.number_block a:hover {
+        text-decoration: none;
+    }
+div.number_block a:active {
+        text-decoration: none;
+    }
+
+}
+
 </style>
 <script>
+var current_selected= [];
+
 function select_number(num) {
-    alert(num);
+    var pos = current_selected.indexOf(num);
+    if (pos > -1) {
+        current_selected.splice(pos, 1);
+        display_selected_number(num, false);
+    } else {
+        current_selected.push(num);
+        current_selected.sort();
+        display_selected_number(num, true);
+    }
 }
+
+function display_selected_number(num, highlight) {
+    if (highlight) {
+        $("#block" + num).css('background','green');
+        $("#block" + num + ' a').css('color','white');
+    } else {
+        $("#block" + num).css('background','white');
+        $("#block" + num + ' a').css('color','#0066CC');;
+    }
+}
+$(document).ready(function(){
+    
+});
+
 </script>
 <body>
 <div class="container">
