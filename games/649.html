@@ -38,12 +38,13 @@ var current_selected= [];
 var selection_prefix_text = '您选择的号码: ';
 var balance_title = '您的余额: ';
 var userId='11010';
+var mybets = [];
 
 function get_user_info(uId) {
-    return { "userId": "11111", "alias":"张涛", "balance": 1000.0, 
-             "current_selections": [ 
-                 { "id": 45, "selection": [1,5,7,11,34,35], "selection_time": 15992939293, "submit_time": 1582837529, "cost": 1.0, "cost_currency": "CNY" }, 
-                 { "id": 46, "selection":[33,34,40,41,43,46], "selection_time": 15992939293} 
+    return { "userId": "11111", "alias":"张涛", "balance": 1000.0, "winning":0, "credit":0,
+             "bets": [ 
+                 { "id": 45, "selection": [1,5,7,11,34,35], "submit_time": 1582837529 }, 
+                 { "id": 46, "selection":[33,34,40,41,43,46], "submit_time": 1582837529 } 
             ]
         };
 }
@@ -65,6 +66,15 @@ function show_next_draw_info(info){
     draw_date.setUTCMilliseconds(info.next_draw_time);
     $("#nextdraw").text("下次抽奖时间: " + draw_date.toLocaleString('zh-CN'));
     $("#prize").text("现有奖金: " + info.first_prize);
+}
+
+function show_mybets(bets) {
+    if (bets === undefined || bets.length == 0) {
+        console.log("show_mybets encounter empty bets array");
+        return;
+    }
+
+    bets.forEach(item=>$("#mybets tbody").append("<tr><td>" + item.selection + "</td></tr>"));
 }
 
 function select_number(num) {
@@ -96,6 +106,7 @@ $(document).ready(function(){
     show_balance(userInfo);
     show_next_draw_info(get_next_draw_info());
     display_current_selection();
+    show_mybets(userInfo.bets)
 });
 
 </script>
@@ -110,6 +121,8 @@ $(document).ready(function(){
 </div>
 <div class="row">
     <div id="selection"></div>
+    <button type="button" class="btn btn-primary">下注（¥1）</button>
+    <button type="button" class="btn btn-default">清除当前选择</button>
 </div>
 <div class="row">
     <div id="block1" class="number_block"><a href="javascript:select_number(1);">1</div>
@@ -173,6 +186,18 @@ $(document).ready(function(){
     <div id="block47" class="number_block"><a href="javascript:select_number(47);">47</div>
     <div id="block48" class="number_block"><a href="javascript:select_number(48);">48</div>
     <div id="block49" class="number_block"><a href="javascript:select_number(49);">49</div>
+</div>
+<div class="row">
+    <div>
+       <table id="mybets" class="table">
+          <thead>
+             <tr>
+                <td><h4>你填好的选择 (总额: ¥4）</h4></td>
+             </tr>
+          </thead>
+          <tbody></tbody>
+       </table>
+    </div>
 </div>
 </div>
 </body>
